@@ -16,10 +16,10 @@
     </div>
 
     <script>
-  // Constants
+// Constants
 const CELL_SIZE = 10; // Size of each cell in pixels
-const CANVAS_WIDTH = 625; // Adjusted to be divisible by CELL_SIZE
-const CANVAS_HEIGHT = 425; // Adjusted to be divisible by CELL_SIZE
+const CANVAS_WIDTH = 625;
+const CANVAS_HEIGHT = 425;
 const ROWS = Math.floor(CANVAS_HEIGHT / CELL_SIZE);
 const COLS = Math.floor(CANVAS_WIDTH / CELL_SIZE);
 
@@ -27,113 +27,99 @@ const COLS = Math.floor(CANVAS_WIDTH / CELL_SIZE);
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Game state
-let grid = createGrid();
-
-// Function to create initial grid
-function createGrid() {
-    let grid = new Array(ROWS);
-    for (let i = 0; i < ROWS; i++) {
-        grid[i] = new Array(COLS);
-        for (let j = 0; j < COLS; j++) {
-            grid[i][j] = Math.random() > 0.5 ? getRandomColor() : null; // Initialize with colors or null
-        }
-    }
-    return grid;
-}
-
-// Function to update game state
-function update() {
-    let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(null));
-
-    // Apply Game of Life rules
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-            let neighbors = countNeighbors(i, j);
-
-            // Apply rules of Conway's Game of Life
-            if (grid[i][j] !== null) { // Cell has a color
-                if (neighbors < 2 || neighbors > 3) {
-                    newGrid[i][j] = null; // Remove color (die)
-                } else {
-                    newGrid[i][j] = grid[i][j]; // Stay with the same color
-                }
-            } else { // Cell doesn't have a color
-                if (neighbors === 3) {
-                    newGrid[i][j] = getRandomColor(); // Assign a new color (reproduction)
-                } else {
-                    newGrid[i][j] = null; // Stay without color
-                }
-            }
-        }
+// Define organism class
+class Organism {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.vx = Math.random() * 2 - 1; // Random initial velocity
+        this.vy = Math.random() * 2 - 1;
     }
 
-    // Update grid to new state after all calculations
-    grid = newGrid;
-}
+    update() {
+        // Move organism
+        this.x += this.vx;
+        this.y += this.vy;
 
-// Function to count neighbors
-function countNeighbors(x, y) {
-    let count = 0;
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            if (!(i === 0 && j === 0)) {
-                let neighborX = x + i;
-                let neighborY = y + j;
+        // Boundary conditions (wrap around canvas)
+        if (this.x < 0) this.x = CANVAS_WIDTH;
+        if (this.x > CANVAS_WIDTH) this.x = 0;
+        if (this.y < 0) this.y = CANVAS_HEIGHT;
+        if (this.y > CANVAS_HEIGHT) this.y = 0;
 
-                if (neighborX >= 0 && neighborX < ROWS && neighborY >= 0 && neighborY < COLS) {
-                    if (grid[neighborX][neighborY] !== null) {
-                        count++;
+        // Collision detection and handling
+        for (let other of organisms) {
+            if (other !== this) {
+                if (this.isCollidingWith(other)) {
+                    if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
+                        (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
+                        // Handle collision (both organisms die)
+                        this.remove();
+                        other.remove();
                     }
                 }
             }
         }
     }
-    return count;
-}
 
-// Function to render the grid
-function render() {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Clear the canvas
+    render() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
+    }
 
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-            if (grid[i][j] !== null) {
-                ctx.fillStyle = grid[i][j]; // Use the stored color
-                ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-            }
-        }
+    isCollidingWith(other) {
+        return this.x < other.x + CELL_SIZE &&
+               this.x + CELL_SIZE > other.x &&
+               this.y < other.y + CELL_SIZE &&
+               this.y + CELL_SIZE > other.y;
+    }
+
+    remove() {
+        // Remove organism from simulation
+        let index = organisms.indexOf(this);
+        organisms.splice(index, 1);
     }
 }
 
-// Function to get a random rainbow color
-function getRandomColor() {
-    const colors = {
-        red: 'rgb(255, 0, 0)',   // Red
-        blue: 'rgb(0, 0, 255)'   // Blue
-    };
+// Array to hold all organisms
+let organisms = [];
 
-    // Convert object keys to an array
-    const colorKeys = Object.keys(colors);
-
-    // Generate a random index based on the length of colorKeys array
-    const randomIndex = Math.floor(Math.random() * colorKeys.length);
-
-    // Get a random color using the random index
-    const randomColorKey = colorKeys[randomIndex];
-    return colors[randomColorKey];
+// Function to create initial organisms
+function createOrganisms() {
+    for (let i = 0; i < 100; i++) {
+        let x = Math.random() * CANVAS_WIDTH;
+        let y = Math.random() * CANVAS_HEIGHT;
+        let color = Math.random() > 0.5 ? 'rgb(255, 0, 0)' : 'rgb(0, 0, 255)';
+        organisms.push(new Organism(x, y, color));
+    }
 }
-        
-// Animation loop
+
+// Function to update all organisms
+function update() {
+    for (let organism of organisms) {
+        organism.update();
+    }
+}
+
+// Function to render all organisms
+function render() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    for (let organism of organisms) {
+        organism.render();
+    }
+}
+
+// Start the simulation
+createOrganisms();
+
 function animate() {
     update();
     render();
     requestAnimationFrame(animate);
 }
 
-// Start animation
 animate();
-
     </script>
 </body>
 </html>

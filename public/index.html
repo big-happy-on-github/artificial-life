@@ -255,39 +255,40 @@
             }
         }
         
-        function loadOrganisms() {
-            try {
-                const dataString = localStorage.getItem("data");
-                if (!dataString) {
-                    console.log('No data found in localStorage');
-                    return;
-                }
-        
-                console.log('Data retrieved from localStorage:', dataString);
-        
-                const data = JSON.parse(dataString);
-        
-                // Clear existing organisms before loading
-                organisms.length = 0;
-        
-                // Load organisms from saved data
-                data.organisms.forEach(orgData => {
-                    const { x, y, color, qValues } = orgData;
-                    const organism = new Organism(x, y, color);
-                    organism.qValues = qValues; // Restore Q-values
-                    organisms.push(organism);
-                });
-        
-                console.log('Organisms loaded successfully:', organisms);
-        
-                // Clear canvas and start animation loop
-                ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-                animate(); // Start the animation loop
-        
-            } catch (error) {
-                console.error('Error loading data:', error);
-            }
+function loadOrganisms() {
+    try {
+        const dataString = localStorage.getItem("data");
+        if (!dataString) {
+            console.log('No data found in localStorage');
+            return;
         }
+
+        console.log('Data retrieved from localStorage:', dataString);
+
+        const data = JSON.parse(dataString);
+
+        // Clear existing organisms before loading
+        organisms.length = 0;
+
+        // Load organisms from saved data
+        data.organisms.forEach(orgData => {
+            const { x, y, color, qValues } = orgData;
+            const organism = new Organism(x, y, color);
+            organism.qValues = qValues; // Restore Q-values
+            organisms.push(organism);
+        });
+
+        console.log('Organisms loaded successfully:', organisms);
+
+        // Clear canvas and start animation loop
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        animate(); // Start the animation loop
+
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
+}
+
     </script>
 </body>
 </html>

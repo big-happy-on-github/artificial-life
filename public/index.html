@@ -198,18 +198,21 @@
         // Function to count distinct colors
         function countDistinctColors() {
             let distinctColors = new Set();
-            let numOrganisms
+            let numOrganisms = 0; // Initialize numOrganisms to 0
+        
             for (let organism of organisms) {
                 distinctColors.add(organism.color);
                 numOrganisms++;
             }
-            
-            if (distinctColors.size === 1) {
+        
+            // Check conditions based on the requirements
+            if (distinctColors.size === 1 || numOrganisms < 4) {
                 return true;
-            } else if (numOrganisms < 4) {
-                return true;
+            } else {
+                return false; // Return false if neither condition is met
             }
         }
+
         
         // Function to reset grid and start with new organisms
         function resetGrid() {

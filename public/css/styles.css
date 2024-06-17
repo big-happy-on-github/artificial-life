@@ -100,3 +100,8 @@ img.dtn {
     vertical-align: middle;
     margin: 0 0.5rem;
 }
+
+canvas {
+    width: 100%;
+    height: 100%;
+}

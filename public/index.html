@@ -33,20 +33,30 @@ class Organism {
         this.x = x;
         this.y = y;
         this.color = color;
-        this.vx = Math.random() * 2 - 1; // Random initial velocity
-        this.vy = Math.random() * 2 - 1;
+        this.speed = 1; // Speed of movement
+        this.direction = Math.random() * 4 | 0; // Initial random direction (0-3)
     }
 
     update() {
-        // Move organism
-        this.x += this.vx;
-        this.y += this.vy;
+        // Move organism based on current direction
+        switch (this.direction) {
+            case 0: // Up
+                this.y -= this.speed;
+                break;
+            case 1: // Right
+                this.x += this.speed;
+                break;
+            case 2: // Down
+                this.y += this.speed;
+                break;
+            case 3: // Left
+                this.x -= this.speed;
+                break;
+        }
 
-        // Boundary conditions (wrap around canvas)
-        if (this.x < 0) this.x = CANVAS_WIDTH;
-        if (this.x > CANVAS_WIDTH) this.x = 0;
-        if (this.y < 0) this.y = CANVAS_HEIGHT;
-        if (this.y > CANVAS_HEIGHT) this.y = 0;
+        // Ensure organism stays within canvas bounds
+        this.x = Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x));
+        this.y = Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y));
 
         // Collision detection and handling
         for (let other of organisms) {
@@ -60,6 +70,11 @@ class Organism {
                     }
                 }
             }
+        }
+
+        // Randomly change direction sometimes
+        if (Math.random() < 0.01) {
+            this.direction = Math.random() * 4 | 0;
         }
     }
 

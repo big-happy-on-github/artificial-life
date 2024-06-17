@@ -96,7 +96,7 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-                if (reward != 0) { console.log(reward); }
+                if (reward != 0) { console.log(reward+"-"+action); }
             }
 
             calculateReward() {

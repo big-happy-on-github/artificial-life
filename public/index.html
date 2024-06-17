@@ -14,14 +14,14 @@
 
         <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-        <p><small>A play on John Conway's Game of Life w/ artificial intelligence originally developed by lim.</small></p>
+        <p><small>made with ❤️</small></p>
     </div>
 
     <script>
         // Constants
         const CELL_SIZE = 10; // Size of each cell in pixels
-        const CANVAS_WIDTH = 800;
-        const CANVAS_HEIGHT = 600;
+        const CANVAS_WIDTH = document.getElementById("gameCanvas").width;
+        const CANVAS_HEIGHT = document.getElementById("gameCanvas").height;
         const ROWS = CANVAS_HEIGHT / CELL_SIZE;
         const COLS = CANVAS_WIDTH / CELL_SIZE;
         

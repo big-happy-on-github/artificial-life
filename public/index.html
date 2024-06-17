@@ -4,137 +4,194 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artificial Organisms</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Artificial Organisms</h1>
         <p>made solely by lim</p>
         <h3>WATCH THE CHAOS</h3>
-        <canvas id="gameCanvas" width="625" height="425" ></canvas>
+        <canvas id="gameCanvas" width="625" height="425"></canvas>
         <p><small>made with ❤️</small></p>
+        <button onclick="saveOrganisms()">Save Organisms</button>
+        <button onclick="loadOrganisms()">Load Organisms</button>
     </div>
 
     <script>
-// Constants
-const CELL_SIZE = 10; // Size of each cell in pixels
-const CANVAS_WIDTH = 625;
-const CANVAS_HEIGHT = 425;
-const ROWS = Math.floor(CANVAS_HEIGHT / CELL_SIZE);
-const COLS = Math.floor(CANVAS_WIDTH / CELL_SIZE);
+        // Constants
+        const CELL_SIZE = 10; // Size of each cell in pixels
+        const CANVAS_WIDTH = 625;
+        const CANVAS_HEIGHT = 425;
+        const ROWS = Math.floor(CANVAS_HEIGHT / CELL_SIZE);
+        const COLS = Math.floor(CANVAS_WIDTH / CELL_SIZE);
 
-// Canvas and context setup
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+        // Canvas and context setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-// Define organism class
-class Organism {
-    constructor(x, y, color) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.speed = 1; // Speed of movement
-        this.direction = Math.random() * 4 | 0; // Initial random direction (0-3)
-    }
+        // Define organism class
+        class Organism {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.speed = 1; // Speed of movement
+                this.direction = Math.random() * 4 | 0; // Initial random direction (0-3)
+            }
 
-    update() {
-        // Move organism based on current direction
-        switch (this.direction) {
-            case 0: // Up
-                this.y -= this.speed;
-                break;
-            case 1: // Right
-                this.x += this.speed;
-                break;
-            case 2: // Down
-                this.y += this.speed;
-                break;
-            case 3: // Left
-                this.x -= this.speed;
-                break;
-        }
+            update() {
+                // Move organism based on current direction
+                switch (this.direction) {
+                    case 0: // Up
+                        this.y -= this.speed;
+                        break;
+                    case 1: // Right
+                        this.x += this.speed;
+                        break;
+                    case 2: // Down
+                        this.y += this.speed;
+                        break;
+                    case 3: // Left
+                        this.x -= this.speed;
+                        break;
+                }
 
-        // Ensure organism stays within canvas bounds
-        this.x = Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x));
-        this.y = Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y));
+                // Ensure organism stays within canvas bounds
+                this.x = Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x));
+                this.y = Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y));
 
-        // Collision detection and handling
-        for (let other of organisms) {
-            if (other !== this) {
-                if (this.isCollidingWith(other)) {
-                    if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
-                        (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
-                        // Handle collision (both organisms die)
-                        this.remove();
-                        other.remove();
+                // Collision detection and handling
+                for (let other of organisms) {
+                    if (other !== this) {
+                        if (this.isCollidingWith(other)) {
+                            if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
+                                (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
+                                // Handle collision (both organisms die)
+                                this.remove();
+                                other.remove();
+                            }
+                        }
                     }
                 }
+
+                // Randomly change direction sometimes
+                if (Math.random() < 0.01) {
+                    this.direction = Math.random() * 4 | 0;
+                }
+            }
+
+            render() {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
+            }
+
+            isCollidingWith(other) {
+                return this.x < other.x + CELL_SIZE &&
+                       this.x + CELL_SIZE > other.x &&
+                       this.y < other.y + CELL_SIZE &&
+                       this.y + CELL_SIZE > other.y;
+            }
+
+            remove() {
+                // Remove organism from simulation
+                let index = organisms.indexOf(this);
+                organisms.splice(index, 1);
+            }
+
+            toJSON() {
+                return {
+                    x: this.x,
+                    y: this.y,
+                    color: this.color
+                };
+            }
+
+            static fromJSON(data) {
+                const { x, y, color } = data;
+                return new Organism(x, y, color);
             }
         }
 
-        // Randomly change direction sometimes
-        if (Math.random() < 0.01) {
-            this.direction = Math.random() * 4 | 0;
+        // Array to hold all organisms
+        let organisms = [];
+
+        // Function to create initial organisms
+        function createOrganisms() {
+            for (let i = 0; i < 100; i++) {
+                let x = Math.random() * CANVAS_WIDTH;
+                let y = Math.random() * CANVAS_HEIGHT;
+                let color = Math.random() > 0.5 ? 'rgb(255, 0, 0)' : 'rgb(0, 0, 255)';
+                organisms.push(new Organism(x, y, color));
+            }
         }
-    }
 
-    render() {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
-    }
+        // Function to update all organisms
+        function update() {
+            for (let organism of organisms) {
+                organism.update();
+            }
+        }
 
-    isCollidingWith(other) {
-        return this.x < other.x + CELL_SIZE &&
-               this.x + CELL_SIZE > other.x &&
-               this.y < other.y + CELL_SIZE &&
-               this.y + CELL_SIZE > other.y;
-    }
+        // Function to render all organisms
+        function render() {
+            ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            for (let organism of organisms) {
+                organism.render();
+            }
+        }
 
-    remove() {
-        // Remove organism from simulation
-        let index = organisms.indexOf(this);
-        organisms.splice(index, 1);
-    }
-}
+        // Start the simulation
+        createOrganisms();
 
-// Array to hold all organisms
-let organisms = [];
+        function animate() {
+            update();
+            render();
+            requestAnimationFrame(animate);
+        }
 
-// Function to create initial organisms
-function createOrganisms() {
-    for (let i = 0; i < 100; i++) {
-        let x = Math.random() * CANVAS_WIDTH;
-        let y = Math.random() * CANVAS_HEIGHT;
-        let color = Math.random() > 0.5 ? 'rgb(255, 0, 0)' : 'rgb(0, 0, 255)';
-        organisms.push(new Organism(x, y, color));
-    }
-}
+        animate();
 
-// Function to update all organisms
-function update() {
-    for (let organism of organisms) {
-        organism.update();
-    }
-}
+        // Function to save and load organisms
+        async function saveOrganisms() {
+            const organismsData = organisms.map(org => org.toJSON());
 
-// Function to render all organisms
-function render() {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    for (let organism of organisms) {
-        organism.render();
-    }
-}
+            try {
+                const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
+                    method: 'POST',
+                    body: JSON.stringify(organismsData)
+                });
 
-// Start the simulation
-createOrganisms();
+                const result = await response.json();
+                console.log(result.message);
+            } catch (error) {
+                console.error('Error saving organisms:', error);
+            }
+        }
 
-function animate() {
-    update();
-    render();
-    requestAnimationFrame(animate);
-}
+        async function loadOrganisms() {
+            try {
+                const response = await fetch('/.netlify/functions/saveLoadOrganisms');
+                const organismsData = await response.json();
 
-animate();
+                // Clear existing organisms and replace with loaded ones
+                organisms.length = 0;
+                organismsData.forEach(data => {
+                    organisms.push(Organism.fromJSON(data));
+                });
+
+                console.log('Organisms loaded successfully:', organisms);
+            } catch (error) {
+                console.error('Error loading organisms:', error);
+            }
+        }
     </script>
 </body>
 </html>

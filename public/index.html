@@ -199,40 +199,47 @@
 
         animate();
 
-        // Function to save and load organisms
         async function saveOrganisms() {
             const organismsData = organisms.map(org => org.toJSON());
-
+        
+            const dataToSave = {
+                organisms: organismsData,
+                rlState: {} // Add your RL state data here
+            };
+        
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
                     method: 'POST',
-                    body: JSON.stringify(organismsData)
+                    body: JSON.stringify(dataToSave)
                 });
-
+        
                 const result = await response.json();
                 console.log(result.message);
             } catch (error) {
-                console.error('Error saving organisms:', error);
+                console.error('Error saving data:', error);
             }
         }
-
+        
         async function loadOrganisms() {
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms');
-                const organismsData = await response.json();
+                const data = await response.json();
         
-                // Clear existing organisms and replace with loaded ones
+                // Load organisms
                 organisms.length = 0;
-                organismsData.forEach(data => {
-                    organisms.push(Organism.fromJSON(data));
+                data.organisms.forEach(orgData => {
+                    organisms.push(Organism.fromJSON(orgData));
                 });
         
-                console.log('Organisms loaded successfully:', organisms);
+                // Load RL state if needed
+                // Example: rlState = data.rlState;
         
-                // After loading organisms, start the simulation
-                animate(); // Start or restart the simulation
+                console.log('Data loaded successfully:', data);
+        
+                // Start the simulation after loading
+                animate();
             } catch (error) {
-                console.error('Error loading organisms:', error);
+                console.error('Error loading data:', error);
             }
         }
     </script>

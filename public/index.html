@@ -108,14 +108,22 @@ function render() {
 
 // Function to get a random rainbow color
 function getRandomColor() {
-    const colors = [
-        'rgb(255, 0, 0)',   // Red
-        'rgb(0, 0, 255)',   // Blue
-    ];
+    const colors = {
+        red: 'rgb(255, 0, 0)',   // Red
+        blue: 'rgb(0, 0, 255)'   // Blue
+    };
 
-    return colors[Math.floor(Math.random() * colors.length)];
+    // Convert object keys to an array
+    const colorKeys = Object.keys(colors);
+
+    // Generate a random index based on the length of colorKeys array
+    const randomIndex = Math.floor(Math.random() * colorKeys.length);
+
+    // Get a random color using the random index
+    const randomColorKey = colorKeys[randomIndex];
+    return colors[randomColorKey];
 }
-
+        
 // Animation loop
 function animate() {
     update();

@@ -14,7 +14,7 @@
         <canvas id="gameCanvas" width="625" height="425"></canvas>
         <p><small>made with ❤️</small></p>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script>
         // Constants
         const CELL_SIZE = 10; // Size of each cell in pixels
@@ -113,15 +113,19 @@
         // Array to hold all organisms
         let organisms = [];
 
-        // Function to create initial organisms
         function createOrganisms() {
+            // Initialize seeded random number generator
+            const rng = new Math.seedrandom('seed'); // Replace 'seed' with your desired seed
+        
             for (let i = 0; i < 100; i++) {
-                let x = Math.random() * CANVAS_WIDTH;
-                let y = Math.random() * CANVAS_HEIGHT;
-                let color = Math.random() > 0.5 ? 'rgb(255, 0, 0)' : 'rgb(0, 0, 255)';
+                rng(); // Advance the seedrandom state for diversity
+                let x = rng() * CANVAS_WIDTH;
+                let y = rng() * CANVAS_HEIGHT;
+                let color = rng() > 0.5 ? 'rgb(255, 0, 0)' : 'rgb(0, 0, 255)';
                 organisms.push(new Organism(x, y, color));
             }
         }
+
 
         // Function to update all organisms
         function update() {

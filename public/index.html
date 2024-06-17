@@ -261,11 +261,14 @@
                     return;
                 }
         
+                console.log('Data retrieved from localStorage:', dataString);
+        
                 const data = JSON.parse(dataString);
         
                 organisms.length = 0;
                 data.organisms.forEach(orgData => {
-                    organisms.push(Organism.fromJSON(orgData));
+                    const organism = Organism.fromJSON(orgData);
+                    organisms.push(organism);
                 });
         
                 console.log('Data loaded successfully:', data);
@@ -275,6 +278,7 @@
                 console.error('Error loading data:', error);
             }
         }
+
 
     </script>
 </body>

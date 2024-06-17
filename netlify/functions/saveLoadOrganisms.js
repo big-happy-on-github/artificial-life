@@ -1,5 +1,4 @@
-// saveLoadOrganisms.js
-savedData = []
+let savedData = []; // Define savedData as a local variable
 
 exports.handler = async event => {
     if (event.httpMethod === 'POST') {

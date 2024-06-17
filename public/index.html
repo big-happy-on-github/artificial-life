@@ -190,7 +190,7 @@
             }
         
             // Check if only one color remains
-            if (countDistinctColors() === 1) {
+            if (countDistinctColors() === true) {
                 resetGrid(); // Function to reset grid when one color remains
             }
         }
@@ -198,10 +198,17 @@
         // Function to count distinct colors
         function countDistinctColors() {
             let distinctColors = new Set();
+            let numOrganisms
             for (let organism of organisms) {
                 distinctColors.add(organism.color);
+                numOrganisms++;
             }
-            return distinctColors.size;
+            
+            if (distinctColors.size === 1) {
+                return true;
+            } else if (numOrganisms < 4) {
+                return true;
+            }
         }
         
         // Function to reset grid and start with new organisms

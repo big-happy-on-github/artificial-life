@@ -62,16 +62,19 @@
                 this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
             
                 // Collision detection and handling
-                for (let i = 0; i < organisms.length; i++) {
-                    for (let j = i + 1; j < organisms.length; j++) {
-                        const organism1 = organisms[i];
-                        const organism2 = organisms[j];
-                        if (organism1 !== this && organism1.isCollidingWith(organism2)) {
-                            if ((organism1.color === 'rgb(255, 0, 0)' && organism2.color === 'rgb(0, 0, 255)') ||
-                                (organism1.color === 'rgb(0, 0, 255)' && organism2.color === 'rgb(255, 0, 0)')) {
+                const allOrganismsInfo = Organism.getOrganismsInformation();
+                for (let info of allOrganismsInfo) {
+                    if (info.x !== this.x || info.y !== this.y) {
+                        // Check collision with other organisms
+                        if (this.isCollidingWith(info)) {
+                            // Handle collision based on color
+                            // Example collision handling logic
+                            if ((this.color === 'rgb(255, 0, 0)' && info.color === 'rgb(0, 0, 255)') ||
+                                (this.color === 'rgb(0, 0, 255)' && info.color === 'rgb(255, 0, 0)')) {
                                 // Handle collision (both organisms die)
-                                organism1.remove();
-                                organism2.remove();
+                                this.remove();
+                                // Find and remove the collided organism
+                                organisms = organisms.filter(org => !(org.x === info.x && org.y === info.y));
                             }
                         }
                     }
@@ -84,6 +87,10 @@
             
                 // Update RL training state
                 this.updateQValues(); // Example method call
+            }
+        
+            static getOrganismsInformation() {
+                return organisms.map(org => ({ x: org.x, y: org.y, color: org.color }));
             }
         
             updateQValues() {
@@ -113,12 +120,9 @@
                             (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(0, 0, 255)')) {
                             reward += 1; // Reward for touching the same color
                             action = this.color; // Action is to touch the same color
-                        } else if (this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') {
-                            reward -= 10; // Penalty for touching blue (run away from blue)
-                            action = 'rgb(0, 0, 255)'; // Action is to move away from blue
-                        } else if (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)') {
-                            reward += 10; // Reward for touching red (move towards red)
-                            action = 'rgb(255, 0, 0)'; // Action is to move towards red
+                        } else {
+                            reward -= 100; // Reward for touching the same color
+                            action = this.color; // Action is to touch the same color
                         }
                     }
                 }

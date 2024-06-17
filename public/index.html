@@ -95,8 +95,10 @@
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
 
-                if (reward > 0 || reward < 0) {
+                if (reward > 0 && reward != 0) {
                     console.log("Reward:", this);
+                } else if (reward < 0 && reward != 0) {
+                    console.log("Lose reward:", this);
                 }
             }
 

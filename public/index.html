@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artificial Organisms</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Artificial Organisms</h1>
-        <p>made solely by lim</p>
+        <p>Made solely by lim</p>
         <h3>WATCH THE CHAOS</h3>
         <canvas id="gameCanvas" width="625" height="425"></canvas>
-        <p><small>made with ❤️</small></p>
+        <p><small>Made with ❤️</small></p>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script>
         // Constants
@@ -57,8 +58,8 @@
                 }
             
                 // Ensure organism stays within canvas bounds
-                this.x = Math.floor(Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x)));
-                this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
+                this.x = Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x));
+                this.y = Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y));
             
                 // Collision detection and handling
                 for (let i = 0; i < organisms.length; i++) {
@@ -96,7 +97,7 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-                if (reward != 0) { console.log(reward+"-"+action); }
+                if (reward !== 0) { console.log(reward + '-' + action); }
             }
 
             calculateReward() {
@@ -205,7 +206,7 @@
         
             const dataToSave = {
                 organisms: organismsData,
-                rlState: organisms.toJSON()
+                rlState: organisms.map(org => org.qValues) // Corrected to store qValues array
             };
         
             try {
@@ -231,7 +232,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                    });
+                });
                 const data = await response.json();
 
                 organisms.length = 0;

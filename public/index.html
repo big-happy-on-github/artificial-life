@@ -38,41 +38,7 @@
                 this.reward = 0; // Example: Reward for RL training
                 this.qValues = {}; // Example: Q-values for RL training
             }
-        
-            getState() {
-                // Define state representation (e.g., position, color, surroundings)
-                return {
-                    x: this.x,
-                    y: this.y,
-                    color: this.color
-                };
-            }
-        
-            chooseAction() {
-                // Implement action selection based on Q-values (e.g., ε-greedy policy)
-                // Choose action based on current state and Q-values
-                // Update this.direction based on chosen action
-                let state = this.getState();
-                let action;
-                if (Math.random() < 0.1) { // Exploration: 10% of the time, choose random action
-                    action = Math.random() * 4 | 0; // Random action (0-3)
-                } else { // Exploitation: Choose action with highest Q-value
-                    action = Object.keys(this.qTable[state]).reduce((a, b) => this.qTable[state][a] > this.qTable[state][b] ? a : b);
-                }
-                this.direction = action;
-                return action;
-            }
-        
-            updateQValues(newState, reward, alpha = 0.1, gamma = 0.9) {
-                // Update Q-values using Q-learning algorithm
-                let currentState = this.getState();
-                let currentQ = this.qTable[currentState] && this.qTable[currentState][this.direction] ? this.qTable[currentState][this.direction] : 0;
-                let maxFutureQ = Math.max(...Object.values(this.qTable[newState] || {}).map(v => v || 0));
-                let newQ = currentQ + alpha * (reward + gamma * maxFutureQ - currentQ);
-                this.qTable[currentState] = this.qTable[currentState] || {};
-                this.qTable[currentState][this.direction] = newQ;
-            }
-        
+
             update() {
                 // Move organism based on current direction
                 switch (this.direction) {
@@ -89,11 +55,11 @@
                         this.x -= this.speed;
                         break;
                 }
-        
+
                 // Ensure organism stays within canvas bounds
                 this.x = Math.floor(Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x)));
                 this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
-        
+
                 // Collision detection and handling
                 for (let other of organisms) {
                     if (other !== this) {
@@ -103,38 +69,46 @@
                                 // Handle collision (both organisms die)
                                 this.remove();
                                 other.remove();
-                            } else {
-                                // No collision penalty (reward for not colliding)
-                                this.updateQValues(this.getState(), 1); // Reward for surviving
                             }
                         }
                     }
                 }
-        
+
                 // Randomly change direction sometimes
                 if (Math.random() < 0.01) {
                     this.direction = Math.random() * 4 | 0;
                 }
+
+                // Update RL training state
+                this.updateQValues(); // Example method call
             }
-        
+
+            updateQValues() {
+                // Example logic accessing this.qValues
+                if (this.qValues && Object.keys(this.qValues).length > 0) {
+                    // Access or manipulate this.qValues
+                    console.log('Updating Q-Values for organism:', this);
+                }
+            }
+
             render() {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
             }
-        
+
             isCollidingWith(other) {
                 return this.x < other.x + CELL_SIZE &&
                        this.x + CELL_SIZE > other.x &&
                        this.y < other.y + CELL_SIZE &&
                        this.y + CELL_SIZE > other.y;
             }
-        
+
             remove() {
                 // Remove organism from simulation
                 let index = organisms.indexOf(this);
                 organisms.splice(index, 1);
             }
-        
+
             toJSON() {
                 return {
                     x: this.x,
@@ -144,7 +118,7 @@
                     qValues: this.qValues // Include RL training state
                 };
             }
-        
+
             static fromJSON(data) {
                 const { x, y, color, reward, qValues } = data;
                 const organism = new Organism(x, y, color);
@@ -169,8 +143,6 @@
                 organisms.push(new Organism(x, y, color));
             }
         }
-
-
 
         // Function to update all organisms
         function update() {
@@ -199,45 +171,41 @@
 
         animate();
 
+        // Function to save and load organisms
         async function saveOrganisms() {
             const organismsData = organisms.map(org => org.toJSON());
-        
+
             const dataToSave = {
                 organisms: organismsData,
-                rlState: {} // Add your RL state data here
+                rlState: {} // Adjust as needed
             };
-        
+
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
                     method: 'POST',
                     body: JSON.stringify(dataToSave)
                 });
-        
+
                 const result = await response.json();
                 console.log(result.message);
             } catch (error) {
                 console.error('Error saving data:', error);
             }
         }
-        
+
         async function loadOrganisms() {
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms');
                 const data = await response.json();
-        
-                // Load organisms
+
                 organisms.length = 0;
                 data.organisms.forEach(orgData => {
                     organisms.push(Organism.fromJSON(orgData));
                 });
-        
-                // Load RL state if needed
-                // Example: rlState = data.rlState;
-        
+
                 console.log('Data loaded successfully:', data);
-        
-                // Start the simulation after loading
-                animate();
+
+                animate(); // Ensure animate() is called after loading
             } catch (error) {
                 console.error('Error loading data:', error);
             }

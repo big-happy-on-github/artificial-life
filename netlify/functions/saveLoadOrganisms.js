@@ -1,11 +1,11 @@
-let savedData = []; // Define savedData as a local variable
+let savedData = { organisms: [], rlState: {} };
 
 exports.handler = async event => {
     if (event.httpMethod === 'POST') {
         savedData = JSON.parse(event.body);
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Organisms data saved successfully' })
+            body: JSON.stringify({ message: 'Data saved successfully' })
         };
     } else if (event.httpMethod === 'GET') {
         return {

@@ -205,12 +205,15 @@
         
             const dataToSave = {
                 organisms: organismsData,
-                rlState: {} // Include your actual RL state here
+                rlState: {Organisms.toJSON()}
             };
         
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(dataToSave)
                 });
         
@@ -223,7 +226,12 @@
         
         async function loadOrganisms() {
             try {
-                const response = await fetch('/.netlify/functions/saveLoadOrganisms');
+                const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                    });
                 const data = await response.json();
 
                 organisms.length = 0;

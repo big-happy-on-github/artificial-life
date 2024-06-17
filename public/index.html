@@ -94,30 +94,19 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-
-                if (reward > 0 && reward != 0) {
-                    console.log("Reward:", this);
-                } else if (reward < 0 && reward != 0) {
-                    console.log("Lose reward:", this);
-                }
             }
 
             calculateReward() {
                 // Example: Calculate reward based on environment or interaction
                 let reward = 0;
         
-                // Example: Reward based on distance from a goal (hypothetical goal coordinates)
-                const goalX = CANVAS_WIDTH / 2;
-                const goalY = CANVAS_HEIGHT / 2;
-                const distanceToGoal = Math.sqrt((this.x - goalX) ** 2 + (this.y - goalY) ** 2);
-                reward += 10 / distanceToGoal; // Higher reward for being closer to the goal
-        
                 // Example: Reward based on interactions with other organisms
                 for (let other of organisms) {
                     if (other !== this && this.isCollidingWith(other)) {
-                        if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
-                            (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
-                            reward += 5; // Example: Reward for specific interactions
+                        if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') || (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
+                            reward -= 10;
+                        } else if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(255, 0, 0)') || (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(0, 0, 255)')) {
+                            reward += 5
                         }
                     }
                 }

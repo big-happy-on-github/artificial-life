@@ -108,11 +108,12 @@ function render() {
 
 // Function to get a random rainbow color
 function getRandomColor() {
-    const h = Math.floor(Math.random() * 360); // Hue between 0 and 360
-    const s = '100%'; // Saturation
-    const l = '50%'; // Lightness
+    const colors = [
+        'rgb(255, 0, 0)',   // Red
+        'rgb(0, 0, 255)',   // Blue
+    ];
 
-    return `hsl(${h},${s},${l})`;
+    return colors[Math.floor(Math.random() * colors.length)];
 }
 
 // Animation loop

@@ -61,14 +61,16 @@
                 this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
             
                 // Collision detection and handling
-                for (let other of organisms) {
-                    if (other !== this) {
-                        if (this.isCollidingWith(other)) {
-                            if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
-                                (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
+                for (let i = 0; i < organisms.length; i++) {
+                    for (let j = i + 1; j < organisms.length; j++) {
+                        const organism1 = organisms[i];
+                        const organism2 = organisms[j];
+                        if (organism1 !== this && organism1.isCollidingWith(organism2)) {
+                            if ((organism1.color === 'rgb(255, 0, 0)' && organism2.color === 'rgb(0, 0, 255)') ||
+                                (organism1.color === 'rgb(0, 0, 255)' && organism2.color === 'rgb(255, 0, 0)')) {
                                 // Handle collision (both organisms die)
-                                this.remove();
-                                other.remove();
+                                organism1.remove();
+                                organism2.remove();
                             }
                         }
                     }
@@ -83,7 +85,6 @@
                 this.updateQValues(); // Example method call
             }
 
-
             updateQValues() {
                 const action = this.calculateReward().action; // Example: Action based on direction
                 const reward = this.calculateReward().reward; // Example: Calculate reward
@@ -95,7 +96,7 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-                if (reward > 0) {console.log();}
+                if (reward > 0) { console.log(); }
             }
 
             calculateReward() {
@@ -134,7 +135,9 @@
             remove() {
                 // Remove organism from simulation
                 let index = organisms.indexOf(this);
-                organisms.splice(index, 1);
+                if (index !== -1) {
+                    organisms.splice(index, 1);
+                }
             }
 
             toJSON() {

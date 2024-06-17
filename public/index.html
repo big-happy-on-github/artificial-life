@@ -44,33 +44,31 @@ function createGrid() {
 
 // Function to update game state
 function update() {
-    setTimeout(() => {
-        let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(null));
-    
-        // Apply Game of Life rules
-        for (let i = 0; i < ROWS; i++) {
-            for (let j = 0; j < COLS; j++) {
-                let neighbors = countNeighbors(i, j);
-    
-                // Apply rules of Conway's Game of Life
-                if (grid[i][j] !== null) { // Cell has a color
-                    if (neighbors < 2 || neighbors > 3) {
-                        newGrid[i][j] = null; // Remove color (die)
-                    } else {
-                        newGrid[i][j] = grid[i][j]; // Stay with the same color
-                    }
-                } else { // Cell doesn't have a color
-                    if (neighbors === 3) {
-                        newGrid[i][j] = getRandomColor(); // Assign a new color (reproduction)
-                    } else {
-                        newGrid[i][j] = null; // Stay without color
-                    }
+    let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(null));
+
+    // Apply Game of Life rules
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+            let neighbors = countNeighbors(i, j);
+
+            // Apply rules of Conway's Game of Life
+            if (grid[i][j] !== null) { // Cell has a color
+                if (neighbors < 2 || neighbors > 3) {
+                    newGrid[i][j] = null; // Remove color (die)
+                } else {
+                    newGrid[i][j] = grid[i][j]; // Stay with the same color
+                }
+            } else { // Cell doesn't have a color
+                if (neighbors === 3) {
+                    newGrid[i][j] = getRandomColor(); // Assign a new color (reproduction)
+                } else {
+                    newGrid[i][j] = null; // Stay without color
                 }
             }
-       }, 1000);
+        }
     }
 
-    // Update grid to new state
+    // Update grid to new state after all calculations
     grid = newGrid;
 }
 

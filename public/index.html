@@ -38,11 +38,12 @@
             for (let i = 0; i < ROWS; i++) {
                 grid[i] = new Array(COLS);
                 for (let j = 0; j < COLS; j++) {
-                    grid[i][j] = Math.random() > 0.5 ? true : false; // Randomly initialize cells alive or dead
+                    grid[i][j] = Math.random() > 0.8 ? true : false; // Adjust the probability here (e.g., 0.8 for fewer initial cells)
                 }
             }
             return grid;
         }
+
         
         // Function to update game state
         function update() {

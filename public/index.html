@@ -206,9 +206,9 @@
         function render() {
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
             for (let organism of organisms) {
-                organism.render();
+                organism.render(); // Render each organism
             }
-            saveOrganisms();
+            saveOrganisms(); // Save after rendering
         }
         
         // Start the simulation
@@ -224,12 +224,12 @@
         
         async function saveOrganisms() {
             const organismsData = organisms.map(org => org.toJSON());
-          
+        
             const dataToSave = {
                 organisms: organismsData,
-                rlState: Organism.toJSON()
+                rlState: organisms.toJSON() // <-- This seems incorrect, it should be an array of objects
             };
-          
+        
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
                     method: 'POST',
@@ -238,14 +238,14 @@
                     },
                     body: JSON.stringify(dataToSave)
                 });
-          
+        
                 const result = await response.json();
-          
+        
             } catch (error) {
                 console.error('Error saving data:', error);
             }
         }
-        
+
         async function loadOrganisms() {
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {

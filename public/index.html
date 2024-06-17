@@ -84,11 +84,42 @@
             }
 
             updateQValues() {
-                // Example logic accessing this.qValues
-                if (this.qValues && Object.keys(this.qValues).length > 0) {
-                    // Access or manipulate this.qValues
-                    console.log('Updating Q-Values for organism:', this);
+                const action = this.direction; // Example: Action based on direction
+                const reward = this.calculateReward(); // Example: Calculate reward
+        
+                if (!this.qValues[action]) {
+                    this.qValues[action] = 0; // Initialize Q-value if not exist
                 }
+        
+                // Example: Update Q-value based on reward and learning rate (alpha)
+                const alpha = 0.1; // Learning rate
+                this.qValues[action] += alpha * (reward - this.qValues[action]);
+        
+                console.log('Updating Q-Values for organism:', this);
+                console.log('Q-Values:', this.qValues);
+            }
+
+            calculateReward() {
+                // Example: Calculate reward based on environment or interaction
+                let reward = 0;
+        
+                // Example: Reward based on distance from a goal (hypothetical goal coordinates)
+                const goalX = CANVAS_WIDTH / 2;
+                const goalY = CANVAS_HEIGHT / 2;
+                const distanceToGoal = Math.sqrt((this.x - goalX) ** 2 + (this.y - goalY) ** 2);
+                reward += 10 / distanceToGoal; // Higher reward for being closer to the goal
+        
+                // Example: Reward based on interactions with other organisms
+                for (let other of organisms) {
+                    if (other !== this && this.isCollidingWith(other)) {
+                        if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
+                            (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
+                            reward += 5; // Example: Reward for specific interactions
+                        }
+                    }
+                }
+        
+                return reward;
             }
 
             render() {
@@ -114,16 +145,14 @@
                     x: this.x,
                     y: this.y,
                     color: this.color,
-                    reward: this.reward, // Include RL training state
-                    qValues: this.qValues // Include RL training state
+                    qValues: this.qValues // Include qValues in JSON serialization
                 };
             }
-
+            
             static fromJSON(data) {
-                const { x, y, color, reward, qValues } = data;
+                const { x, y, color, qValues } = data;
                 const organism = new Organism(x, y, color);
-                organism.reward = reward;
-                organism.qValues = qValues;
+                organism.qValues = qValues; // Restore qValues from JSON data
                 return organism;
             }
         }
@@ -171,28 +200,28 @@
 
         animate();
 
-        // Function to save and load organisms
         async function saveOrganisms() {
             const organismsData = organisms.map(org => org.toJSON());
-
+        
             const dataToSave = {
                 organisms: organismsData,
-                rlState: {} // Adjust as needed
+                rlState: {} // Include your actual RL state here
             };
-
+        
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
                     method: 'POST',
                     body: JSON.stringify(dataToSave)
                 });
-
+        
                 const result = await response.json();
                 console.log(result.message);
+        
             } catch (error) {
                 console.error('Error saving data:', error);
             }
         }
-
+        
         async function loadOrganisms() {
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms');

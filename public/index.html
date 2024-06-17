@@ -44,7 +44,7 @@ function createGrid() {
 
 // Function to update game state
 function update() {
-    setTimeout( => {
+    setTimeout(() => {
         let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(null));
     
         // Apply Game of Life rules

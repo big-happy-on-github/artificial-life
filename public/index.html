@@ -55,8 +55,8 @@
                 }
 
                 // Ensure organism stays within canvas bounds
-                this.x = Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x));
-                this.y = Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y));
+                this.x = Math.floor(Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x)));
+                this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
 
                 // Collision detection and handling
                 for (let other of organisms) {

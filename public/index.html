@@ -85,7 +85,7 @@
 
 
             updateQValues() {
-                const action = this.direction; // Example: Action based on direction
+                const action = this.isCollidingWith(other); // Example: Action based on direction
                 const reward = this.calculateReward(); // Example: Calculate reward
         
                 if (!this.qValues[action]) {
@@ -95,6 +95,7 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
+                if (reward > 0) {console.log();)
             }
 
             calculateReward() {

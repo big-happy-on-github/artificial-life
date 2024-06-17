@@ -35,8 +35,45 @@
                 this.color = color;
                 this.speed = 1; // Speed of movement
                 this.direction = Math.random() * 4 | 0; // Initial random direction (0-3)
+                this.qTable = {}; // Q-table for Q-learning
+                // Initialize Q-values for (state, action) pairs
+                // Example: this.qTable[state][action] = initialQValue;
             }
-
+        
+            getState() {
+                // Define state representation (e.g., position, color, surroundings)
+                return {
+                    x: this.x,
+                    y: this.y,
+                    color: this.color
+                };
+            }
+        
+            chooseAction() {
+                // Implement action selection based on Q-values (e.g., ε-greedy policy)
+                // Choose action based on current state and Q-values
+                // Update this.direction based on chosen action
+                let state = this.getState();
+                let action;
+                if (Math.random() < 0.1) { // Exploration: 10% of the time, choose random action
+                    action = Math.random() * 4 | 0; // Random action (0-3)
+                } else { // Exploitation: Choose action with highest Q-value
+                    action = Object.keys(this.qTable[state]).reduce((a, b) => this.qTable[state][a] > this.qTable[state][b] ? a : b);
+                }
+                this.direction = action;
+                return action;
+            }
+        
+            updateQValues(newState, reward, alpha = 0.1, gamma = 0.9) {
+                // Update Q-values using Q-learning algorithm
+                let currentState = this.getState();
+                let currentQ = this.qTable[currentState] && this.qTable[currentState][this.direction] ? this.qTable[currentState][this.direction] : 0;
+                let maxFutureQ = Math.max(...Object.values(this.qTable[newState] || {}).map(v => v || 0));
+                let newQ = currentQ + alpha * (reward + gamma * maxFutureQ - currentQ);
+                this.qTable[currentState] = this.qTable[currentState] || {};
+                this.qTable[currentState][this.direction] = newQ;
+            }
+        
             update() {
                 // Move organism based on current direction
                 switch (this.direction) {
@@ -53,11 +90,11 @@
                         this.x -= this.speed;
                         break;
                 }
-
+        
                 // Ensure organism stays within canvas bounds
                 this.x = Math.floor(Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x)));
                 this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
-
+        
                 // Collision detection and handling
                 for (let other of organisms) {
                     if (other !== this) {
@@ -67,35 +104,38 @@
                                 // Handle collision (both organisms die)
                                 this.remove();
                                 other.remove();
+                            } else {
+                                // No collision penalty (reward for not colliding)
+                                this.updateQValues(this.getState(), 1); // Reward for surviving
                             }
                         }
                     }
                 }
-
+        
                 // Randomly change direction sometimes
                 if (Math.random() < 0.01) {
                     this.direction = Math.random() * 4 | 0;
                 }
             }
-
+        
             render() {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
             }
-
+        
             isCollidingWith(other) {
                 return this.x < other.x + CELL_SIZE &&
                        this.x + CELL_SIZE > other.x &&
                        this.y < other.y + CELL_SIZE &&
                        this.y + CELL_SIZE > other.y;
             }
-
+        
             remove() {
                 // Remove organism from simulation
                 let index = organisms.indexOf(this);
                 organisms.splice(index, 1);
             }
-
+        
             toJSON() {
                 return {
                     x: this.x,
@@ -103,7 +143,7 @@
                     color: this.color
                 };
             }
-
+        
             static fromJSON(data) {
                 const { x, y, color } = data;
                 return new Organism(x, y, color);

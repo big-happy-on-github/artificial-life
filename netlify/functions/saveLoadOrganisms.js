@@ -1,4 +1,4 @@
-let savedData = { organisms: [], rlState: {} };
+let savedData = { organisms: [], rlState: {} }; // Define savedData as a local variable
 
 exports.handler = async event => {
     if (event.httpMethod === 'POST') {

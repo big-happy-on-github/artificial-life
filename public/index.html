@@ -23,11 +23,11 @@
         const CANVAS_HEIGHT = 425;
         const ROWS = Math.floor(CANVAS_HEIGHT / CELL_SIZE);
         const COLS = Math.floor(CANVAS_WIDTH / CELL_SIZE);
-
+        
         // Canvas and context setup
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-
+        
         // Define organism class
         class Organism {
             constructor(x, y, color) {
@@ -39,7 +39,7 @@
                 this.reward = 0; // Example: Reward for RL training
                 this.qValues = {}; // Example: Q-values for RL training
             }
-
+        
             update() {
                 // Move organism based on current direction
                 switch (this.direction) {
@@ -58,8 +58,8 @@
                 }
             
                 // Ensure organism stays within canvas bounds
-                this.x = Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x));
-                this.y = Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y));
+                this.x = Math.floor(Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x)));
+                this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
             
                 // Collision detection and handling
                 for (let i = 0; i < organisms.length; i++) {
@@ -85,7 +85,7 @@
                 // Update RL training state
                 this.updateQValues(); // Example method call
             }
-
+        
             updateQValues() {
                 const action = this.calculateReward().action; // Example: Action based on direction
                 const reward = this.calculateReward().reward; // Example: Calculate reward
@@ -97,9 +97,9 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-                if (reward !== 0) { console.log(reward + '-' + action); }
+                if (reward != 0) { console.log(reward+"-"+action); }
             }
-
+        
             calculateReward() {
                 let reward = 0;
                 let otherColor;
@@ -120,19 +120,19 @@
             
                 return { reward: reward, action: otherColor };
             }
-
+        
             render() {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);
             }
-
+        
             isCollidingWith(other) {
                 return this.x < other.x + CELL_SIZE &&
                        this.x + CELL_SIZE > other.x &&
                        this.y < other.y + CELL_SIZE &&
                        this.y + CELL_SIZE > other.y;
             }
-
+        
             remove() {
                 // Remove organism from simulation
                 let index = organisms.indexOf(this);
@@ -140,7 +140,7 @@
                     organisms.splice(index, 1);
                 }
             }
-
+        
             toJSON() {
                 return {
                     x: this.x,
@@ -157,15 +157,15 @@
                 return organism;
             }
         }
-
+        
         // Array to hold all organisms
         let organisms = [];
-
+        
         function createOrganisms() {
             // Initialize seeded random number generator
             const seed = 'replace-with-your-seed'; // Replace with your desired seed value
             const rng = new Math.seedrandom(seed);
-        
+          
             for (let i = 0; i < 100; i++) {
                 let x = rng() * CANVAS_WIDTH;
                 let y = rng() * CANVAS_HEIGHT;
@@ -173,14 +173,35 @@
                 organisms.push(new Organism(x, y, color));
             }
         }
-
+        
         // Function to update all organisms
         function update() {
             for (let organism of organisms) {
                 organism.update();
             }
+        
+            // Check if only one color remains
+            if (countDistinctColors() === 1) {
+                resetGrid(); // Function to reset grid when one color remains
+            }
         }
-
+        
+        // Function to count distinct colors
+        function countDistinctColors() {
+            let distinctColors = new Set();
+            for (let organism of organisms) {
+                distinctColors.add(organism.color);
+            }
+            return distinctColors.size;
+        }
+        
+        // Function to reset grid and start with new organisms
+        function resetGrid() {
+            organisms.length = 0; // Clear organisms array
+            // Reinitialize the grid with new organisms or logic as needed
+            createOrganisms();
+        }
+        
         // Function to render all organisms
         function render() {
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -189,26 +210,26 @@
             }
             saveOrganisms();
         }
-
+        
         // Start the simulation
         createOrganisms();
-
+        
         function animate() {
             update();
             render();
             requestAnimationFrame(animate);
         }
-
+        
         animate();
-
+        
         async function saveOrganisms() {
             const organismsData = organisms.map(org => org.toJSON());
-        
+          
             const dataToSave = {
                 organisms: organismsData,
-                rlState: organisms.map(org => org.qValues) // Corrected to store qValues array
+                rlState: organisms.toJSON()
             };
-        
+          
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
                     method: 'POST',
@@ -217,9 +238,9 @@
                     },
                     body: JSON.stringify(dataToSave)
                 });
-        
+          
                 const result = await response.json();
-        
+          
             } catch (error) {
                 console.error('Error saving data:', error);
             }
@@ -232,16 +253,16 @@
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                });
+                    });
                 const data = await response.json();
-
+        
                 organisms.length = 0;
                 data.organisms.forEach(orgData => {
                     organisms.push(Organism.fromJSON(orgData));
                 });
-
+        
                 console.log('Data loaded successfully:', data);
-
+        
                 animate(); // Ensure animate() is called after loading
             } catch (error) {
                 console.error('Error loading data:', error);

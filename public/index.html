@@ -4,25 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artificial Organisms</title>
-    <style>
-        .container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        canvas {
-            border: 1px solid black;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/styles.css" />
 </head>
-<body>
+<body onload="loadOrganisms();">
     <div class="container">
         <h1>Artificial Organisms</h1>
         <p>made solely by lim</p>
         <h3>WATCH THE CHAOS</h3>
         <canvas id="gameCanvas" width="625" height="425"></canvas>
         <p><small>made with ❤️</small></p>
-        <button onclick="saveOrganisms()">Save Organisms</button>
-        <button onclick="loadOrganisms()">Load Organisms</button>
     </div>
 
     <script>
@@ -192,6 +182,8 @@
                 console.error('Error loading organisms:', error);
             }
         }
+
+        saveOrganisms();
     </script>
 </body>
 </html>

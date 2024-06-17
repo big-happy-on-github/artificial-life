@@ -246,16 +246,7 @@
             };
         
             try {
-                const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(dataToSave)
-                });
-        
-                const result = await response.json();
-        
+                localStorage.setItem("data", dataToSave);
             } catch (error) {
                 console.error('Error saving data:', error);
             }
@@ -263,13 +254,7 @@
 
         async function loadOrganisms() {
             try {
-                const response = await fetch('/.netlify/functions/saveLoadOrganisms', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                    });
-                const data = await response.json();
+                const data = localStorage.getItem("data");
         
                 organisms.length = 0;
                 data.organisms.forEach(orgData => {

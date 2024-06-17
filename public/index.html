@@ -85,8 +85,8 @@
 
 
             updateQValues() {
-                const action = this.isCollidingWith(other); // Example: Action based on direction
-                const reward = this.calculateReward(); // Example: Calculate reward
+                const action = this.isCollidingWith().action; // Example: Action based on direction
+                const reward = this.calculateReward().reward; // Example: Calculate reward
         
                 if (!this.qValues[action]) {
                     this.qValues[action] = 0; // Initialize Q-value if not exist
@@ -100,20 +100,23 @@
 
             calculateReward() {
                 let reward = 0;
+                let otherColor;
             
                 for (let other of organisms) {
                     if (other !== this && this.isCollidingWith(other)) {
                         if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(255, 0, 0)') ||
                             (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(0, 0, 255)')) {
                             reward += 1; // Reward for touching the same color
+                            otherColor = this.color;
                         } else if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
                                    (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
                             reward -= 10; // Penalty for touching a different color (kill penalty)
+                            otherColor = other.color;
                         }
                     }
                 }
             
-                return reward;
+                return { reward: reward, action: otherColor };
             }
 
             render() {

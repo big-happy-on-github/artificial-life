@@ -35,9 +35,8 @@
                 this.color = color;
                 this.speed = 1; // Speed of movement
                 this.direction = Math.random() * 4 | 0; // Initial random direction (0-3)
-                this.qTable = {}; // Q-table for Q-learning
-                // Initialize Q-values for (state, action) pairs
-                // Example: this.qTable[state][action] = initialQValue;
+                this.reward = 0; // Example: Reward for RL training
+                this.qValues = {}; // Example: Q-values for RL training
             }
         
             getState() {
@@ -140,13 +139,18 @@
                 return {
                     x: this.x,
                     y: this.y,
-                    color: this.color
+                    color: this.color,
+                    reward: this.reward, // Include RL training state
+                    qValues: this.qValues // Include RL training state
                 };
             }
         
             static fromJSON(data) {
-                const { x, y, color } = data;
-                return new Organism(x, y, color);
+                const { x, y, color, reward, qValues } = data;
+                const organism = new Organism(x, y, color);
+                organism.reward = reward;
+                organism.qValues = qValues;
+                return organism;
             }
         }
 

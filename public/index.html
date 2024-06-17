@@ -55,11 +55,11 @@
                         this.x -= this.speed;
                         break;
                 }
-
+            
                 // Ensure organism stays within canvas bounds
                 this.x = Math.floor(Math.max(0, Math.min(CANVAS_WIDTH - CELL_SIZE, this.x)));
                 this.y = Math.floor(Math.max(0, Math.min(CANVAS_HEIGHT - CELL_SIZE, this.y)));
-
+            
                 // Collision detection and handling
                 for (let other of organisms) {
                     if (other !== this) {
@@ -73,15 +73,16 @@
                         }
                     }
                 }
-
+            
                 // Randomly change direction sometimes
                 if (Math.random() < 0.01) {
                     this.direction = Math.random() * 4 | 0;
                 }
-
+            
                 // Update RL training state
                 this.updateQValues(); // Example method call
             }
+
 
             updateQValues() {
                 const action = this.direction; // Example: Action based on direction
@@ -97,20 +98,20 @@
             }
 
             calculateReward() {
-                // Example: Calculate reward based on environment or interaction
                 let reward = 0;
-        
-                // Example: Reward based on interactions with other organisms
+            
                 for (let other of organisms) {
                     if (other !== this && this.isCollidingWith(other)) {
-                        if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') || (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
-                            reward -= 10;
-                        } else if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(255, 0, 0)') || (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(0, 0, 255)')) {
-                            reward += 5
+                        if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(255, 0, 0)') ||
+                            (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(0, 0, 255)')) {
+                            reward += 1; // Reward for touching the same color
+                        } else if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
+                                   (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
+                            reward -= 10; // Penalty for touching a different color (kill penalty)
                         }
                     }
                 }
-        
+            
                 return reward;
             }
 

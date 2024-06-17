@@ -4,16 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artificial Organisms</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Artificial Organisms</h1>
         <p>made solely by lim</p>
         <h3>WATCH THE CHAOS</h3>
-
         <canvas id="gameCanvas" width="800" height="600"></canvas>
-
         <p><small>made with ❤️</small></p>
     </div>
 
@@ -24,36 +26,35 @@
         const CANVAS_HEIGHT = document.getElementById("gameCanvas").height;
         const ROWS = CANVAS_HEIGHT / CELL_SIZE;
         const COLS = CANVAS_WIDTH / CELL_SIZE;
-        
+
         // Canvas and context setup
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        
+
         // Game state
         let grid = createGrid();
-        
+
         // Function to create initial grid
         function createGrid() {
             let grid = new Array(ROWS);
             for (let i = 0; i < ROWS; i++) {
                 grid[i] = new Array(COLS);
                 for (let j = 0; j < COLS; j++) {
-                    grid[i][j] = Math.random() > 0.8 ? true : false; // Adjust the probability here (e.g., 0.8 for fewer initial cells)
+                    grid[i][j] = Math.random() > 0.5 ? true : false; // Randomly initialize cells alive or dead
                 }
             }
             return grid;
         }
 
-        
         // Function to update game state
         function update() {
-            let newGrid = createGrid();
-        
+            let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(false));
+
             // Apply Game of Life rules
             for (let i = 0; i < ROWS; i++) {
                 for (let j = 0; j < COLS; j++) {
                     let neighbors = countNeighbors(i, j);
-        
+
                     // Apply rules of Conway's Game of Life
                     if (grid[i][j]) { // Alive cell
                         if (neighbors < 2 || neighbors > 3) {
@@ -68,19 +69,13 @@
                             newGrid[i][j] = false; // Stay dead
                         }
                     }
-        
-                    // Randomly change color
-                    if (newGrid[i][j]) {
-                        ctx.fillStyle = getRandomColor(); // Get random rainbow color
-                        ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                    }
                 }
             }
-        
+
             // Update grid to new state
             grid = newGrid;
         }
-        
+
         // Function to count neighbors
         function countNeighbors(x, y) {
             let count = 0;
@@ -89,7 +84,7 @@
                     if (!(i === 0 && j === 0)) {
                         let neighborX = x + i;
                         let neighborY = y + j;
-        
+
                         if (neighborX >= 0 && neighborX < ROWS && neighborY >= 0 && neighborY < COLS) {
                             if (grid[neighborX][neighborY]) {
                                 count++;
@@ -100,22 +95,37 @@
             }
             return count;
         }
-        
+
+        // Function to render the grid
+        function render() {
+            ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Clear the canvas
+
+            for (let i = 0; i < ROWS; i++) {
+                for (let j = 0; j < COLS; j++) {
+                    if (grid[i][j]) {
+                        ctx.fillStyle = getRandomColor(); // Get random rainbow color
+                        ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    }
+                }
+            }
+        }
+
         // Function to get a random rainbow color
         function getRandomColor() {
             const h = Math.floor(Math.random() * 360); // Hue between 0 and 360
             const s = '100%'; // Saturation
             const l = '50%'; // Lightness
-        
+
             return `hsl(${h},${s},${l})`;
         }
-        
+
         // Animation loop
         function animate() {
             update();
+            render();
             requestAnimationFrame(animate);
         }
-        
+
         // Start animation
         animate();
     </script>

@@ -95,17 +95,18 @@ function countNeighbors(x, y) {
 // Function to render the grid
 function render() {
     setTimeout(() => {
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Clear the canvas
+        
+    }, 10000);
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Clear the canvas
 
-        for (let i = 0; i < ROWS; i++) {
-            for (let j = 0; j < COLS; j++) {
-                if (grid[i][j] !== null) {
-                    ctx.fillStyle = grid[i][j]; // Use the stored color
-                    ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                }
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+            if (grid[i][j] !== null) {
+                ctx.fillStyle = grid[i][j]; // Use the stored color
+                ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }
-    }, 10000);
+    }
 }
 
 // Function to get a random rainbow color

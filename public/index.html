@@ -115,16 +115,17 @@
 
         function createOrganisms() {
             // Initialize seeded random number generator
-            const rng = new Math.seedrandom('seed'); // Replace 'seed' with your desired seed
+            const seed = 'fuckyou'; // Replace with your desired seed value
+            const rng = new Math.seedrandom(seed);
         
             for (let i = 0; i < 100; i++) {
-                rng(); // Advance the seedrandom state for diversity
                 let x = rng() * CANVAS_WIDTH;
                 let y = rng() * CANVAS_HEIGHT;
                 let color = rng() > 0.5 ? 'rgb(255, 0, 0)' : 'rgb(0, 0, 255)';
                 organisms.push(new Organism(x, y, color));
             }
         }
+
 
 
         // Function to update all organisms
@@ -175,14 +176,17 @@
             try {
                 const response = await fetch('/.netlify/functions/saveLoadOrganisms');
                 const organismsData = await response.json();
-
+        
                 // Clear existing organisms and replace with loaded ones
                 organisms.length = 0;
                 organismsData.forEach(data => {
                     organisms.push(Organism.fromJSON(data));
                 });
-
+        
                 console.log('Organisms loaded successfully:', organisms);
+        
+                // After loading organisms, start the simulation
+                animate(); // Start or restart the simulation
             } catch (error) {
                 console.error('Error loading organisms:', error);
             }

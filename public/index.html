@@ -87,40 +87,45 @@
             }
         
             updateQValues() {
-                const action = this.calculateReward().action; // Example: Action based on direction
-                const reward = this.calculateReward().reward; // Example: Calculate reward
-        
+                const rewardInfo = this.calculateReward();
+                const action = rewardInfo.action;
+                const reward = rewardInfo.reward;
+            
                 if (!this.qValues[action]) {
                     this.qValues[action] = 0; // Initialize Q-value if not exist
                 }
-        
-                // Example: Update Q-value based on reward and learning rate (alpha)
+            
+                // Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-                if (reward != 0) { console.log(reward+"-"+action); }
+            
+                // Log for debugging purposes
+                console.log(`Action: ${action}, Reward: ${reward}, Q-value: ${this.qValues[action]}`);
             }
-        
+
             calculateReward() {
                 let reward = 0;
-                let otherColor;
+                let action = null;
             
                 for (let other of organisms) {
                     if (other !== this && this.isCollidingWith(other)) {
                         if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(255, 0, 0)') ||
                             (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(0, 0, 255)')) {
                             reward += 1; // Reward for touching the same color
-                            otherColor = this.color;
-                        } else if ((this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') ||
-                                   (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)')) {
-                            reward -= 10; // Penalty for touching a different color (kill penalty)
-                            otherColor = other.color;
+                            action = this.color; // Action is to touch the same color
+                        } else if (this.color === 'rgb(255, 0, 0)' && other.color === 'rgb(0, 0, 255)') {
+                            reward -= 10; // Penalty for touching blue (run away from blue)
+                            action = 'rgb(0, 0, 255)'; // Action is to move away from blue
+                        } else if (this.color === 'rgb(0, 0, 255)' && other.color === 'rgb(255, 0, 0)') {
+                            reward += 10; // Reward for touching red (move towards red)
+                            action = 'rgb(255, 0, 0)'; // Action is to move towards red
                         }
                     }
                 }
             
-                return { reward: reward, action: otherColor };
+                return { reward: reward, action: action };
             }
-        
+
             render() {
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x, this.y, CELL_SIZE, CELL_SIZE);

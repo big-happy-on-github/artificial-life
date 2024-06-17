@@ -250,6 +250,7 @@
         
             try {
                 localStorage.setItem("data", JSON.stringify(dataToSave));
+                console.log('Saved');
             } catch (error) {
                 console.error('Error saving data:', error);
             }

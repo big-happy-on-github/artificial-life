@@ -85,7 +85,7 @@
 
 
             updateQValues() {
-                const action = this.isCollidingWith().action; // Example: Action based on direction
+                const action = this.calculateReward().action; // Example: Action based on direction
                 const reward = this.calculateReward().reward; // Example: Calculate reward
         
                 if (!this.qValues[action]) {

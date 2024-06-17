@@ -94,9 +94,10 @@
                 // Example: Update Q-value based on reward and learning rate (alpha)
                 const alpha = 0.1; // Learning rate
                 this.qValues[action] += alpha * (reward - this.qValues[action]);
-        
-                console.log('Updating Q-Values for organism:', this);
-                console.log('Q-Values:', this.qValues);
+
+                if (reward > 0 || reward < 0) {
+                    console.log("Reward:", this);
+                }
             }
 
             calculateReward() {
@@ -215,7 +216,6 @@
                 });
         
                 const result = await response.json();
-                console.log(result.message);
         
             } catch (error) {
                 console.error('Error saving data:', error);

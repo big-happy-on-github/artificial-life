@@ -136,6 +136,7 @@
             for (let organism of organisms) {
                 organism.render();
             }
+            saveOrganisms();
         }
 
         // Start the simulation
@@ -182,8 +183,6 @@
                 console.error('Error loading organisms:', error);
             }
         }
-
-        saveOrganisms();
     </script>
 </body>
 </html>

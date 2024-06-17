@@ -272,12 +272,14 @@
         
                 // Load organisms from saved data
                 data.organisms.forEach(orgData => {
-                    const organism = Organism.fromJSON(orgData);
+                    const { x, y, color, qValues } = orgData;
+                    const organism = new Organism(x, y, color);
+                    organism.qValues = qValues; // Restore Q-values
                     organisms.push(organism);
                 });
         
-                console.log('Data loaded successfully:', data);
-    
+                console.log('Organisms loaded successfully:', organisms);
+        
                 // Clear canvas and start animation loop
                 ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
                 animate(); // Start the animation loop
@@ -286,9 +288,6 @@
                 console.error('Error loading data:', error);
             }
         }
-
-
-
     </script>
 </body>
 </html>

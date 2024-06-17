@@ -238,7 +238,7 @@
         
         animate();
         
-        async function saveOrganisms() {
+        function saveOrganisms() {
             const organismsData = organisms.map(org => org.toJSON());
         
             const dataToSave = {
@@ -246,15 +246,22 @@
             };
         
             try {
-                localStorage.setItem("data", dataToSave);
+                localStorage.setItem("data", JSON.stringify(dataToSave));
             } catch (error) {
                 console.error('Error saving data:', error);
             }
         }
-
-        async function loadOrganisms() {
+        
+        function loadOrganisms() {
             try {
-                const data = localStorage.getItem("data");
+                const dataString = localStorage.getItem("data");
+                if (!dataString) {
+                    // Handle case where no data is found in localStorage
+                    console.log('No data found in localStorage');
+                    return;
+                }
+        
+                const data = JSON.parse(dataString);
         
                 organisms.length = 0;
                 data.organisms.forEach(orgData => {
@@ -268,6 +275,7 @@
                 console.error('Error loading data:', error);
             }
         }
+
     </script>
 </body>
 </html>

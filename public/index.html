@@ -22,56 +22,56 @@
         const CANVAS_HEIGHT = document.getElementById("gameCanvas").height;
         const ROWS = CANVAS_HEIGHT / CELL_SIZE;
         const COLS = CANVAS_WIDTH / CELL_SIZE;
-
+        
         // Canvas and context setup
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-
+        
         // Game state
         let grid = createGrid();
-
+        
         // Function to create initial grid
         function createGrid() {
             let grid = new Array(ROWS);
             for (let i = 0; i < ROWS; i++) {
                 grid[i] = new Array(COLS);
                 for (let j = 0; j < COLS; j++) {
-                    grid[i][j] = Math.random() > 0.5 ? true : false; // Randomly initialize cells alive or dead
+                    grid[i][j] = Math.random() > 0.5 ? getRandomColor() : null; // Initialize with colors or null
                 }
             }
             return grid;
         }
-
+        
         // Function to update game state
         function update() {
-            let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(false));
-
+            let newGrid = new Array(ROWS).fill().map(() => new Array(COLS).fill(null));
+        
             // Apply Game of Life rules
             for (let i = 0; i < ROWS; i++) {
                 for (let j = 0; j < COLS; j++) {
                     let neighbors = countNeighbors(i, j);
-
+        
                     // Apply rules of Conway's Game of Life
-                    if (grid[i][j]) { // Alive cell
+                    if (grid[i][j] !== null) { // Cell has a color
                         if (neighbors < 2 || neighbors > 3) {
-                            newGrid[i][j] = false; // Die (under-population or over-population)
+                            newGrid[i][j] = null; // Remove color (die)
                         } else {
-                            newGrid[i][j] = true; // Stay alive
+                            newGrid[i][j] = grid[i][j]; // Stay with the same color
                         }
-                    } else { // Dead cell
+                    } else { // Cell doesn't have a color
                         if (neighbors === 3) {
-                            newGrid[i][j] = true; // Become alive (reproduction)
+                            newGrid[i][j] = getRandomColor(); // Assign a new color (reproduction)
                         } else {
-                            newGrid[i][j] = false; // Stay dead
+                            newGrid[i][j] = null; // Stay without color
                         }
                     }
                 }
             }
-
+        
             // Update grid to new state
             grid = newGrid;
         }
-
+        
         // Function to count neighbors
         function countNeighbors(x, y) {
             let count = 0;
@@ -80,9 +80,9 @@
                     if (!(i === 0 && j === 0)) {
                         let neighborX = x + i;
                         let neighborY = y + j;
-
+        
                         if (neighborX >= 0 && neighborX < ROWS && neighborY >= 0 && neighborY < COLS) {
-                            if (grid[neighborX][neighborY]) {
+                            if (grid[neighborX][neighborY] !== null) {
                                 count++;
                             }
                         }
@@ -91,37 +91,37 @@
             }
             return count;
         }
-
+        
         // Function to render the grid
         function render() {
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Clear the canvas
-
+        
             for (let i = 0; i < ROWS; i++) {
                 for (let j = 0; j < COLS; j++) {
-                    if (grid[i][j]) {
-                        ctx.fillStyle = getRandomColor(); // Get random rainbow color
+                    if (grid[i][j] !== null) {
+                        ctx.fillStyle = grid[i][j]; // Use the stored color
                         ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     }
                 }
             }
         }
-
+        
         // Function to get a random rainbow color
         function getRandomColor() {
             const h = Math.floor(Math.random() * 360); // Hue between 0 and 360
             const s = '100%'; // Saturation
             const l = '50%'; // Lightness
-
+        
             return `hsl(${h},${s},${l})`;
         }
-
+        
         // Animation loop
         function animate() {
             update();
             render();
             requestAnimationFrame(animate);
         }
-
+        
         // Start animation
         animate();
     </script>

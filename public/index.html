@@ -245,9 +245,7 @@
         function saveOrganisms() {
             const organismsData = organisms;
         
-            const dataToSave = {
-                organisms: organismsData,
-            };
+            const dataToSave = organismsData;
         
             try {
                 localStorage.setItem("data", JSON.stringify(dataToSave));

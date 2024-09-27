@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Improved Tower Defense</title>
+    <title>Liam's TD</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div id="game-container">
         <canvas id="game-canvas"></canvas>
         <div id="hud">
-            <div id="wave">Wave: 1</div>
-            <div id="tower-selection">
-                <button onclick="selectTower('basic')">Basic Tower</button>
-                <button onclick="selectTower('fast')">Fast Tower</button>
-            </div>
+            <div id="wave">lvl 1</div>
+            <div id="currency">$100</div>
+        </div>
+        <div id="tower-selection">
+            <div class="tower" id="basic-tower">Basic Tower - $50</div>
         </div>
     </div>
-    <script src="game.js"></script>
+    <script src="js/game.js"></script>
 </body>
 </html>

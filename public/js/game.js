@@ -155,28 +155,34 @@ class Projectile {
     }
 }
 
-// Tower Placement
-canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    if (currency >= 50) {
-        towers.push(new Tower(x, y, 'basic'));
-        currency -= 50;
-        updateHUD();
-    }
-});
-
 // Tower Selection
 towerSelection.addEventListener('click', (event) => {
     if (event.target.id === 'basic-tower') {
-        // Logic to place a basic tower
+        // Tower Placement
+        canvas.addEventListener('click', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+        
+            if (currency >= 50) {
+                towers.push(new Tower(x, y, 'basic'));
+                currency -= 50;
+                updateHUD();
+            }
+        });
     } else if (event.target.id === 'advanced-tower') {
         if (currency >= 100) {
-            towers.push(new Tower(100, 100, 'advanced'));
-            currency -= 100;
-            updateHUD();
+            canvas.addEventListener('click', (event) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+            
+                if (currency >= 100) {
+                    towers.push(new Tower(x, y, 'advanced'));
+                    currency -= 100;
+                    updateHUD();
+                }
+            });
         }
     }
 });
@@ -212,7 +218,7 @@ function update(deltaTime) {
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `lvl ${wave}`;
-    document.getElementById('lives').textContent = `Lives: ${lives}`;
+    document.getElementById('lives').textContent = `${lives} lives`;
 }
 
 // Spawn enemies for the wave
@@ -251,7 +257,7 @@ function resetGame() {
     towers.length = 0;
     enemies.length = 0;
     projectiles.length = 0;
-    updateHUD();
+    ();
 }
 
 // Initialize the game

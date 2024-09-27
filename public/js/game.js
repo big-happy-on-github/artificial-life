@@ -8,6 +8,7 @@ const towerSelection = document.getElementById('tower-selection');
 // Game State
 let currency = 100;
 let wave = 1;
+let lives = 9;
 const towers = [];
 const enemies = [];
 const projectiles = [];
@@ -18,26 +19,39 @@ canvas.height = 600;
 
 // Game objects
 class Tower {
-    constructor(x, y) {
+    constructor(x, y, type) {
         this.x = x;
         this.y = y;
-        this.range = 150;
-        this.fireRate = 1000;
+        this.type = type;
+        this.level = 1;
+        this.range = type === 'basic' ? 150 : 200;
+        this.fireRate = type === 'basic' ? 1000 : 1500;
         this.lastFired = 0;
+        this.damage = type === 'basic' ? 20 : 35;
     }
 
     draw() {
-        ctx.fillStyle = 'blue';
+        ctx.fillStyle = this.type === 'basic' ? 'blue' : 'green';
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
     shoot(enemy) {
         const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-        projectiles.push(new Projectile(this.x, this.y, angle));
+        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+    }
+
+    upgrade() {
+        if (currency >= 50) {
+            this.level++;
+            this.range += 50;
+            this.fireRate -= 200;
+            this.damage += 10;
+            currency -= 50;
+            updateHUD();
+        }
     }
 
     update(deltaTime) {
-        // Find the nearest enemy within range
         const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
         
         if (nearestEnemy && Date.now() - this.lastFired > this.fireRate) {
@@ -55,11 +69,11 @@ class Tower {
 }
 
 class Enemy {
-    constructor(x, y, speed) {
+    constructor(x, y, speed, health) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        this.health = 100;
+        this.health = health;
     }
 
     draw() {
@@ -69,33 +83,47 @@ class Enemy {
 
     update() {
         this.x += this.speed;
+
+        // Check if the enemy reached the end
+        if (this.x > canvas.width) {
+            this.die(true);
+        }
+
         this.draw();
     }
 
     takeDamage(amount) {
         this.health -= amount;
         if (this.health <= 0) {
-            this.die();
+            this.die(false);
         }
     }
 
-    die() {
-        // Remove enemy from the array
+    die(crossed) {
         const index = enemies.indexOf(this);
         if (index > -1) {
             enemies.splice(index, 1);
-            currency += 10; // Reward for defeating the enemy
+            if (!crossed) {
+                currency += 10; // Reward for defeating the enemy
+            } else {
+                lives--; // Lose a life if the enemy crosses the canvas
+                if (lives <= 0) {
+                    alert('Game Over! You lost all your lives.');
+                    resetGame();
+                }
+            }
             updateHUD();
         }
     }
 }
 
 class Projectile {
-    constructor(x, y, angle) {
+    constructor(x, y, angle, damage) {
         this.x = x;
         this.y = y;
         this.speed = 5;
         this.angle = angle;
+        this.damage = damage;
     }
 
     draw() {
@@ -110,11 +138,10 @@ class Projectile {
         this.y += Math.sin(this.angle) * this.speed;
         this.draw();
 
-        // Check for collisions with enemies
         enemies.forEach(enemy => {
             const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
             if (distance < 20) {
-                enemy.takeDamage(20);
+                enemy.takeDamage(this.damage);
                 this.destroy();
             }
         });
@@ -135,10 +162,37 @@ canvas.addEventListener('click', (event) => {
     const y = event.clientY - rect.top;
 
     if (currency >= 50) {
-        towers.push(new Tower(x, y));
+        towers.push(new Tower(x, y, 'basic'));
         currency -= 50;
         updateHUD();
     }
+});
+
+// Tower Selection
+towerSelection.addEventListener('click', (event) => {
+    if (event.target.id === 'basic-tower') {
+        // Logic to place a basic tower
+    } else if (event.target.id === 'advanced-tower') {
+        if (currency >= 100) {
+            towers.push(new Tower(100, 100, 'advanced'));
+            currency -= 100;
+            updateHUD();
+        }
+    }
+});
+
+// Upgrade towers on click
+canvas.addEventListener('dblclick', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    towers.forEach(tower => {
+        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+        if (distance < 30) {
+            tower.upgrade();
+        }
+    });
 });
 
 // Game Loop
@@ -158,6 +212,24 @@ function update(deltaTime) {
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `lvl ${wave}`;
+    document.getElementById('lives').textContent = `Lives: ${lives}`;
+}
+
+// Spawn enemies for the wave
+function spawnEnemies() {
+    const enemyCount = wave * 5;
+    for (let i = 0; i < enemyCount; i++) {
+        setTimeout(() => {
+            const enemy = new Enemy(0, Math.random() * canvas.height, 1 + wave * 0.1, 100 + wave * 20);
+            enemies.push(enemy);
+        }, i * 1000);
+    }
+}
+
+// Move to the next wave
+function nextWave() {
+    wave++;
+    spawnEnemies();
 }
 
 // Start the game loop
@@ -171,14 +243,18 @@ function gameLoop(timestamp) {
     requestAnimationFrame(gameLoop);
 }
 
-// Spawn enemies periodically
-function spawnEnemies() {
-    setInterval(() => {
-        const enemy = new Enemy(0, Math.random() * canvas.height, 1);
-        enemies.push(enemy);
-    }, 2000);
+// Reset the game
+function resetGame() {
+    currency = 100;
+    wave = 1;
+    lives = 9;
+    towers.length = 0;
+    enemies.length = 0;
+    projectiles.length = 0;
+    updateHUD();
 }
 
 // Initialize the game
 gameLoop();
 spawnEnemies();
+setInterval(nextWave, 30000); // Advance to the next wave every 30 seconds

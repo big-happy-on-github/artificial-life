@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tower Defense</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Improved Tower Defense</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="game-container">
         <canvas id="game-canvas"></canvas>
-        <div id="tower-menu">
-            <button onclick="addTower()">Add Tower</button>
+        <div id="hud">
+            <div id="wave">Wave: 1</div>
+            <div id="tower-selection">
+                <button onclick="selectTower('basic')">Basic Tower</button>
+                <button onclick="selectTower('fast')">Fast Tower</button>
+            </div>
         </div>
     </div>
     <script src="game.js"></script>

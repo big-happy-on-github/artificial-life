@@ -52,9 +52,9 @@ class Tower {
     }
 
     draw() {
-        if (type == '1') {
+        if (this.type == '1') {
             ctx.fillStyle = 'grey';
-        } else if (type == '2') {
+        } else if (this.type == '2') {
             ctx.fillStyle = 'green';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);

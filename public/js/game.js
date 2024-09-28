@@ -347,7 +347,7 @@ function spawnEnemies() {
     const enemyCount = wave * 5;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const enemy = new Enemy(0, Math.random() * canvas.height, 1 + wave * 0.25, 100 + wave * 5);
+            const enemy = new Enemy(0, Math.random() * canvas.height, 1 + wave * 0.25, 100 + wave * 2);
             enemies.push(enemy);
         }, i * 1000);
     }

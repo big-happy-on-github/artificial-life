@@ -200,13 +200,25 @@ canvas.addEventListener('dblclick', (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
+    console.log(`Double-click detected at (${x}, ${y})`);
+
+    let towerUpgraded = false;
+
     towers.forEach(tower => {
         const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-        if (distance < 30) {
+        console.log(`Distance to tower at (${tower.x}, ${tower.y}): ${distance}`);
+        
+        if (distance < 50) { // Increase the threshold from 30 to 50
             tower.upgrade();
+            towerUpgraded = true;
+            console.log('Tower upgraded!');
         }
     });
-});
+
+    if (!towerUpgraded) {
+        console.log('No tower found within range to upgrade.');
+    }
+})
 
 // Start wave button click event
 startWaveButton.addEventListener('click', () => {

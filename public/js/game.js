@@ -28,14 +28,14 @@ class Tower {
         this.y = y;
         this.type = type;
         this.level = 1;
-        this.range = type === 'basic' ? 150 : 200;
-        this.fireRate = type === 'basic' ? 1000 : 1500;
+        this.range = type === '1' ? 150 : 200;
+        this.fireRate = type === '1' ? 1000 : 1500;
         this.lastFired = 0;
-        this.damage = type === 'basic' ? 20 : 35;
+        this.damage = type === '1' ? 20 : 35;
     }
 
     draw() {
-        ctx.fillStyle = this.type === 'basic' ? 'blue' : 'green';
+        ctx.fillStyle = this.type === '1' ? 'blue' : 'green';
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
@@ -178,7 +178,7 @@ class Projectile {
 // Handle tower selection
 towerSelection.addEventListener('click', (event) => {
     if (event.target.classList.contains('tower')) {
-        selectedTowerType = event.target.id === 'basic-tower' ? 'basic' : 'advanced';
+        selectedTowerType = event.target.id === '1-tower' ? '1' : '2';
     }
 });
 
@@ -188,7 +188,7 @@ canvas.addEventListener('click', (event) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        const towerCost = selectedTowerType === 'basic' ? 2 : 3;
+        const towerCost = selectedTowerType === '1' ? 2 : 3;
 
         if (currency >= towerCost) {
             towers.push(new Tower(x, y, selectedTowerType));

@@ -45,9 +45,9 @@ class Tower {
     }
 
     upgrade() {
-        const upgradePrice = 2+this.level
+        const upgradePrice = 1+this.level
         if (alert(`are you sure you want to upgrade this lvl ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
-            if (currency >= upgradePrice && this.level <= 1) {
+            if (currency >= upgradePrice && this.level == 1) {
                 this.level++;
                 this.range += 50;
                 this.fireRate += 200;

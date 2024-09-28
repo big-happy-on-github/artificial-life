@@ -50,33 +50,26 @@ class Tower {
     }
 
     upgrade() {
-        if (this.level > 2) {
-            alert(`no upgrades available past lvl ${this.level}`);
-        } else {
-            const upgradePrice = 1+this.level
-            if (confirm(`are you sure you want to upgrade this lvl ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
-                console.log("confirmed");
-                if (currency >= upgradePrice && this.level == 1) {
-                    console.log("confirmed 2");
-                    this.level++;
-                    this.range += 50;
-                    this.fireRate += 200;
-                    this.damage += 10;
-                    currency -= upgradePrice;
-                    updateHUD();
-                } else if (currency >= upgradePrice && this.level == 2) {
-                    this.level++;
-                    this.range += 50;
-                    this.fireRate += 200;
-                    this.damage += 10;
-                    currency -= upgradePrice;
-                    updateHUD();
-                } else {
-                    alert("not enough money to upgrade...");
-                }
+        if (this.level >= 3) {
+            alert(`No upgrades available past level ${this.level}`);
+            return;
+        }
+    
+        const upgradePrice = 1 + this.level;
+        if (confirm(`Are you sure you want to upgrade this level ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
+            if (currency >= upgradePrice) {
+                this.level++;
+                this.range += 50;
+                this.fireRate -= 200; // Decrease fire rate for faster shooting
+                this.damage += 10;
+                currency -= upgradePrice;
+                updateHUD();
+            } else {
+                alert("Not enough money to upgrade...");
             }
         }
     }
+
 
     update(deltaTime) {
         const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
@@ -249,7 +242,7 @@ startWaveButton.addEventListener('click', () => {
     }
 });
 
-let hoverTarget = null; // Keep track of the hovered tower or enemy
+let hoverTarget;
 
 canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
@@ -286,15 +279,10 @@ function drawTooltip() {
     // Determine if hoverTarget is a tower or an enemy
     let tooltipText;
     if (hoverTarget instanceof Tower) {
-        let hoverTargetType;
-        if (hoverTarget.type = "1") {
-            hoverTargetType = `$${this.price} rascal`;
-        } else if (hoverTarget.type = "2") {
-            hoverTargetType = `$${this.price} liam`;
-        }
-        tooltipText = `${hoverTargetType}\nlvl ${hoverTarget.level}\n${hoverTarget.range} range\n${hoverTarget.damage}dmg\n${hoverTarget.fireRate} fire rate`;
+        let hoverTargetType = hoverTarget.type === "1" ? `$${hoverTarget.price} rascal` : `$${hoverTarget.price} liam`;
+        tooltipText = `${hoverTargetType}\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `enemy\n${hoverTarget.health}hp\n${hoverTarget.speed} speed`;
+        tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
     }
 
     // Draw tooltip background

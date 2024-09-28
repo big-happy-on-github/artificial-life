@@ -355,6 +355,7 @@ function spawnEnemies() {
     setTimeout(() => {
         waveInProgress = false;
         startWaveButton.disabled = false;
+        currency += 3;
         nextWave(); // Move to the next wave after enemies are done spawning
     }, enemyCount * 1000);
 }
@@ -362,7 +363,6 @@ function spawnEnemies() {
 // Move to the next wave
 function nextWave() {
     wave++;
-    currency+=5;
     updateHUD();
 }
 

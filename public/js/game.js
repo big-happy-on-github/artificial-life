@@ -66,12 +66,12 @@ class Tower {
     }
 
     upgrade() {
-        if (this.level >= 3) {
+        if (this.level >= 10) {
             alert(`No upgrades available past level ${this.level}`);
             return;
         }
     
-        const upgradePrice = 1 + this.level;
+        const upgradePrice = this.price * this.level;
         let targetType;
         if (this.type == "1") {
             targetType = `rascal`;

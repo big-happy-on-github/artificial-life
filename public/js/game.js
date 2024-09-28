@@ -256,9 +256,6 @@ function resetGame() {
     updateHUD();
 }
 
-// Initialize the game
-gameLoop();
-
 let lastTime = 0;
 function gameLoop(timestamp) {
     const deltaTime = timestamp - lastTime;
@@ -268,3 +265,6 @@ function gameLoop(timestamp) {
 
     requestAnimationFrame(gameLoop);
 }
+
+// Initialize the game
+gameLoop();

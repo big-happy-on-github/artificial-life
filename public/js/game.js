@@ -309,7 +309,7 @@ function drawTooltip() {
         }
         tooltipText = `${hoverTargetType}\nlvl ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
+        tooltipText = `bad guy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
     }
 
     // Draw tooltip background

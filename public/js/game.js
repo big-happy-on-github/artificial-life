@@ -63,6 +63,8 @@ class Tower {
                 this.damage += 10;
                 currency -= upgradePrice;
                 updateHUD();
+            } else if (this.level > 2) {
+                alert(`no upgrades available past lvl ${this.level}`);
             } else {
                 alert("not enough money to upgrade...");
             }

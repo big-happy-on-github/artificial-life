@@ -364,6 +364,15 @@ function endGame() {
         waveInProgress = false;
         startWaveButton.disabled = false; // Re-enable the start button
         updateHUD();
+    } else {
+        currency = 10;
+        wave = 1;
+        lives = 9;
+        towers.length = 0;
+        enemies.length = 0;
+        projectiles.length = 0;
+        selectedTowerType = null;
+        waveInProgress = false;
     }
 }
 

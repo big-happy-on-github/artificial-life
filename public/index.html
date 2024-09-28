@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>liam's tower defense</title>
     <link rel="stylesheet" href="css/styles.css">
+    <styles>
+        #auto-start-div, #start-wave-button {
+            margin: 5px, 0;
+        }
+    </styles>
 </head>
 <body>
     <div id="game-container">
@@ -19,9 +24,8 @@
             <div class="tower" id="2-tower">$3 liam</div>
         </div>
         <!-- Start Wave Button -->
-        <div>
-            <label for="auto-start">auto start</label>
-            <br>
+        <div id="auto-start-div">
+            <label for="auto-start">auto <br>start</label>
             <input type="checkbox" id="auto-start">
         </div>
         <button id="start-wave-button">start</button>

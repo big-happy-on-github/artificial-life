@@ -28,10 +28,22 @@ class Tower {
         this.y = y;
         this.type = type;
         this.level = 1;
-        this.range = type === '1' ? 150 : 200;
-        this.fireRate = type === '1' ? 1000 : 1500;
+        if (type == '1') {
+            this.damage = 150;
+        } else if (type == '2') {
+            this.damage = 200;
+        }
+        if (type == '1') {
+            this.damage = 1000;
+        } else if (type == '2') {
+            this.damage = 1500;
+        }
         this.lastFired = 0;
-        this.damage = type === '1' ? 20 : 35;
+        if (type == '1') {
+            this.damage = 20;
+        } else if (type == '2') {
+            this.damage = 35;
+        }
         if (type == '1') {
             this.price = 2;
         } else if (type == '2') {
@@ -40,7 +52,11 @@ class Tower {
     }
 
     draw() {
-        ctx.fillStyle = this.type === '1' ? 'blue' : 'green';
+        if (type == '1') {
+            ctx.fillStyle = 'grey';
+        } else if (type == '2') {
+            ctx.fillStyle = 'green';
+        }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
@@ -145,7 +161,7 @@ class Projectile {
     constructor(x, y, angle, damage) {
         this.x = x;
         this.y = y;
-        this.speed = 5;
+        this.speed = 15;
         this.angle = angle;
         this.damage = damage;
     }
@@ -331,7 +347,7 @@ function spawnEnemies() {
     const enemyCount = wave * 5;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const enemy = new Enemy(0, Math.random() * canvas.height, 1 + wave * 0.1, 100 + wave * 20);
+            const enemy = new Enemy(0, Math.random() * canvas.height, 1 + wave * 0.25, 100 + wave * 5);
             enemies.push(enemy);
         }, i * 1000);
     }

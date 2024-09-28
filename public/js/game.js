@@ -125,7 +125,7 @@ class Enemy {
         if (index > -1) {
             enemies.splice(index, 1);
             if (!crossed) {
-                currency += 10;
+                currency += 1;
             } else {
                 lives--;
                 if (lives <= 0) {

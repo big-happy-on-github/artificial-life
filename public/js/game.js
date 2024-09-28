@@ -8,7 +8,7 @@ const towerSelection = document.getElementById('tower-selection');
 const startWaveButton = document.getElementById('start-wave-button');
 
 // Game State
-let currency = 100;
+let currency = 10;
 let wave = 1;
 let lives = 9;
 const towers = [];
@@ -45,13 +45,25 @@ class Tower {
     }
 
     upgrade() {
-        if (currency >= 50) {
-            this.level++;
-            this.range += 50;
-            this.fireRate -= 200;
-            this.damage += 10;
-            currency -= 50;
-            updateHUD();
+        const upgradePrice = 2+this.level
+        if (alert(`are you sure you want to upgrade this lvl ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
+            if (currency >= upgradePrice && this.level <= 1) {
+                this.level++;
+                this.range += 50;
+                this.fireRate += 200;
+                this.damage += 10;
+                currency -= upgradePrice;
+                updateHUD();
+            } else if (currency >= upgradePrice && this.level == 2) {
+                this.level++;
+                this.range += 50;
+                this.fireRate += 200;
+                this.damage += 10;
+                currency -= upgradePrice;
+                updateHUD();
+            } else {
+                alert("not enough money to upgrade...");
+            }
         }
     }
 
@@ -239,6 +251,7 @@ function spawnEnemies() {
 // Move to the next wave
 function nextWave() {
     wave++;
+    currency+=5;
     updateHUD();
 }
 
@@ -246,7 +259,7 @@ function nextWave() {
 function endGame() {
     alert(`game over! died on lvl ${wave}`);
     if (alert("play again?")) {
-        currency = 100;
+        currency = 10;
         wave = 1;
         lives = 9;
         towers.length = 0;

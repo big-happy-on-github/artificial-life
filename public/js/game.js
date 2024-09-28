@@ -312,7 +312,7 @@ function update(deltaTime) {
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `lvl ${wave}`;
+    waveDisplay.textContent = `wave ${wave}`;
     livesDisplay.textContent = `${lives} lives`;
 }
 
@@ -342,7 +342,7 @@ function nextWave() {
 
 // Reset the game
 function endGame() {
-    alert(`game over! died on lvl ${wave}`);
+    alert(`game over! died on wave ${wave}`);
     if (confirm("play again?")) {
         currency = 10;
         wave = 1;

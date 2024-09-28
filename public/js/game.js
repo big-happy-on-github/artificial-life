@@ -194,31 +194,41 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
-// Upgrade towers on double-click
-canvas.addEventListener('dblclick', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+let lastClickTime = 0;
 
-    console.log(`Double-click detected at (${x}, ${y})`);
+// Custom double-click handler for upgrading towers
+canvas.addEventListener('click', (event) => {
+    const currentTime = new Date().getTime();
+    const timeDifference = currentTime - lastClickTime;
 
-    let towerUpgraded = false;
+    if (timeDifference < 300 && timeDifference > 0) { // Check for a double-click within 300 milliseconds
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
 
-    towers.forEach(tower => {
-        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-        console.log(`Distance to tower at (${tower.x}, ${tower.y}): ${distance}`);
-        
-        if (distance < 50) { // Increase the threshold from 30 to 50
-            tower.upgrade();
-            towerUpgraded = true;
-            console.log('Tower upgraded!');
+        console.log(`Double-click detected at (${x}, ${y})`);
+
+        let towerUpgraded = false;
+
+        towers.forEach(tower => {
+            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+            console.log(`Distance to tower at (${tower.x}, ${tower.y}): ${distance}`);
+            
+            if (distance < 50) { // Increased threshold
+                tower.upgrade();
+                towerUpgraded = true;
+                console.log('Tower upgraded!');
+            }
+        });
+
+        if (!towerUpgraded) {
+            console.log('No tower found within range to upgrade.');
         }
-    });
-
-    if (!towerUpgraded) {
-        console.log('No tower found within range to upgrade.');
     }
-})
+
+    // Update lastClickTime to the current click time
+    lastClickTime = currentTime;
+});
 
 // Start wave button click event
 startWaveButton.addEventListener('click', () => {

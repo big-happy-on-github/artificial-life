@@ -3,6 +3,7 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 const currencyDisplay = document.getElementById('currency');
 const waveDisplay = document.getElementById('wave');
+const livesDisplay = document.getElementById('lives');
 const towerSelection = document.getElementById('tower-selection');
 
 // Game State
@@ -12,6 +13,7 @@ let lives = 9;
 const towers = [];
 const enemies = [];
 const projectiles = [];
+let selectedTowerType = null; // Track the selected tower type
 
 // Canvas settings
 canvas.width = 800;
@@ -84,7 +86,6 @@ class Enemy {
     update() {
         this.x += this.speed;
 
-        // Check if the enemy reached the end
         if (this.x > canvas.width) {
             this.die(true);
         }
@@ -104,9 +105,9 @@ class Enemy {
         if (index > -1) {
             enemies.splice(index, 1);
             if (!crossed) {
-                currency += 10; // Reward for defeating the enemy
+                currency += 10;
             } else {
-                lives--; // Lose a life if the enemy crosses the canvas
+                lives--;
                 if (lives <= 0) {
                     alert('Game Over! You lost all your lives.');
                     resetGame();
@@ -155,39 +156,30 @@ class Projectile {
     }
 }
 
-// Tower Selection
+// Handle tower selection
 towerSelection.addEventListener('click', (event) => {
-    if (event.target.id === 'basic-tower') {
-        // Tower Placement
-        canvas.addEventListener('click', (event) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-        
-            if (currency >= 50) {
-                towers.push(new Tower(x, y, 'basic'));
-                currency -= 50;
-                updateHUD();
-            }
-        });
-    } else if (event.target.id === 'advanced-tower') {
-        if (currency >= 100) {
-            canvas.addEventListener('click', (event) => {
-                const rect = canvas.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-            
-                if (currency >= 100) {
-                    towers.push(new Tower(x, y, 'advanced'));
-                    currency -= 100;
-                    updateHUD();
-                }
-            });
+    if (event.target.classList.contains('tower')) {
+        selectedTowerType = event.target.id === 'basic-tower' ? 'basic' : 'advanced';
+    }
+});
+
+// Place towers on canvas click
+canvas.addEventListener('click', (event) => {
+    if (selectedTowerType) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const towerCost = selectedTowerType === 'basic' ? 50 : 100;
+
+        if (currency >= towerCost) {
+            towers.push(new Tower(x, y, selectedTowerType));
+            currency -= towerCost;
+            updateHUD();
         }
     }
 });
 
-// Upgrade towers on click
+// Upgrade towers on double-click
 canvas.addEventListener('dblclick', (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -205,20 +197,15 @@ canvas.addEventListener('dblclick', (event) => {
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Update towers
     towers.forEach(tower => tower.update(deltaTime));
-
-    // Update enemies
     enemies.forEach(enemy => enemy.update());
-
-    // Update projectiles
     projectiles.forEach(projectile => projectile.update());
 }
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `lvl ${wave}`;
-    document.getElementById('lives').textContent = `${lives} lives`;
+    livesDisplay.textContent = `${lives} lives`;
 }
 
 // Spawn enemies for the wave
@@ -257,10 +244,11 @@ function resetGame() {
     towers.length = 0;
     enemies.length = 0;
     projectiles.length = 0;
-    ();
+    selectedTowerType = null; // Reset tower selection
+    updateHUD();
 }
 
 // Initialize the game
 gameLoop();
 spawnEnemies();
-setInterval(nextWave, 30000); // Advance to the next wave every 30 seconds
+setInterval(nextWave, 30000);

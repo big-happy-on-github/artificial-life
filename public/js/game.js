@@ -29,14 +29,14 @@ class Tower {
         this.type = type;
         this.level = 1;
         if (type == '1') {
-            this.damage = 150;
+            this.range = 150;
         } else if (type == '2') {
-            this.damage = 200;
+            this.range = 200;
         }
         if (type == '1') {
-            this.damage = 1000;
+            this.fireRate = 1000;
         } else if (type == '2') {
-            this.damage = 1500;
+            this.fireRate = 1500;
         }
         this.lastFired = 0;
         if (type == '1') {
@@ -307,7 +307,7 @@ function drawTooltip() {
         } else if (hoverTarget.type == "2") {
             hoverTargetType = `$${hoverTarget.price} liam`;
         }
-        tooltipText = `${hoverTargetType}\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+        tooltipText = `${hoverTargetType}\nlvl ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
         tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
     }

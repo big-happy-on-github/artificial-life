@@ -73,3 +73,40 @@ body {
 #start-wave-button:hover {
     background-color: #666;
 }
+
+/* Container for the button and auto-start checkbox */
+#controls-container {
+    display: flex;
+    align-items: center; /* Align items on the y-axis */
+    gap: 10px; /* Space between elements on the x-axis */
+    position: absolute; /* Adjust position to wherever needed */
+    bottom: 20px; /* Adjust this value to position vertically */
+    right: 20px; /* Adjust this value to position horizontally */
+}
+
+/* Style for the auto-start div */
+#auto-start-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align the label and checkbox */
+}
+
+/* Optional button styling */
+#start-wave-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 2px solid #fff;
+    background-color: #444;
+    color: #fff;
+    border-radius: 5px;
+}
+
+#start-wave-button:hover {
+    background-color: #666;
+}
+
+/* Optional checkbox styling */
+#auto-start {
+    margin-top: 5px;
+}

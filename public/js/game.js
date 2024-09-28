@@ -188,6 +188,7 @@ canvas.addEventListener('click', (event) => {
         if (currency >= towerCost) {
             towers.push(new Tower(x, y, selectedTowerType));
             currency -= towerCost;
+            selectedTowerType = null;
             updateHUD();
         }
     }

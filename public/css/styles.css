@@ -7,6 +7,7 @@ body {
     height: 100vh;
     background-color: #333;
     font-family: Arial, sans-serif;
+    color: #fff;
 }
 
 /* Game Container */
@@ -91,22 +92,7 @@ body {
     align-items: center; /* Center align the label and checkbox */
 }
 
-/* Optional button styling */
-#start-wave-button {
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    border: 2px solid #fff;
-    background-color: #444;
-    color: #fff;
-    border-radius: 5px;
-}
-
-#start-wave-button:hover {
-    background-color: #666;
-}
-
 /* Optional checkbox styling */
 #auto-start {
-    margin-top: 5px;
+    margin-top: 8px;
 }

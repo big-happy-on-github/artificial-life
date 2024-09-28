@@ -122,7 +122,7 @@ class Projectile {
     constructor(x, y, angle, damage) {
         this.x = x;
         this.y = y;
-        this.speed = 5;
+        this.speed = 10;
         this.angle = angle;
         this.damage = damage;
     }

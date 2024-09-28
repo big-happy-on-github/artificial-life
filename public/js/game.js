@@ -112,7 +112,7 @@ class Enemy {
                 lives--;
                 if (lives <= 0) {
                     alert('Game Over! You lost all your lives.');
-                    resetGame();
+                    endGame();
                 }
             }
             updateHUD();
@@ -243,17 +243,20 @@ function nextWave() {
 }
 
 // Reset the game
-function resetGame() {
-    currency = 100;
-    wave = 1;
-    lives = 9;
-    towers.length = 0;
-    enemies.length = 0;
-    projectiles.length = 0;
-    selectedTowerType = null;
-    waveInProgress = false;
-    startWaveButton.disabled = false; // Re-enable the start button
-    updateHUD();
+function endGame() {
+    alert(`game over! died on lvl ${wave}`
+    if (alert("play again?")) {
+        currency = 100;
+        wave = 1;
+        lives = 9;
+        towers.length = 0;
+        enemies.length = 0;
+        projectiles.length = 0;
+        selectedTowerType = null;
+        waveInProgress = false;
+        startWaveButton.disabled = false; // Re-enable the start button
+        updateHUD();
+    }
 }
 
 let lastTime = 0;

@@ -32,6 +32,11 @@ class Tower {
         this.fireRate = type === '1' ? 1000 : 1500;
         this.lastFired = 0;
         this.damage = type === '1' ? 20 : 35;
+        if (type == '1') {
+            this.price = 2;
+        } else if (type == '2') {
+            this.price = 3;
+        }
     }
 
     draw() {
@@ -188,11 +193,11 @@ canvas.addEventListener('click', (event) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        const towerCost = selectedTowerType === '1' ? 2 : 3;
 
         if (currency >= towerCost) {
-            towers.push(new Tower(x, y, selectedTowerType));
-            currency -= towerCost;
+            const tower = new Tower(x, y, selectedTowerType)
+            towers.push(tower);
+            currency -= tower.price;
             selectedTowerType = null;
             updateHUD();
         }
@@ -281,9 +286,15 @@ function drawTooltip() {
     // Determine if hoverTarget is a tower or an enemy
     let tooltipText;
     if (hoverTarget instanceof Tower) {
-        tooltipText = `Tower: ${hoverTarget.type}\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+        let hoverTargetType;
+        if (hoverTarget.type = "1") {
+            hoverTargetType = `$${this.price} rascal`;
+        } else if (hoverTarget.type = "2") {
+            hoverTargetType = `$${this.price} liam`;
+        }
+        tooltipText = `${hoverTargetType}\nlvl ${hoverTarget.level}\n${hoverTarget.range} range\n${hoverTarget.damage}dmg\n${hoverTarget.fireRate} fire rate`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
+        tooltipText = `enemy\n${hoverTarget.health}hp\n${hoverTarget.speed} speed`;
     }
 
     // Draw tooltip background

@@ -129,7 +129,6 @@ class Enemy {
             } else {
                 lives--;
                 if (lives <= 0) {
-                    alert('Game Over! You lost all your lives.');
                     endGame();
                 }
             }
@@ -344,7 +343,7 @@ function nextWave() {
 // Reset the game
 function endGame() {
     alert(`game over! died on lvl ${wave}`);
-    if (alert("play again?")) {
+    if (confirm("play again?")) {
         currency = 10;
         wave = 1;
         lives = 9;

@@ -244,7 +244,7 @@ function nextWave() {
 
 // Reset the game
 function endGame() {
-    alert(`game over! died on lvl ${wave}`
+    alert(`game over! died on lvl ${wave}`);
     if (alert("play again?")) {
         currency = 100;
         wave = 1;

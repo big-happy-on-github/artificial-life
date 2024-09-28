@@ -45,28 +45,30 @@ class Tower {
     }
 
     upgrade() {
-        const upgradePrice = 1+this.level
-        if (confirm(`are you sure you want to upgrade this lvl ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
-            console.log("confirmed");
-            if (currency >= upgradePrice && this.level == 1) {
-                console.log("confirmed 2");
-                this.level++;
-                this.range += 50;
-                this.fireRate += 200;
-                this.damage += 10;
-                currency -= upgradePrice;
-                updateHUD();
-            } else if (currency >= upgradePrice && this.level == 2) {
-                this.level++;
-                this.range += 50;
-                this.fireRate += 200;
-                this.damage += 10;
-                currency -= upgradePrice;
-                updateHUD();
-            } else if (this.level > 2) {
-                alert(`no upgrades available past lvl ${this.level}`);
-            } else {
-                alert("not enough money to upgrade...");
+        if (this.level > 2) {
+            alert(`no upgrades available past lvl ${this.level}`);
+        } else {
+            const upgradePrice = 1+this.level
+            if (confirm(`are you sure you want to upgrade this lvl ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
+                console.log("confirmed");
+                if (currency >= upgradePrice && this.level == 1) {
+                    console.log("confirmed 2");
+                    this.level++;
+                    this.range += 50;
+                    this.fireRate += 200;
+                    this.damage += 10;
+                    currency -= upgradePrice;
+                    updateHUD();
+                } else if (currency >= upgradePrice && this.level == 2) {
+                    this.level++;
+                    this.range += 50;
+                    this.fireRate += 200;
+                    this.damage += 10;
+                    currency -= upgradePrice;
+                    updateHUD();
+                } else {
+                    alert("not enough money to upgrade...");
+                }
             }
         }
     }

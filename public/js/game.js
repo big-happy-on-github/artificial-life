@@ -56,7 +56,13 @@ class Tower {
         }
     
         const upgradePrice = 1 + this.level;
-        if (confirm(`Are you sure you want to upgrade this level ${this.level} ${this.type} tower for $${upgradePrice}?`)) {
+        let targetType;
+        if (this.type == "1") {
+            targetType = `rascal`;
+        } else if (this.type == "2") {
+            targetType = `liam`;
+        }
+        if (confirm(`Are you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
             if (currency >= upgradePrice) {
                 this.level++;
                 this.range += 50;
@@ -279,7 +285,12 @@ function drawTooltip() {
     // Determine if hoverTarget is a tower or an enemy
     let tooltipText;
     if (hoverTarget instanceof Tower) {
-        let hoverTargetType = hoverTarget.type === "1" ? `$${hoverTarget.price} rascal` : `$${hoverTarget.price} liam`;
+        let hoverTargetType;
+        if (hoverTarget.type == "1") {
+            hoverTargetType = `$${hoverTarget.price} rascal`;
+        } else if (hoverTarget.type == "2") {
+            hoverTargetType = `$${hoverTarget.price} liam`;
+        }
         tooltipText = `${hoverTargetType}\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
         tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;

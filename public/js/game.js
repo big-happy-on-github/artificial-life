@@ -6,6 +6,7 @@ const waveDisplay = document.getElementById('wave');
 const livesDisplay = document.getElementById('lives');
 const towerSelection = document.getElementById('tower-selection');
 const startWaveButton = document.getElementById('start-wave-button');
+const autoStartCheckbox = document.getElementById('auto-start');
 
 // Game State
 let currency = 10;
@@ -334,6 +335,12 @@ function update(deltaTime) {
     projectiles.forEach(projectile => projectile.update());
 
     drawTooltip(); // Draw tooltip for hover
+
+    if (autoStartCheckbox.checked && !waveInProgress) {
+        waveInProgress = true;
+        spawnEnemies();
+        startWaveButton.disabled = true; // Disable button during wave
+    }
 }
 
 function updateHUD() {

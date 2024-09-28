@@ -241,6 +241,61 @@ startWaveButton.addEventListener('click', () => {
     }
 });
 
+let hoverTarget = null; // Keep track of the hovered tower or enemy
+
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    // Reset hover target
+    hoverTarget = null;
+
+    // Check for hovering over towers
+    towers.forEach(tower => {
+        const distance = Math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
+        if (distance < 30) { // Assuming 30 is the size of the tower
+            hoverTarget = tower;
+        }
+    });
+
+    // Check for hovering over enemies
+    enemies.forEach(enemy => {
+        const distance = Math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
+        if (distance < 15) { // Assuming 15 is half the size of the enemy
+            hoverTarget = enemy;
+        }
+    });
+});
+
+// Function to draw the tooltip
+function drawTooltip() {
+    if (!hoverTarget) return;
+
+    const tooltipX = hoverTarget.x + 20; // Position tooltip near the hovered object
+    const tooltipY = hoverTarget.y - 20;
+
+    // Determine if hoverTarget is a tower or an enemy
+    let tooltipText;
+    if (hoverTarget instanceof Tower) {
+        tooltipText = `Tower: ${hoverTarget.type}\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+    } else if (hoverTarget instanceof Enemy) {
+        tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
+    }
+
+    // Draw tooltip background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent black background
+    ctx.fillRect(tooltipX, tooltipY, 120, 60); // Adjust size based on text length
+
+    // Draw tooltip text
+    ctx.fillStyle = 'white';
+    ctx.font = '12px Arial';
+    const lines = tooltipText.split('\n');
+    lines.forEach((line, index) => {
+        ctx.fillText(line, tooltipX + 5, tooltipY + 15 + index * 15);
+    });
+}
+
 // Game Loop
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -248,6 +303,8 @@ function update(deltaTime) {
     towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
+
+    drawTooltip(); // Draw tooltip for hover
 }
 
 function updateHUD() {

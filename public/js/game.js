@@ -183,7 +183,7 @@ canvas.addEventListener('click', (event) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        const towerCost = selectedTowerType === 'basic' ? 50 : 100;
+        const towerCost = selectedTowerType === 'basic' ? 2 : 3;
 
         if (currency >= towerCost) {
             towers.push(new Tower(x, y, selectedTowerType));

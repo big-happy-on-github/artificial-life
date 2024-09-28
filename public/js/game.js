@@ -283,4 +283,5 @@ function gameLoop(timestamp) {
 }
 
 // Initialize the game
+updateHUD();
 gameLoop();

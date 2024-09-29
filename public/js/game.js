@@ -132,27 +132,33 @@ class Tower {
 }
 
 class Enemy {
-    constructor(speed, health, fireRate, damage) {
+    constructor(type) {
         this.x = path[0].x; // Start at the first waypoint
         this.y = path[0].y;
-        this.speed = speed;
-        this.health = health;
+
+        // Enemy attributes based on type
+        this.type = type;
+        this.speed = type.speed;
+        this.health = type.health;
+        this.color = type.color;
+        this.canShoot = type.canShoot;
+        this.fireRate = type.fireRate;
+        this.damage = type.damage;
+
         this.currentPathIndex = 1; // Start moving to the second waypoint
-        this.range = 100;
-        this.fireRate = fireRate; // Time between shots (2 seconds)
         this.lastFired = 0;
-        this.damage = damage; // Damage dealt to towers
     }
 
     draw() {
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = this.color;
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
     shoot(tower) {
-        if (wave >= 5 && Math.floor(Math.random() * 3) >= 1) {
+        if (this.canShoot && Date.now() - this.lastFired > this.fireRate) {
             const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
             enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+            this.lastFired = Date.now();
         }
     }
 
@@ -184,9 +190,8 @@ class Enemy {
 
         // Check for nearby towers and shoot
         const nearestTower = towers.find(tower => this.isInRange(tower));
-        if (nearestTower && Date.now() - this.lastFired > this.fireRate) {
+        if (nearestTower) {
             this.shoot(nearestTower);
-            this.lastFired = Date.now();
         }
 
         this.draw();
@@ -219,6 +224,34 @@ class Enemy {
             updateHUD();
         }
     }
+}
+
+// Define different enemy types
+const enemyTypes = [
+    { speed: 1, health: 50, color: 'red', canShoot: false, fireRate: 0, damage: 0 }, // Basic enemy
+    { speed: 1.5, health: 30, color: 'blue', canShoot: false, fireRate: 0, damage: 0 }, // Fast enemy
+    { speed: 0.8, health: 100, color: 'green', canShoot: false, fireRate: 0, damage: 0 }, // Tank enemy
+    { speed: 1, health: 40, color: 'purple', canShoot: true, fireRate: 2000, damage: 10 }, // Shooting enemy
+    { speed: 1.2, health: 60, color: 'yellow', canShoot: true, fireRate: 1500, damage: 5 }, // Fast shooting enemy
+];
+
+// Spawn enemies for the wave
+function spawnEnemies() {
+    const enemyCount = wave * 5;
+    for (let i = 0; i < enemyCount; i++) {
+        setTimeout(() => {
+            // Randomly select an enemy type
+            const randomType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            const enemy = new Enemy(randomType);
+            enemies.push(enemy);
+        }, i * 1000);
+    }
+    setTimeout(() => {
+        waveInProgress = false;
+        startWaveButton.disabled = false;
+        currency += 3;
+        nextWave();
+    }, enemyCount * 1000);
 }
 
 class Projectile {
@@ -470,23 +503,6 @@ function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `wave ${wave}`;
     livesDisplay.textContent = `${lives} lives`;
-}
-
-// Spawn enemies for the wave
-function spawnEnemies() {
-    const enemyCount = wave * 5;
-    for (let i = 0; i < enemyCount; i++) {
-        setTimeout(() => {
-            const enemy = new Enemy(1 + wave * 0.25, 50 + wave * 10, 1000 + wave * 200, 20 + wave * 2);
-            enemies.push(enemy);
-        }, i * 1000);
-    }
-    setTimeout(() => {
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        currency += 3;
-        nextWave();
-    }, enemyCount * 1000);
 }
 
 // Move to the next wave

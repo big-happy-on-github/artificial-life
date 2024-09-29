@@ -128,8 +128,10 @@ class Enemy {
     }
 
     shoot(tower) {
-        const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
-        enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+        if (wave >= 5 && Math.floor(Math.random() * 3) >= 1) {
+            const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
+            enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+        }
     }
 
     update() {

@@ -484,7 +484,9 @@ function endGame() {
     selectedTowerType = null;
     waveInProgress = false;
     startWaveButton.disabled = false;
+    autoStartCheckbox.checked = false;
     updateHUD();
+    window.location.reload();
 }
 
 let lastTime = 0;

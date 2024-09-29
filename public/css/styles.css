@@ -57,6 +57,18 @@ body {
     background-color: #666;
 }
 
+#controls-container {
+    display: flex;
+    align-items: center; /* Aligns child elements vertically in the center */
+    gap: 10px; /* Optional: Adds spacing between the elements */
+}
+
+#auto-start-div {
+    display: flex;
+    align-items: center; /* Aligns the contents of the div vertically */
+    flex-direction: column; /* Ensures label and checkbox stack vertically */
+}
+
 /* Start Wave Button Styles */
 #start-wave-button {
     position: absolute;

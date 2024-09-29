@@ -91,6 +91,28 @@ class Tower {
         }
     }
 
+    upgrade() {
+        if (this.level >= 10) {
+            alert(No upgrades available past level ${this.level});
+            return;
+        }
+    
+        const upgradePrice = this.price * this.level;
+        let targetType = this.type === '1' ? 'rascal' : 'liam';
+        if (confirm(Are you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?)) {
+            if (currency >= upgradePrice) {
+                this.level++;
+                this.range += 50;
+                this.fireRate -= 200; // Decrease fire rate for faster shooting
+                this.damage += 10;
+                currency -= upgradePrice;
+                updateHUD();
+            } else {
+                alert("Not enough money to upgrade...");
+            }
+        }
+    }
+
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
         const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));

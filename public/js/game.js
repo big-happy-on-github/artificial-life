@@ -234,10 +234,10 @@ class Enemy {
 // Define different enemy types
 const enemyTypes = [
     { speed: 1, health: 50, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Basic enemy
-    { speed: 1.5, health: 30, color: 'blue', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Fast enemy
-    { speed: 0.8, health: 100, color: 'green', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Tank enemy
-    { speed: 1, health: 40, color: 'purple', canShoot: true, range: 100, fireRate: 2000, damage: 10 }, // Shooting enemy
-    { speed: 1.2, health: 60, color: 'yellow', canShoot: true, range: 100, fireRate: 1500, damage: 5 }, // Fast shooting enemy
+    { speed: 2, health: 30, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Fast enemy
+    { speed: 0.8, health: 100, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Tank enemy
+    { speed: 1, health: 40, color: 'red', canShoot: true, range: 100, fireRate: 2000, damage: 10 }, // Shooting enemy
+    { speed: 1.2, health: 60, color: 'red', canShoot: true, range: 100, fireRate: 1500, damage: 5 }, // Fast shooting enemy
 ];
 
 // Spawn enemies for the wave
@@ -486,7 +486,7 @@ function drawTooltip() {
         let towerType = hoverTarget.type === '1' ? 'rascal' : 'liam';
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
+        tooltipText = `${hoverTarget.color} enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
     }
 
     // Draw tooltip background

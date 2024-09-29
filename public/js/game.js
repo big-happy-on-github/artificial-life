@@ -481,7 +481,7 @@ function drawTooltip() {
         let towerType = hoverTarget.type === '1' ? 'rascal' : 'liam';
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `Enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
+        tooltipText = `Enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
     }
 
     // Draw tooltip background

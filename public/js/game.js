@@ -144,6 +144,7 @@ class Enemy {
         this.canShoot = type.canShoot;
         this.fireRate = type.fireRate;
         this.damage = type.damage;
+        this.range = type.range;
 
         this.currentPathIndex = 1; // Start moving to the second waypoint
         this.lastFired = 0;
@@ -169,37 +170,41 @@ class Enemy {
             const dx = target.x - this.x;
             const dy = target.y - this.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-
+    
             // Move in the direction of the target
             const moveX = (dx / distance) * this.speed;
             const moveY = (dy / distance) * this.speed;
-
-            this.x += moveX;
-            this.y += moveY;
-
-            // Check if the enemy has reached the current target waypoint
+    
+            // Check if the enemy will overshoot the target
             if (distance < this.speed) {
-                this.currentPathIndex++;
+                // Move directly to the target waypoint
+                this.x = target.x;
+                this.y = target.y;
+                this.currentPathIndex++; // Move to the next waypoint
+            } else {
+                // Normal movement towards the target
+                this.x += moveX;
+                this.y += moveY;
             }
         }
-
+    
         // Check if the enemy reached the end of the path
         if (this.currentPathIndex >= path.length) {
             this.die(true); // Enemy crossed the path
         }
-
+    
         // Check for nearby towers and shoot
         const nearestTower = towers.find(tower => this.isInRange(tower));
         if (nearestTower) {
             this.shoot(nearestTower);
         }
-
+    
         this.draw();
     }
 
     isInRange(tower) {
         const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
-        return distance <= 100; // Adjust range as necessary
+        return distance <= this.range; // Adjust range as necessary
     }
 
     takeDamage(amount) {
@@ -228,11 +233,11 @@ class Enemy {
 
 // Define different enemy types
 const enemyTypes = [
-    { speed: 1, health: 50, color: 'red', canShoot: false, fireRate: 0, damage: 0 }, // Basic enemy
-    { speed: 1.5, health: 30, color: 'blue', canShoot: false, fireRate: 0, damage: 0 }, // Fast enemy
-    { speed: 0.8, health: 100, color: 'green', canShoot: false, fireRate: 0, damage: 0 }, // Tank enemy
-    { speed: 1, health: 40, color: 'purple', canShoot: true, fireRate: 2000, damage: 10 }, // Shooting enemy
-    { speed: 1.2, health: 60, color: 'yellow', canShoot: true, fireRate: 1500, damage: 5 }, // Fast shooting enemy
+    { speed: 1, health: 50, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Basic enemy
+    { speed: 1.5, health: 30, color: 'blue', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Fast enemy
+    { speed: 0.8, health: 100, color: 'green', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Tank enemy
+    { speed: 1, health: 40, color: 'purple', canShoot: true, range: 100, fireRate: 2000, damage: 10 }, // Shooting enemy
+    { speed: 1.2, health: 60, color: 'yellow', canShoot: true, range: 100, fireRate: 1500, damage: 5 }, // Fast shooting enemy
 ];
 
 // Spawn enemies for the wave
@@ -481,7 +486,7 @@ function drawTooltip() {
         let towerType = hoverTarget.type === '1' ? 'rascal' : 'liam';
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `Enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
+        tooltipText = `enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
     }
 
     // Draw tooltip background

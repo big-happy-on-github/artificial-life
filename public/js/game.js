@@ -22,6 +22,16 @@ let waveInProgress = false; // Track if a wave is in progress
 canvas.width = 800;
 canvas.height = 600;
 
+// Define path waypoints
+const path = [
+    { x: 0, y: 300 },
+    { x: 200, y: 300 },
+    { x: 200, y: 100 },
+    { x: 600, y: 100 },
+    { x: 600, y: 400 },
+    { x: 800, y: 400 }
+];
+
 // Game objects
 class Tower {
     constructor(x, y, type) {
@@ -73,12 +83,7 @@ class Tower {
         }
     
         const upgradePrice = this.price * this.level;
-        let targetType;
-        if (this.type == "1") {
-            targetType = `rascal`;
-        } else if (this.type == "2") {
-            targetType = `liam`;
-        }
+        let targetType = this.type === '1' ? 'rascal' : 'liam';
         if (confirm(`Are you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
             if (currency >= upgradePrice) {
                 this.level++;
@@ -92,7 +97,6 @@ class Tower {
             }
         }
     }
-
 
     update(deltaTime) {
         const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
@@ -112,11 +116,12 @@ class Tower {
 }
 
 class Enemy {
-    constructor(x, y, speed, health) {
-        this.x = x;
-        this.y = y;
+    constructor(speed, health) {
+        this.x = path[0].x; // Start at the first waypoint
+        this.y = path[0].y;
         this.speed = speed;
         this.health = health;
+        this.currentPathIndex = 1; // Start moving to the second waypoint
     }
 
     draw() {
@@ -125,9 +130,19 @@ class Enemy {
     }
 
     update() {
-        this.x += this.speed;
+        const target = path[this.currentPathIndex];
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (this.x > canvas.width) {
+        this.x += (dx / distance) * this.speed;
+        this.y += (dy / distance) * this.speed;
+
+        if (distance < this.speed) {
+            this.currentPathIndex++;
+        }
+
+        if (this.currentPathIndex >= path.length) {
             this.die(true);
         }
 
@@ -196,6 +211,28 @@ class Projectile {
     }
 }
 
+// Function to check if position is outside the path
+function isOutsidePath(x, y) {
+    const buffer = 30;
+
+    for (let i = 0; i < path.length - 1; i++) {
+        const start = path[i];
+        const end = path[i + 1];
+
+        const length = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2);
+        const t = ((x - start.x) * (end.x - start.x) + (y - start.y) * (end.y - start.y)) / (length * length);
+        const closestX = start.x + t * (end.x - start.x);
+        const closestY = start.y + t * (end.y - start.y);
+
+        const distance = Math.sqrt((x - closestX) ** 2 + (y - closestY) ** 2);
+
+        if (distance < buffer) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // Handle tower selection
 towerSelection.addEventListener('click', (event) => {
     if (event.target.classList.contains('tower')) {
@@ -203,143 +240,56 @@ towerSelection.addEventListener('click', (event) => {
     }
 });
 
-// Place towers on canvas click
+// Place towers on canvas click, only if outside the path
 canvas.addEventListener('click', (event) => {
     if (selectedTowerType) {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-        const tower = new Tower(x, y, selectedTowerType)
 
-        if (currency >= tower.price) {
-            towers.push(tower);
-            currency -= tower.price;
-            selectedTowerType = null;
-            updateHUD();
-        }
-    }
-});
-
-let lastClickTime = 0;
-
-// Custom double-click handler for upgrading towers
-canvas.addEventListener('click', (event) => {
-    const currentTime = new Date().getTime();
-    const timeDifference = currentTime - lastClickTime;
-
-    if (timeDifference < 300 && timeDifference > 0) { // Check for a double-click within 300 milliseconds
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        console.log(`Double-click detected at (${x}, ${y})`);
-
-        let towerUpgraded = false;
-
-        towers.forEach(tower => {
-            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-            console.log(`Distance to tower at (${tower.x}, ${tower.y}): ${distance}`);
-            
-            if (distance < 50) { // Increased threshold
-                tower.upgrade();
-                towerUpgraded = true;
-                console.log('Tower upgraded!');
+        if (isOutsidePath(x, y)) {
+            const tower = new Tower(x, y, selectedTowerType);
+            if (currency >= tower.price) {
+                towers.push(tower);
+                currency -= tower.price;
+                selectedTowerType = null;
+                updateHUD();
             }
-        });
-
-        if (!towerUpgraded) {
-            console.log('No tower found within range to upgrade.');
+        } else {
+            alert('Cannot place tower on the path!');
         }
-    }
-
-    // Update lastClickTime to the current click time
-    lastClickTime = currentTime;
-});
-
-// Start wave button click event
-startWaveButton.addEventListener('click', () => {
-    if (!waveInProgress) {
-        waveInProgress = true;
-        spawnEnemies();
-        startWaveButton.disabled = true; // Disable button during wave
     }
 });
 
-let hoverTarget;
+// Draw the path
+function drawPath() {
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 10;
 
-canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
 
-    // Reset hover target
-    hoverTarget = null;
-
-    // Check for hovering over towers
-    towers.forEach(tower => {
-        const distance = Math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
-        if (distance < 30) { // Assuming 30 is the size of the tower
-            hoverTarget = tower;
-        }
-    });
-
-    // Check for hovering over enemies
-    enemies.forEach(enemy => {
-        const distance = Math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
-        if (distance < 15) { // Assuming 15 is half the size of the enemy
-            hoverTarget = enemy;
-        }
-    });
-});
-
-// Function to draw the tooltip
-function drawTooltip() {
-    if (!hoverTarget) return;
-
-    const tooltipX = hoverTarget.x + 20; // Position tooltip near the hovered object
-    const tooltipY = hoverTarget.y - 20;
-
-    // Determine if hoverTarget is a tower or an enemy
-    let tooltipText;
-    if (hoverTarget instanceof Tower) {
-        let hoverTargetType;
-        if (hoverTarget.type == "1") {
-            hoverTargetType = `$${hoverTarget.price} rascal`;
-        } else if (hoverTarget.type == "2") {
-            hoverTargetType = `$${hoverTarget.price} liam`;
-        }
-        tooltipText = `${hoverTargetType}\nlvl ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
-    } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `bad guy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
+    for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i].x, path[i].y);
     }
 
-    // Draw tooltip background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent black background
-    ctx.fillRect(tooltipX, tooltipY, 120, 60); // Adjust size based on text length
-
-    // Draw tooltip text
-    ctx.fillStyle = 'white';
-    ctx.font = '12px Arial';
-    const lines = tooltipText.split('\n');
-    lines.forEach((line, index) => {
-        ctx.fillText(line, tooltipX + 5, tooltipY + 15 + index * 15);
-    });
+    ctx.stroke();
 }
 
 // Game Loop
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    drawPath(); // Draw the path
+
     towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
 
-    drawTooltip(); // Draw tooltip for hover
-
     if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;
         spawnEnemies();
-        startWaveButton.disabled = true; // Disable button during wave
+        startWaveButton.disabled = true;
     }
 }
 
@@ -354,16 +304,15 @@ function spawnEnemies() {
     const enemyCount = wave * 5;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const enemy = new Enemy(0, Math.random() * canvas.height, 1 + wave * 0.25, 50 + wave * 5);
+            const enemy = new Enemy(1 + wave * 0.25, 50 + wave * 5);
             enemies.push(enemy);
         }, i * 1000);
     }
-    // Allow starting the next wave after a delay
     setTimeout(() => {
         waveInProgress = false;
         startWaveButton.disabled = false;
         currency += 3;
-        nextWave(); // Move to the next wave after enemies are done spawning
+        nextWave();
     }, enemyCount * 1000);
 }
 
@@ -385,17 +334,8 @@ function endGame() {
         projectiles.length = 0;
         selectedTowerType = null;
         waveInProgress = false;
-        startWaveButton.disabled = false; // Re-enable the start button
+        startWaveButton.disabled = false;
         updateHUD();
-    } else {
-        currency = 10;
-        wave = 1;
-        lives = 9;
-        towers.length = 0;
-        enemies.length = 0;
-        projectiles.length = 0;
-        selectedTowerType = null;
-        waveInProgress = false;
     }
 }
 

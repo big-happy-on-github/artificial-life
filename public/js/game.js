@@ -272,7 +272,7 @@ canvas.addEventListener('click', (event) => {
 
 // Draw the path
 function drawPath() {
-    ctx.strokeStyle = 'blue';
+    ctx.strokeStyle = 'dark grey';
     ctx.lineWidth = 10;
 
     ctx.beginPath();

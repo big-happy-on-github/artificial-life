@@ -74,13 +74,3 @@ body {
 #start-wave-button:hover {
     background-color: #666;
 }
-
-/* Container for the button and auto-start checkbox */
-#controls-container {
-    display: flex;
-    align-items: center; /* Align items on the y-axis */
-    gap: 10px; /* Space between elements on the x-axis */
-    position: absolute; /* Adjust position to wherever needed */
-    bottom: 20px; /* Adjust this value to position vertically */
-    right: 20px; /* Adjust this value to position horizontally */
-}

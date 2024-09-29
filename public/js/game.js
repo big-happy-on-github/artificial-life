@@ -15,6 +15,7 @@ let lives = 9;
 const towers = [];
 const enemies = [];
 const projectiles = [];
+const enemyProjectiles = []; // Array to hold projectiles fired by enemies
 let selectedTowerType = null;
 let waveInProgress = false; // Track if a wave is in progress
 
@@ -126,7 +127,8 @@ class Enemy {
     }
 
     shoot(tower) {
-        tower.takeDamage(this.damage);
+        const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
+        enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
     }
 
     update() {
@@ -195,16 +197,17 @@ class Enemy {
 }
 
 class Projectile {
-    constructor(x, y, angle, damage) {
+    constructor(x, y, angle, damage, type = 'tower') {
         this.x = x;
         this.y = y;
         this.speed = 15;
         this.angle = angle;
         this.damage = damage;
+        this.type = type; // Type to distinguish between tower and enemy projectiles
     }
 
     draw() {
-        ctx.fillStyle = 'yellow';
+        ctx.fillStyle = this.type === 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
         ctx.fill();
@@ -215,20 +218,59 @@ class Projectile {
         this.y += Math.sin(this.angle) * this.speed;
         this.draw();
 
-        enemies.forEach(enemy => {
-            const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
-            if (distance < 20) {
-                enemy.takeDamage(this.damage);
-                this.destroy();
-            }
-        });
+        if (this.type === 'tower') {
+            // Check collision with enemies
+            enemies.forEach(enemy => {
+                const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                if (distance < 20) {
+                    enemy.takeDamage(this.damage);
+                    this.destroy();
+                }
+            });
+        } else if (this.type === 'enemy') {
+            // Check collision with towers
+            towers.forEach(tower => {
+                const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+                if (distance < 20) {
+                    tower.takeDamage(this.damage);
+                    this.destroy();
+                }
+            });
+        }
     }
 
     destroy() {
-        const index = projectiles.indexOf(this);
+        const array = this.type === 'tower' ? projectiles : enemyProjectiles;
+        const index = array.indexOf(this);
         if (index > -1) {
-            projectiles.splice(index, 1);
+            array.splice(index, 1);
         }
+    }
+}
+
+function update(deltaTime) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawPath(); // Draw the path
+
+    towers.forEach((tower, index) => {
+        if (tower.health > 0) {
+            tower.update(deltaTime);
+        } else {
+            towers.splice(index, 1);
+        }
+    });
+
+    enemies.forEach(enemy => enemy.update());
+    projectiles.forEach(projectile => projectile.update());
+    enemyProjectiles.forEach(projectile => projectile.update()); // Update enemy projectiles
+
+    drawTooltip(); // Draw tooltip if hovering over an object
+
+    if (autoStartCheckbox.checked && !waveInProgress) {
+        waveInProgress = true;
+        spawnEnemies();
+        startWaveButton.disabled = true;
     }
 }
 
@@ -397,31 +439,7 @@ function drawTooltip() {
     });
 }
 
-function update(deltaTime) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawPath(); // Draw the path
-
-    // Update towers and remove destroyed ones
-    towers.forEach((tower, index) => {
-        if (tower.health > 0) {
-            tower.update(deltaTime);
-        } else {
-            towers.splice(index, 1);
-        }
-    });
-
-    enemies.forEach(enemy => enemy.update());
-    projectiles.forEach(projectile => projectile.update());
-
-    drawTooltip(); // Draw tooltip if hovering over an object
-
-    if (autoStartCheckbox.checked && !waveInProgress) {
-        waveInProgress = true;
-        spawnEnemies();
-        startWaveButton.disabled = true;
-    }
-}
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;

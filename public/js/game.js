@@ -32,13 +32,13 @@ const path = [
     { x: 800, y: 400 }
 ];
 
-// Game objects
 class Tower {
     constructor(x, y, type) {
         this.x = x;
         this.y = y;
         this.type = type;
         this.level = 1;
+        this.health = 100; // Add health property for the tower
         if (type == '1') {
             this.range = 150;
         } else if (type == '2') {
@@ -76,29 +76,22 @@ class Tower {
         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
     }
 
-    upgrade() {
-        if (this.level >= 10) {
-            alert(`No upgrades available past level ${this.level}`);
-            return;
+    takeDamage(amount) {
+        this.health -= amount;
+        if (this.health <= 0) {
+            this.destroy();
         }
-    
-        const upgradePrice = this.price * this.level;
-        let targetType = this.type === '1' ? 'rascal' : 'liam';
-        if (confirm(`Are you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
-            if (currency >= upgradePrice) {
-                this.level++;
-                this.range += 50;
-                this.fireRate -= 200; // Decrease fire rate for faster shooting
-                this.damage += 10;
-                currency -= upgradePrice;
-                updateHUD();
-            } else {
-                alert("Not enough money to upgrade...");
-            }
+    }
+
+    destroy() {
+        const index = towers.indexOf(this);
+        if (index > -1) {
+            towers.splice(index, 1);
         }
     }
 
     update(deltaTime) {
+        if (this.health <= 0) return; // Skip update if the tower is destroyed
         const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
         
         if (nearestEnemy && Date.now() - this.lastFired > this.fireRate) {
@@ -122,11 +115,18 @@ class Enemy {
         this.speed = speed;
         this.health = health;
         this.currentPathIndex = 1; // Start moving to the second waypoint
+        this.fireRate = 2000; // Time between shots (2 seconds)
+        this.lastFired = 0;
+        this.damage = 10; // Damage dealt to towers
     }
 
     draw() {
         ctx.fillStyle = 'red';
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
+    }
+
+    shoot(tower) {
+        tower.takeDamage(this.damage);
     }
 
     update() {
@@ -155,7 +155,19 @@ class Enemy {
             this.die(true); // Enemy crossed the path
         }
 
+        // Check for nearby towers and shoot
+        const nearestTower = towers.find(tower => this.isInRange(tower));
+        if (nearestTower && Date.now() - this.lastFired > this.fireRate) {
+            this.shoot(nearestTower);
+            this.lastFired = Date.now();
+        }
+
         this.draw();
+    }
+
+    isInRange(tower) {
+        const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+        return distance <= 100; // Adjust range as necessary
     }
 
     takeDamage(amount) {
@@ -390,7 +402,15 @@ function update(deltaTime) {
 
     drawPath(); // Draw the path
 
-    towers.forEach(tower => tower.update(deltaTime));
+    // Update towers and remove destroyed ones
+    towers.forEach((tower, index) => {
+        if (tower.health > 0) {
+            tower.update(deltaTime);
+        } else {
+            towers.splice(index, 1);
+        }
+    });
+
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
 

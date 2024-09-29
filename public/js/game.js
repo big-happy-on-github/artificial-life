@@ -334,18 +334,17 @@ function nextWave() {
 // Reset the game
 function endGame() {
     alert(`game over! died on wave ${wave}`);
-    if (confirm("play again?")) {
-        currency = 10;
-        wave = 1;
-        lives = 9;
-        towers.length = 0;
-        enemies.length = 0;
-        projectiles.length = 0;
-        selectedTowerType = null;
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        updateHUD();
-    }
+    alert("play again?");
+    currency = 10;
+    wave = 1;
+    lives = 9;
+    towers.length = 0;
+    enemies.length = 0;
+    projectiles.length = 0;
+    selectedTowerType = null;
+    waveInProgress = false;
+    startWaveButton.disabled = false;
+    updateHUD();
 }
 
 let lastTime = 0;

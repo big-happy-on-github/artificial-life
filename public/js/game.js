@@ -110,15 +110,16 @@ class Tower {
 }
 
 class Enemy {
-    constructor(speed, health) {
+    constructor(speed, health, fireRate, damage) {
         this.x = path[0].x; // Start at the first waypoint
         this.y = path[0].y;
         this.speed = speed;
         this.health = health;
         this.currentPathIndex = 1; // Start moving to the second waypoint
-        this.fireRate = 2000; // Time between shots (2 seconds)
+        this.range = 100;
+        this.fireRate = fireRate; // Time between shots (2 seconds)
         this.lastFired = 0;
-        this.damage = 10; // Damage dealt to towers
+        this.damage = damage; // Damage dealt to towers
     }
 
     draw() {
@@ -421,9 +422,9 @@ function drawTooltip() {
     let tooltipText;
     if (hoverTarget instanceof Tower) {
         let towerType = hoverTarget.type === '1' ? 'rascal' : 'liam';
-        tooltipText = `${towerType} tower\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+        tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
+        tooltipText = `Enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
     }
 
     // Draw tooltip background
@@ -452,7 +453,7 @@ function spawnEnemies() {
     const enemyCount = wave * 5;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const enemy = new Enemy(1 + wave * 0.25, 50 + wave * 5);
+            const enemy = new Enemy(1 + wave * 0.25, 50 + wave * 10, 1000 + wave * 200, 20 + wave * 4);
             enemies.push(enemy);
         }, i * 1000);
     }

@@ -265,14 +265,15 @@ canvas.addEventListener('click', (event) => {
                 updateHUD();
             }
         } else {
-            alert('Cannot place tower on the path!');
+            //alert('Cannot place tower on the path!');
+            console.log("tower cannot be placed on path");
         }
     }
 });
 
 // Draw the path
 function drawPath() {
-    ctx.strokeStyle = 'dark grey';
+    ctx.strokeStyle = 'white';
     ctx.lineWidth = 10;
 
     ctx.beginPath();

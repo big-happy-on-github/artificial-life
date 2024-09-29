@@ -304,6 +304,15 @@ canvas.addEventListener('click', (event) => {
     lastClickTime = currentTime;
 });
 
+// Handle start wave button click
+startWaveButton.addEventListener('click', () => {
+    if (!waveInProgress) {
+        waveInProgress = true;
+        spawnEnemies();
+        startWaveButton.disabled = true; // Disable button during wave
+    }
+});
+
 // Draw the path
 function drawPath() {
     ctx.strokeStyle = 'white';

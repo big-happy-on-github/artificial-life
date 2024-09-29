@@ -130,20 +130,29 @@ class Enemy {
     }
 
     update() {
-        const target = path[this.currentPathIndex];
-        const dx = target.x - this.x;
-        const dy = target.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        // Check if there are more waypoints to follow
+        if (this.currentPathIndex < path.length) {
+            const target = path[this.currentPathIndex];
+            const dx = target.x - this.x;
+            const dy = target.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-        this.x += (dx / distance) * this.speed;
-        this.y += (dy / distance) * this.speed;
+            // Move in the direction of the target
+            const moveX = (dx / distance) * this.speed;
+            const moveY = (dy / distance) * this.speed;
 
-        if (distance < this.speed) {
-            this.currentPathIndex++;
+            this.x += moveX;
+            this.y += moveY;
+
+            // Check if the enemy has reached the current target waypoint
+            if (distance < this.speed) {
+                this.currentPathIndex++;
+            }
         }
 
+        // Check if the enemy reached the end of the path
         if (this.currentPathIndex >= path.length) {
-            this.die(true);
+            this.die(true); // Enemy crossed the path
         }
 
         this.draw();

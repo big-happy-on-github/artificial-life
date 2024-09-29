@@ -271,6 +271,39 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
+let lastClickTime = 0; // To store the timestamp of the last click
+
+// Handle single and double clicks for upgrading towers
+canvas.addEventListener('click', (event) => {
+    const currentTime = new Date().getTime();
+    const timeDifference = currentTime - lastClickTime;
+
+    // Check if the second click happened within 500 milliseconds
+    if (timeDifference < 500) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        // Loop through towers to find one within range of the click
+        let towerUpgraded = false;
+
+        towers.forEach(tower => {
+            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+            if (distance < 30) { // Assuming 30 is the size of the tower
+                tower.upgrade();
+                towerUpgraded = true;
+            }
+        });
+
+        if (!towerUpgraded) {
+            console.log('No tower found within range to upgrade.');
+        }
+    }
+
+    // Update the last click time
+    lastClickTime = currentTime;
+});
+
 // Draw the path
 function drawPath() {
     ctx.strokeStyle = 'white';
@@ -286,7 +319,63 @@ function drawPath() {
     ctx.stroke();
 }
 
-// Game Loop
+let hoverTarget = null; // To store the hovered object
+
+// Handle mouse movement for hover detection
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    // Reset hover target
+    hoverTarget = null;
+
+    // Check for hovering over towers
+    towers.forEach(tower => {
+        const distance = Math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
+        if (distance < 30) { // Assuming 30 is the size of the tower
+            hoverTarget = tower;
+        }
+    });
+
+    // Check for hovering over enemies
+    enemies.forEach(enemy => {
+        const distance = Math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
+        if (distance < 15) { // Assuming 15 is half the size of the enemy
+            hoverTarget = enemy;
+        }
+    });
+});
+
+// Function to draw the tooltip
+function drawTooltip() {
+    if (!hoverTarget) return;
+
+    const tooltipX = hoverTarget.x + 20; // Position tooltip near the hovered object
+    const tooltipY = hoverTarget.y - 20;
+
+    // Determine if hoverTarget is a tower or an enemy
+    let tooltipText;
+    if (hoverTarget instanceof Tower) {
+        let towerType = hoverTarget.type === '1' ? 'rascal' : 'liam';
+        tooltipText = `${towerType} tower\nLevel: ${hoverTarget.level}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+    } else if (hoverTarget instanceof Enemy) {
+        tooltipText = `Enemy\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}`;
+    }
+
+    // Draw tooltip background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent black background
+    ctx.fillRect(tooltipX, tooltipY, 120, 60); // Adjust size based on text length
+
+    // Draw tooltip text
+    ctx.fillStyle = 'white';
+    ctx.font = '12px Arial';
+    const lines = tooltipText.split('\n');
+    lines.forEach((line, index) => {
+        ctx.fillText(line, tooltipX + 5, tooltipY + 15 + index * 15);
+    });
+}
+
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -295,6 +384,8 @@ function update(deltaTime) {
     towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
+
+    drawTooltip(); // Draw tooltip if hovering over an object
 
     if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;

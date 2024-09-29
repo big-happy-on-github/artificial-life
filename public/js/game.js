@@ -453,7 +453,7 @@ function spawnEnemies() {
     const enemyCount = wave * 5;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const enemy = new Enemy(1 + wave * 0.25, 50 + wave * 10, 1000 + wave * 200, 20 + wave * 4);
+            const enemy = new Enemy(1 + wave * 0.25, 50 + wave * 10, 1000 + wave * 200, 20 + wave * 2);
             enemies.push(enemy);
         }, i * 1000);
     }

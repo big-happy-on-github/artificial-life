@@ -93,13 +93,13 @@ class Tower {
 
     upgrade() {
         if (this.level >= 10) {
-            alert(No upgrades available past level ${this.level});
+            alert(`no upgrades available past lvl ${this.level}`);
             return;
         }
     
         const upgradePrice = this.price * this.level;
         let targetType = this.type === '1' ? 'rascal' : 'liam';
-        if (confirm(Are you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?)) {
+        if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
             if (currency >= upgradePrice) {
                 this.level++;
                 this.range += 50;
@@ -108,7 +108,7 @@ class Tower {
                 currency -= upgradePrice;
                 updateHUD();
             } else {
-                alert("Not enough money to upgrade...");
+                alert("not enough money to upgrade...");
             }
         }
     }

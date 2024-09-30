@@ -43,22 +43,30 @@ class Tower {
         if (type == '1') {
             this.range = 150;
         } else if (type == '2') {
-            this.range = 200;
+            this.range = 100;
+        } else if (type == '3') {
+            this.range = 1000;
         }
         if (type == '1') {
             this.fireRate = 1000;
         } else if (type == '2') {
             this.fireRate = 1500;
+        } else if (type == '3') {
+            this.fireRate = 800;
         }
         this.lastFired = 0;
         if (type == '1') {
             this.damage = 20;
         } else if (type == '2') {
             this.damage = 35;
+        } else if (type == '3') {
+            this.damage = 45;
         }
         if (type == '1') {
             this.price = 2;
         } else if (type == '2') {
+            this.price = 3;
+        } else if (type == '3') {
             this.price = 3;
         }
     }
@@ -68,6 +76,8 @@ class Tower {
             ctx.fillStyle = 'grey';
         } else if (this.type == '2') {
             ctx.fillStyle = 'green';
+        } else if (this.type == '3') {
+            ctx.fillStyle = 'purple';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -98,12 +108,17 @@ class Tower {
         }
     
         const upgradePrice = this.price * this.level;
-        let targetType = this.type === '1' ? 'rascal' : 'liam';
+        if (this.type === '1') {
+            let targetType = 'rascal';
+        } else if (this.type === '2') {
+            let targetType = 'liam';
+        } else if (this.type === '3') {
+            let targetType = 'evan';
+        }
         if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
             if (currency >= upgradePrice) {
                 this.level++;
                 this.range += 50;
-                this.fireRate -= 200; // Decrease fire rate for faster shooting
                 this.damage += 10;
                 currency -= upgradePrice;
                 updateHUD();
@@ -490,7 +505,13 @@ function drawTooltip() {
     // Determine if hoverTarget is a tower or an enemy
     let tooltipText;
     if (hoverTarget instanceof Tower) {
-        let towerType = hoverTarget.type === '1' ? 'rascal' : 'liam';
+        if (hoverTarget.type === '1') {
+            let towerType = 'rascal';
+        } else if (hoverTarget.type === '2') {
+            let towerType = 'liam';
+        } else if (hoverTarget.type === '3') {
+            let towerType = 'evan';
+        }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
         tooltipText = `${hoverTarget.color} enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;

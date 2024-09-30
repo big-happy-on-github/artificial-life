@@ -109,11 +109,11 @@ class Tower {
     
         const upgradePrice = this.price * this.level;
         let targetType;
-            if (this.type === '1') {
+            if (this.type == '1') {
                 targetType = 'rascal';
-            } else if (this.type === '2') {
+            } else if (this.type == '2') {
                 targetType = 'liam';
-            } else if (this.type === '3') {
+            } else if (this.type == '3') {
                 targetType = 'evan';
             }
         if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
@@ -286,7 +286,7 @@ class Projectile {
     }
 
     draw() {
-        ctx.fillStyle = this.type === 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
+        ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
         ctx.fill();
@@ -297,7 +297,7 @@ class Projectile {
         this.y += Math.sin(this.angle) * this.speed;
         this.draw();
 
-        if (this.type === 'tower') {
+        if (this.type == 'tower') {
             // Check collision with enemies
             enemies.forEach(enemy => {
                 const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
@@ -306,7 +306,7 @@ class Projectile {
                     this.destroy();
                 }
             });
-        } else if (this.type === 'enemy') {
+        } else if (this.type == 'enemy') {
             // Check collision with towers
             towers.forEach(tower => {
                 const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
@@ -319,7 +319,7 @@ class Projectile {
     }
 
     destroy() {
-        const array = this.type === 'tower' ? projectiles : enemyProjectiles;
+        const array = this.type == 'tower' ? projectiles : enemyProjectiles;
         const index = array.indexOf(this);
         if (index > -1) {
             array.splice(index, 1);
@@ -378,11 +378,11 @@ function isOutsidePath(x, y) {
 // Handle tower selection
 towerSelection.addEventListener('click', (event) => {
     if (event.target.classList.contains('tower')) {
-        if (event.target.id === '1-tower') {
+        if (event.target.id == '1-tower') {
             selectedTowerType = '1';
-        } else if (event.target.id === '2-tower') {
+        } else if (event.target.id == '2-tower') {
             selectedTowerType = '2';
-        } else if (event.target.id === '3-tower') {
+        } else if (event.target.id == '3-tower') {
             selectedTowerType = '3';
         }
     }
@@ -506,9 +506,9 @@ function drawTooltip() {
     let tooltipText;
     if (hoverTarget instanceof Tower) {
         let towerType;
-        if (this.type === '1') {
+        if (this.type == '1') {
             towerType = 'rascal';
-        } else if (this.type === '2') {
+        } else if (this.type == '2') {
             towerType = 'liam';
         } else if (this.type == '3') {
             towerType = 'evan';

@@ -506,11 +506,11 @@ function drawTooltip() {
     let tooltipText;
     if (hoverTarget instanceof Tower) {
         let towerType;
-        if (this.type == '1') {
+        if (hoverTarget.type == '1') {
             towerType = 'rascal';
-        } else if (this.type == '2') {
+        } else if (hoverTarget.type == '2') {
             towerType = 'liam';
-        } else if (this.type == '3') {
+        } else if (hoverTarget.type == '3') {
             towerType = 'evan';
         }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;

@@ -505,12 +505,13 @@ function drawTooltip() {
     // Determine if hoverTarget is a tower or an enemy
     let tooltipText;
     if (hoverTarget instanceof Tower) {
+        let towerType;
         if (hoverTarget.type === '1') {
-            let towerType = 'rascal';
+            towerType = 'rascal';
         } else if (hoverTarget.type === '2') {
-            let towerType = 'liam';
+            towerType = 'liam';
         } else if (hoverTarget.type === '3') {
-            let towerType = 'evan';
+            towerType = 'evan';
         }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {

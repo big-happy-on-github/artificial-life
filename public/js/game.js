@@ -353,9 +353,9 @@ function update(deltaTime) {
     }
 }
 
-// Function to check if position is outside the path
+// Simplified isOutsidePath to make tower placement easier
 function isOutsidePath(x, y) {
-    const buffer = 30;
+    const buffer = 50; // Increase buffer to make placing towers easier
 
     for (let i = 0; i < path.length - 1; i++) {
         const start = path[i];
@@ -369,11 +369,37 @@ function isOutsidePath(x, y) {
         const distance = Math.sqrt((x - closestX) ** 2 + (y - closestY) ** 2);
 
         if (distance < buffer) {
-            return false;
+            return false; // Position is too close to the path
         }
     }
-    return true;
+    return true; // Position is safe to place a tower
 }
+
+// Updated canvas click event to simplify tower placement
+canvas.addEventListener('click', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    if (!selectedTowerType) {
+        selectedTowerType = '1'; // Default to tower type '1' if none is selected
+    }
+
+    if (isOutsidePath(x, y)) {
+        const tower = new Tower(x, y, selectedTowerType);
+        if (currency >= tower.price) {
+            towers.push(tower);
+            currency -= tower.price;
+            selectedTowerType = null;
+            updateHUD();
+        } else {
+            console.log('Not enough currency to place the tower.');
+        }
+    } else {
+        console.log("Tower cannot be placed on the path.");
+    }
+});
+
 
 // Handle tower selection
 towerSelection.addEventListener('click', (event) => {
@@ -384,28 +410,6 @@ towerSelection.addEventListener('click', (event) => {
             selectedTowerType = '2';
         } else if (event.target.id == '3-tower') {
             selectedTowerType = '3';
-        }
-    }
-});
-
-// Place towers on canvas click, only if outside the path
-canvas.addEventListener('click', (event) => {
-    if (selectedTowerType) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        if (isOutsidePath(x, y)) {
-            const tower = new Tower(x, y, selectedTowerType);
-            if (currency >= tower.price) {
-                towers.push(tower);
-                currency -= tower.price;
-                selectedTowerType = null;
-                updateHUD();
-            }
-        } else {
-            //alert('Cannot place tower on the path!');
-            console.log("tower cannot be placed on path");
         }
     }
 });

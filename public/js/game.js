@@ -510,7 +510,7 @@ function drawTooltip() {
             towerType = 'rascal';
         } else if (this.type === '2') {
             towerType = 'liam';
-        } else if (this.type === '3') {
+        } else if (this.type == '3') {
             towerType = 'evan';
         }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;

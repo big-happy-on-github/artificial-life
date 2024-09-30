@@ -233,11 +233,11 @@ class Enemy {
 
 // Define different enemy types
 const enemyTypes = [
-    { speed: 1, health: 50, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Basic enemy
-    { speed: 2, health: 30, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Fast enemy
-    { speed: 0.8, health: 100, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0 }, // Tank enemy
-    { speed: 1, health: 40, color: 'red', canShoot: true, range: 100, fireRate: 2000, damage: 10 }, // Shooting enemy
-    { speed: 1.2, health: 60, color: 'red', canShoot: true, range: 100, fireRate: 1500, damage: 5 }, // Fast shooting enemy
+    { speed: 1, health: 75, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 1 }, // Basic enemy
+    { speed: 2, health: 55, color: 'yellow', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 2 }, // Fast enemy
+    { speed: 0.8, health: 125, color: 'brown', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 3 }, // Tank enemy
+    { speed: 1, health: 65, color: 'white', canShoot: true, range: 100, fireRate: 2000, damage: 15, , level: 4 }, // Shooting enemy
+    { speed: 1.2, health: 85, color: 'yellow', canShoot: true, range: 100, fireRate: 1500, damage: 10, level: 5 }, // Fast shooting enemy
 ];
 
 // Spawn enemies for the wave
@@ -246,7 +246,13 @@ function spawnEnemies() {
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
             // Randomly select an enemy type
-            const randomType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            let updatedEnemyTypes = [];
+            for (let enemy in enemyTypes) {
+                if (enemy.level < wave) {
+                    updatedEnemyTypes.push(enemy);
+                }
+            }
+            const randomType = updatedEnemyTypes[Math.floor(Math.random() * enemyTypes.length)];
             const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
@@ -260,13 +266,14 @@ function spawnEnemies() {
 }
 
 class Projectile {
-    constructor(x, y, angle, damage, type = 'tower') {
+    constructor(x, y, angle, damage, type = 'tower', specificType = null) {
         this.x = x;
         this.y = y;
         this.speed = 15;
         this.angle = angle;
         this.damage = damage;
         this.type = type; // Type to distinguish between tower and enemy projectiles
+        this.specificType = specificType;
     }
 
     draw() {

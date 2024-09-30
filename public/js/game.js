@@ -108,13 +108,14 @@ class Tower {
         }
     
         const upgradePrice = this.price * this.level;
-        if (this.type === '1') {
-            let targetType = 'rascal';
-        } else if (this.type === '2') {
-            let targetType = 'liam';
-        } else if (this.type === '3') {
-            let targetType = 'evan';
-        }
+        let targetType;
+            if (this.type === '1') {
+                targetType = 'rascal';
+            } else if (this.type === '2') {
+                targetType = 'liam';
+            } else if (this.type === '3') {
+                targetType = 'evan';
+            }
         if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
             if (currency >= upgradePrice) {
                 this.level++;
@@ -255,19 +256,12 @@ const enemyTypes = [
     { speed: 1.2, health: 85, color: 'yellow', canShoot: true, range: 100, fireRate: 1500, damage: 10, level: 5 }, // Fast shooting enemy
 ];
 
-// Spawn enemies for the wave
 function spawnEnemies() {
     const enemyCount = wave * 5;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            // Randomly select an enemy type
-            let updatedEnemyTypes = [];
-            for (let enemy in enemyTypes) {
-                if (enemy.level < wave) {
-                    updatedEnemyTypes.push(enemy);
-                }
-            }
-            const randomType = updatedEnemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
+            const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
             const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
@@ -384,7 +378,13 @@ function isOutsidePath(x, y) {
 // Handle tower selection
 towerSelection.addEventListener('click', (event) => {
     if (event.target.classList.contains('tower')) {
-        selectedTowerType = event.target.id === '1-tower' ? '1' : '2';
+        if (event.target.id === '1-tower') {
+            selectedTowerType = '1';
+        } else if (event.target.id === '2-tower') {
+            selectedTowerType = '2';
+        } else if (event.target.id === '3-tower') {
+            selectedTowerType = '3';
+        }
     }
 });
 
@@ -505,17 +505,17 @@ function drawTooltip() {
     // Determine if hoverTarget is a tower or an enemy
     let tooltipText;
     if (hoverTarget instanceof Tower) {
-        let towerType;
-        if (hoverTarget.type === '1') {
-            towerType = 'rascal';
-        } else if (hoverTarget.type === '2') {
-            towerType = 'liam';
-        } else if (hoverTarget.type === '3') {
-            towerType = 'evan';
+        let targetType;
+        if (this.type === '1') {
+            targetType = 'rascal';
+        } else if (this.type === '2') {
+            targetType = 'liam';
+        } else if (this.type === '3') {
+            targetType = 'evan';
         }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `${hoverTarget.color} enemy\nlvl ${wave}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.speed}`;
+        tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.type.level}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     }
 
     // Draw tooltip background

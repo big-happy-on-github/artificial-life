@@ -560,7 +560,7 @@ function drawTooltip() {
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `wave ${wave}\n(top score: ${JSON.parse(localStorage.getItem("topScore"))}`;
+    waveDisplay.textContent = `wave ${wave}\n(top score: ${JSON.parse(localStorage.getItem("topScore"))})`;
     livesDisplay.textContent = `${lives} lives`;
 }
 
@@ -597,6 +597,10 @@ function gameLoop(timestamp) {
     update(deltaTime);
 
     requestAnimationFrame(gameLoop);
+}
+
+if (!localStorage.getItem("topScore")) {
+    localStorage.setItem("topScore", JSON.stringify(1));
 }
 
 // Initialize the game

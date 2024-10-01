@@ -180,9 +180,7 @@ class Enemy {
         const index = enemies.indexOf(this);
         if (index > -1) {
             enemies.splice(index, 1);
-            if (!crossed) {
-                currency += 1;
-            } else {
+            if (crossed) {
                 lives--;
                 if (lives <= 0) {
                     endGame();

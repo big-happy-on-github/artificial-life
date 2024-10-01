@@ -576,7 +576,9 @@ function updateHUD() {
 // Move to the next wave
 function nextWave() {
     wave++;
-    localStorage.setItem("topScore", JSON.stringify(wave));
+    if (wave > JSON.parse(localStorage.getItem("topScore"))) {
+        localStorage.setItem("topScore", JSON.stringify(wave));
+    }
     updateHUD();
 }
 

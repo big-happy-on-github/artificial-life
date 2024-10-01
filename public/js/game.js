@@ -560,13 +560,14 @@ function drawTooltip() {
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `wave ${wave}`;
+    waveDisplay.textContent = `wave ${wave}\n(top score: ${JSON.parse(localStorage.getItem("topScore"))}`;
     livesDisplay.textContent = `${lives} lives`;
 }
 
 // Move to the next wave
 function nextWave() {
     wave++;
+    localStorage.setItem("topScore", JSON.stringify(wave));
     updateHUD();
 }
 

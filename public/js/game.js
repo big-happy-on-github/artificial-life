@@ -394,11 +394,10 @@ const gridHeight = canvas.height / gridSize;
 
 // Tracks which squares are occupied by the path
 const occupiedSquares = new Set();
-const pathBuffer = 1; // Number of grid squares to buffer around the path
 
 // Draw the grid and the path
 function drawGrid() {
-    ctx.strokeStyle = '#3b3b3b'; // Light gray for grid lines
+    ctx.strokeStyle = '#ccc'; // Light gray for grid lines
     for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
             ctx.strokeRect(x, y, gridSize, gridSize);
@@ -415,7 +414,6 @@ function drawPath() {
 
     for (let i = 1; i < path.length; i++) {
         ctx.lineTo(path[i].x, path[i].y);
-
         // Mark squares occupied by the path as unavailable for tower placement
         markPathSquares(path[i - 1], path[i]);
     }
@@ -423,7 +421,7 @@ function drawPath() {
     ctx.stroke();
 }
 
-// Mark grid squares occupied by the path, including a buffer
+// Mark grid squares occupied by the path
 function markPathSquares(start, end) {
     const dx = end.x - start.x;
     const dy = end.y - start.y;
@@ -432,13 +430,7 @@ function markPathSquares(start, end) {
     for (let i = 0; i <= steps; i++) {
         const x = Math.floor((start.x + (dx * i) / steps) / gridSize);
         const y = Math.floor((start.y + (dy * i) / steps) / gridSize);
-
-        // Mark this square and its surrounding squares (buffer) as occupied
-        for (let offsetX = -pathBuffer; offsetX <= pathBuffer; offsetX++) {
-            for (let offsetY = -pathBuffer; offsetY <= pathBuffer; offsetY++) {
-                occupiedSquares.add(`${x + offsetX},${y + offsetY}`);
-            }
-        }
+        occupiedSquares.add(`${x},${y}`);
     }
 }
 
@@ -471,7 +463,6 @@ canvas.addEventListener('click', (event) => {
         }
     } else {
         console.log('Cannot place tower here.');
-        alert("tower is too close to the path; move it back a space");
     }
 });
 

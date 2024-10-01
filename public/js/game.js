@@ -421,16 +421,34 @@ function drawPath() {
     ctx.stroke();
 }
 
-// Mark grid squares occupied by the path
+// Mark grid squares occupied by the path using Bresenham's line algorithm
 function markPathSquares(start, end) {
-    const dx = end.x - start.x;
-    const dy = end.y - start.y;
-    const steps = Math.max(Math.abs(dx), Math.abs(dy)) / gridSize;
+    let x0 = Math.floor(start.x / gridSize);
+    let y0 = Math.floor(start.y / gridSize);
+    const x1 = Math.floor(end.x / gridSize);
+    const y1 = Math.floor(end.y / gridSize);
 
-    for (let i = 0; i <= steps; i++) {
-        const x = Math.floor((start.x + (dx * i) / steps) / gridSize);
-        const y = Math.floor((start.y + (dy * i) / steps) / gridSize);
-        occupiedSquares.add(`${x},${y}`);
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = (x0 < x1) ? 1 : -1;
+    const sy = (y0 < y1) ? 1 : -1;
+    let err = dx - dy;
+
+    while (true) {
+        occupiedSquares.add(`${x0},${y0}`);
+
+        // If we've reached the end point, break out of the loop
+        if (x0 === x1 && y0 === y1) break;
+
+        const e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+        }
     }
 }
 

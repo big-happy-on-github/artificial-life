@@ -215,6 +215,11 @@ class Enemy {
         this.draw();
     }
 
+    isInRange(tower) {
+        const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+        return distance <= this.range; // Adjust range as necessary
+    }
+
     die(crossed) {
         const index = enemies.indexOf(this);
         if (index > -1) {

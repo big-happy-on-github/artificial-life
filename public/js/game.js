@@ -170,6 +170,7 @@ class Enemy {
         this.fireRate = type.fireRate;
         this.damage = type.damage;
         this.range = type.range;
+        this.level = type.level;
         this.currentPathIndex = 1; // Start moving to the second waypoint
         this.lastFired = 0;
         this.nextType = type.nextType;
@@ -582,7 +583,7 @@ function drawTooltip() {
         }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.type.level}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+        tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
     }
 
     // Draw tooltip background

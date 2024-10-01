@@ -423,7 +423,7 @@ function drawPath() {
 
 // Mark grid squares occupied by the path using Bresenham's line algorithm
 function markPathSquares(start, end) {
-    let x0 = Math.floor(start.x / gridSize);
+    /*let x0 = Math.floor(start.x / gridSize);
     let y0 = Math.floor(start.y / gridSize);
     const x1 = Math.floor(end.x / gridSize);
     const y1 = Math.floor(end.y / gridSize);
@@ -449,7 +449,7 @@ function markPathSquares(start, end) {
             err += dx;
             y0 += sy;
         }
-    }
+    }*/
 }
 
 // Check if a square is available for tower placement

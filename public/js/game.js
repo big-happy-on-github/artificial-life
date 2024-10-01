@@ -398,7 +398,7 @@ const pathBuffer = 1; // Number of grid squares to buffer around the path
 
 // Draw the grid and the path
 function drawGrid() {
-    ctx.strokeStyle = '#ccc'; // Light gray for grid lines
+    ctx.strokeStyle = '#3b3b3b'; // Light gray for grid lines
     for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
             ctx.strokeRect(x, y, gridSize, gridSize);

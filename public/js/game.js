@@ -310,11 +310,11 @@ class Enemy {
 
 // Define different enemy types with a transformation sequence
 const enemyTypes = [
-    { speed: 1, health: 75, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 1, nextType: 'yellow' }, // Basic enemy
-    { speed: 4, health: 55, color: 'orange', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 2, nextType: 'white' }, // Fast enemy
-    { speed: 0.8, health: 200, color: 'yellow', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 3, nextType: 'red' }, // Tank enemy, no further transformation
-    { speed: 1, health: 80, color: 'green', canShoot: true, range: 100, fireRate: 2000, damage: 25, level: 4, nextType: null }, // Shooting enemy, no further transformation
-    { speed: 1.2, health: 90, color: 'blue', canShoot: true, range: 100, fireRate: 1500, damage: 20, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
+    { speed: 1, health: 65, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 1, nextType: 'yellow' }, // Basic enemy
+    { speed: 4, health: 45, color: 'orange', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 2, nextType: 'white' }, // Fast enemy
+    { speed: 0.7, health: 180, color: 'yellow', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 3, nextType: 'red' }, // Tank enemy, no further transformation
+    { speed: 1, health: 70, color: 'green', canShoot: true, range: 100, fireRate: 2000, damage: 25, level: 4, nextType: null }, // Shooting enemy, no further transformation
+    { speed: 2, health: 80, color: 'blue', canShoot: true, range: 100, fireRate: 1500, damage: 20, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
 ];
 
 function spawnEnemies() {

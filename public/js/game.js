@@ -176,6 +176,7 @@ class Enemy {
         }
     }
 
+
     shoot(tower) {
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate) {
             const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
@@ -185,7 +186,6 @@ class Enemy {
     }
 
     update() {
-        // Check if there are more waypoints to follow
         if (this.currentPathIndex < path.length) {
             const target = path[this.currentPathIndex];
             const dx = target.x - this.x;
@@ -305,7 +305,6 @@ class Projectile {
         this.draw();
 
         if (this.type == 'tower') {
-            // Check collision with enemies
             enemies.forEach(enemy => {
                 const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20) {

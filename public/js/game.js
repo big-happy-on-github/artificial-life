@@ -387,6 +387,93 @@ class Projectile {
     }
 }
 
+// Grid settings
+const gridSize = 50; // Size of each grid square
+const gridWidth = canvas.width / gridSize;
+const gridHeight = canvas.height / gridSize;
+
+// Tracks which squares are occupied by the path
+const occupiedSquares = new Set();
+const pathBuffer = 1; // Number of grid squares to buffer around the path
+
+// Draw the grid and the path
+function drawGrid() {
+    ctx.strokeStyle = '#ccc'; // Light gray for grid lines
+    for (let x = 0; x < canvas.width; x += gridSize) {
+        for (let y = 0; y < canvas.height; y += gridSize) {
+            ctx.strokeRect(x, y, gridSize, gridSize);
+        }
+    }
+}
+
+function drawPath() {
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 10;
+
+    ctx.beginPath();
+    ctx.moveTo(path[0].x, path[0].y);
+
+    for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i].x, path[i].y);
+
+        // Mark squares occupied by the path as unavailable for tower placement
+        markPathSquares(path[i - 1], path[i]);
+    }
+
+    ctx.stroke();
+}
+
+// Mark grid squares occupied by the path, including a buffer
+function markPathSquares(start, end) {
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const steps = Math.max(Math.abs(dx), Math.abs(dy)) / gridSize;
+
+    for (let i = 0; i <= steps; i++) {
+        const x = Math.floor((start.x + (dx * i) / steps) / gridSize);
+        const y = Math.floor((start.y + (dy * i) / steps) / gridSize);
+
+        // Mark this square and its surrounding squares (buffer) as occupied
+        for (let offsetX = -pathBuffer; offsetX <= pathBuffer; offsetX++) {
+            for (let offsetY = -pathBuffer; offsetY <= pathBuffer; offsetY++) {
+                occupiedSquares.add(`${x + offsetX},${y + offsetY}`);
+            }
+        }
+    }
+}
+
+// Check if a square is available for tower placement
+function isSquareAvailable(x, y) {
+    const gridX = Math.floor(x / gridSize);
+    const gridY = Math.floor(y / gridSize);
+    return !occupiedSquares.has(`${gridX},${gridY}`);
+}
+
+// Handle tower placement
+canvas.addEventListener('click', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Align placement to the center of the grid square
+    const gridX = Math.floor(x / gridSize) * gridSize + gridSize / 2;
+    const gridY = Math.floor(y / gridSize) * gridSize + gridSize / 2;
+
+    if (selectedTowerType && isSquareAvailable(gridX, gridY)) {
+        const tower = new Tower(gridX, gridY, selectedTowerType);
+        if (currency >= tower.price) {
+            towers.push(tower);
+            currency -= tower.price;
+            selectedTowerType = null;
+            updateHUD();
+        } else {
+            console.log('Not enough currency to place the tower.');
+        }
+    } else {
+        console.log('Cannot place tower here.');
+    }
+});
+
 // Update the game loop to include drawing the grid
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -440,32 +527,6 @@ function isOutsidePath(x, y) {
     }
     return true; // The point is far enough from all path segments
 }
-
-// Handle tower placement
-canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    // Align placement to the center of the grid square
-    const gridX = Math.floor(x / gridSize) * gridSize + gridSize / 2;
-    const gridY = Math.floor(y / gridSize) * gridSize + gridSize / 2;
-
-    if (selectedTowerType && isSquareAvailable(gridX, gridY)) {
-        const tower = new Tower(gridX, gridY, selectedTowerType);
-        if (currency >= tower.price) {
-            towers.push(tower);
-            currency -= tower.price;
-            selectedTowerType = null;
-            updateHUD();
-        } else {
-            console.log('Not enough currency to place the tower.');
-        }
-    } else {
-        console.log('Cannot place tower here.');
-    }
-});
-
 
 // Handle tower selection
 towerSelection.addEventListener('click', (event) => {
@@ -521,61 +582,6 @@ startWaveButton.addEventListener('click', () => {
         startWaveButton.disabled = true; // Disable button during wave
     }
 });
-
-// Grid settings
-const gridSize = 50; // Size of each grid square
-const gridWidth = canvas.width / gridSize;
-const gridHeight = canvas.height / gridSize;
-
-// Tracks which squares are occupied by the path
-const occupiedSquares = new Set();
-
-// Draw the grid and the path
-function drawGrid() {
-    ctx.strokeStyle = '#3b3b3b'; // Light gray for grid lines
-    for (let x = 0; x < canvas.width; x += gridSize) {
-        for (let y = 0; y < canvas.height; y += gridSize) {
-            ctx.strokeRect(x, y, gridSize, gridSize);
-        }
-    }
-}
-
-function drawPath() {
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 10;
-
-    ctx.beginPath();
-    ctx.moveTo(path[0].x, path[0].y);
-
-    for (let i = 1; i < path.length; i++) {
-        ctx.lineTo(path[i].x, path[i].y);
-
-        // Mark squares occupied by the path as unavailable for tower placement
-        markPathSquares(path[i - 1], path[i]);
-    }
-
-    ctx.stroke();
-}
-
-// Mark grid squares occupied by the path
-function markPathSquares(start, end) {
-    const dx = end.x - start.x;
-    const dy = end.y - start.y;
-    const steps = Math.max(Math.abs(dx), Math.abs(dy)) / gridSize;
-
-    for (let i = 0; i <= steps; i++) {
-        const x = Math.floor((start.x + (dx * i) / steps) / gridSize);
-        const y = Math.floor((start.y + (dy * i) / steps) / gridSize);
-        occupiedSquares.add(`${x},${y}`);
-    }
-}
-
-// Check if a square is available for tower placement
-function isSquareAvailable(x, y) {
-    const gridX = Math.floor(x / gridSize);
-    const gridY = Math.floor(y / gridSize);
-    return !occupiedSquares.has(`${gridX},${gridY}`);
-}
 
 let hoverTarget = null; // To store the hovered object
 

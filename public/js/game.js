@@ -246,16 +246,16 @@ class Enemy {
                         newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
                         newEnemy.y = this.y;
     
-                        // Calculate the nearest path index for the new enemy
+                        // Calculate the nearest path index for the new enemy, ensuring it's ahead on the path
                         let closestDistance = Infinity;
-                        for (let i = 0; i < path.length; i++) {
+                        for (let i = this.currentPathIndex; i < path.length; i++) { // Start from the current path index
                             const distance = Math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
                             if (distance < closestDistance) {
                                 closestDistance = distance;
                                 newEnemy.currentPathIndex = i;
                             }
                         }
-    
+                        
                         enemies.push(newEnemy);
                     }
                 }

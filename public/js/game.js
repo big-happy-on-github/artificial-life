@@ -176,6 +176,45 @@ class Enemy {
         }
     }
 
+    update() {
+        // Check if there are more waypoints to follow
+        if (this.currentPathIndex < path.length) {
+            const target = path[this.currentPathIndex];
+            const dx = target.x - this.x;
+            const dy = target.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+    
+            // Move in the direction of the target
+            const moveX = (dx / distance) * this.speed;
+            const moveY = (dy / distance) * this.speed;
+    
+            // Check if the enemy will overshoot the target
+            if (distance < this.speed) {
+                // Move directly to the target waypoint
+                this.x = target.x;
+                this.y = target.y;
+                this.currentPathIndex++; // Move to the next waypoint
+            } else {
+                // Normal movement towards the target
+                this.x += moveX;
+                this.y += moveY;
+            }
+        }
+    
+        // Check if the enemy reached the end of the path
+        if (this.currentPathIndex >= path.length) {
+            this.die(true); // Enemy crossed the path
+        }
+    
+        // Check for nearby towers and shoot
+        const nearestTower = towers.find(tower => this.isInRange(tower));
+        if (nearestTower) {
+            this.shoot(nearestTower);
+        }
+    
+        this.draw();
+    }
+
     die(crossed) {
         const index = enemies.indexOf(this);
         if (index > -1) {

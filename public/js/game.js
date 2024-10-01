@@ -110,7 +110,7 @@ class Tower {
         const upgradePrice = this.price * this.level;
         let targetType;
             if (this.type == '1') {
-                targetType = 'rascal';
+                targetType = 'jack';
             } else if (this.type == '2') {
                 targetType = 'liam';
             } else if (this.type == '3') {
@@ -515,7 +515,7 @@ function drawTooltip() {
     if (hoverTarget instanceof Tower) {
         let towerType;
         if (hoverTarget.type == '1') {
-            towerType = 'rascal';
+            towerType = 'jack';
         } else if (hoverTarget.type == '2') {
             towerType = 'liam';
         } else if (hoverTarget.type == '3') {

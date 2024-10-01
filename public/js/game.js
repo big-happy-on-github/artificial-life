@@ -386,7 +386,7 @@ canvas.addEventListener('click', (event) => {
     const y = event.clientY - rect.top;
 
     if (!selectedTowerType) {
-        selectedTowerType = '1'; // Default to tower type '1' if none is selected
+        selectedTowerType = null;
     }
 
     if (isOutsidePath(x, y)) {

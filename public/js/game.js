@@ -471,6 +471,7 @@ canvas.addEventListener('click', (event) => {
         }
     } else {
         console.log('Cannot place tower here.');
+        alert("tower is too close to the path; move it back a space");
     }
 });
 

@@ -40,7 +40,7 @@ class Tower {
         this.type = type;
         this.level = 1;
         this.health = 100;
-        this.target = null; // Add target property to track the current enemy
+        this.target = null;
 
         if (type == '1') {
             this.range = 150;
@@ -73,9 +73,46 @@ class Tower {
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
-    shoot(enemy) {
-        const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+    shoot() {
+        if (!this.target) return; // No target to shoot at
+
+        const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+    }
+
+    update(deltaTime) {
+        if (this.health <= 0) return; // Skip update if the tower is destroyed
+
+        // Check if the current target is valid (within range and alive)
+        if (this.target && (!this.isInRange(this.target) || this.target.health <= 0)) {
+            this.target = null; // Clear target if it's out of range or dead
+        }
+
+        // Acquire a new target if there is none
+        if (!this.target) {
+            const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
+            if (enemiesInRange.length > 0) {
+                // Find the enemy with the greatest progress along the path
+                this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
+                    return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
+                        ? currentEnemy
+                        : farthestEnemy;
+                });
+            }
+        }
+
+        // Attack the target if it's time to fire
+        if (this.target && Date.now() - this.lastFired > this.fireRate) {
+            this.shoot();
+            this.lastFired = Date.now();
+        }
+
+        this.draw();
+    }
+
+    isInRange(enemy) {
+        const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+        return distance <= this.range;
     }
 
     takeDamage(amount) {
@@ -119,42 +156,7 @@ class Tower {
             }
         }
     }
-
-    shoot() {
-        if (!this.target) return; // No target to shoot at
-
-        const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
-    }
-
-    update(deltaTime) {
-        if (this.health <= 0) return; // Skip update if the tower is destroyed
-
-        // Check if the current target is valid (within range and alive)
-        if (this.target && (!this.isInRange(this.target) || this.target.health <= 0)) {
-            this.target = null; // Clear target if it's out of range or dead
-        }
-
-        // Acquire a new target if there is none
-        if (!this.target) {
-            this.target = enemies.find(enemy => this.isInRange(enemy));
-        }
-
-        // Attack the target if it's time to fire
-        if (this.target && Date.now() - this.lastFired > this.fireRate) {
-            this.shoot();
-            this.lastFired = Date.now();
-        }
-
-        this.draw();
-    }
-
-    isInRange(enemy) {
-        const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
-        return distance <= this.range;
-    }
 }
-
 
 class Enemy {
     constructor(type) {
@@ -170,7 +172,38 @@ class Enemy {
         this.range = type.range;
         this.currentPathIndex = 1; // Start moving to the second waypoint
         this.lastFired = 0;
-        this.nextType = type.nextType; // Store the next enemy type
+        this.nextType = type.nextType;
+    }
+
+    // New method to calculate the progress of the enemy along the path
+    getPathProgress() {
+        let totalDistance = 0;
+        let progressDistance = 0;
+
+        // Calculate total path length
+        for (let i = 0; i < path.length - 1; i++) {
+            const dx = path[i + 1].x - path[i].x;
+            const dy = path[i + 1].y - path[i].y;
+            totalDistance += Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Calculate the progress distance
+        for (let i = 0; i < this.currentPathIndex - 1; i++) {
+            const dx = path[i + 1].x - path[i].x;
+            const dy = path[i + 1].y - path[i].y;
+            progressDistance += Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Add the partial progress in the current segment
+        if (this.currentPathIndex < path.length) {
+            const target = path[this.currentPathIndex];
+            const dx = target.x - this.x;
+            const dy = target.y - this.y;
+            progressDistance += Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Return progress as a percentage of the total path length
+        return progressDistance / totalDistance;
     }
 
     draw() {

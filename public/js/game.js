@@ -151,8 +151,6 @@ class Enemy {
     constructor(type) {
         this.x = path[0].x; // Start at the first waypoint
         this.y = path[0].y;
-
-        // Enemy attributes based on type
         this.type = type;
         this.speed = type.speed;
         this.health = type.health;
@@ -161,66 +159,14 @@ class Enemy {
         this.fireRate = type.fireRate;
         this.damage = type.damage;
         this.range = type.range;
-
         this.currentPathIndex = 1; // Start moving to the second waypoint
         this.lastFired = 0;
+        this.nextType = type.nextType; // Store the next enemy type
     }
 
     draw() {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
-    }
-
-    shoot(tower) {
-        if (this.canShoot && Date.now() - this.lastFired > this.fireRate) {
-            const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
-            enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
-            this.lastFired = Date.now();
-        }
-    }
-
-    update() {
-        // Check if there are more waypoints to follow
-        if (this.currentPathIndex < path.length) {
-            const target = path[this.currentPathIndex];
-            const dx = target.x - this.x;
-            const dy = target.y - this.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-    
-            // Move in the direction of the target
-            const moveX = (dx / distance) * this.speed;
-            const moveY = (dy / distance) * this.speed;
-    
-            // Check if the enemy will overshoot the target
-            if (distance < this.speed) {
-                // Move directly to the target waypoint
-                this.x = target.x;
-                this.y = target.y;
-                this.currentPathIndex++; // Move to the next waypoint
-            } else {
-                // Normal movement towards the target
-                this.x += moveX;
-                this.y += moveY;
-            }
-        }
-    
-        // Check if the enemy reached the end of the path
-        if (this.currentPathIndex >= path.length) {
-            this.die(true); // Enemy crossed the path
-        }
-    
-        // Check for nearby towers and shoot
-        const nearestTower = towers.find(tower => this.isInRange(tower));
-        if (nearestTower) {
-            this.shoot(nearestTower);
-        }
-    
-        this.draw();
-    }
-
-    isInRange(tower) {
-        const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
-        return distance <= this.range; // Adjust range as necessary
     }
 
     takeDamage(amount) {
@@ -243,17 +189,28 @@ class Enemy {
                 }
             }
             updateHUD();
+
+            // Transform into the next enemy type if available
+            if (this.nextType) {
+                const nextEnemyType = enemyTypes.find(type => type.color === this.nextType);
+                if (nextEnemyType) {
+                    const newEnemy = new Enemy(nextEnemyType);
+                    newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
+                    newEnemy.y = this.y;
+                    enemies.push(newEnemy);
+                }
+            }
         }
     }
 }
 
-// Define different enemy types
+// Define different enemy types with a transformation sequence
 const enemyTypes = [
-    { speed: 1, health: 75, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 1 }, // Basic enemy
-    { speed: 2, health: 55, color: 'yellow', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 2 }, // Fast enemy
-    { speed: 0.8, health: 125, color: 'brown', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 3 }, // Tank enemy
-    { speed: 1, health: 65, color: 'white', canShoot: true, range: 100, fireRate: 2000, damage: 15, level: 4 }, // Shooting enemy
-    { speed: 1.2, health: 85, color: 'yellow', canShoot: true, range: 100, fireRate: 1500, damage: 10, level: 5 }, // Fast shooting enemy
+    { speed: 1, health: 75, color: 'red', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 1, nextType: 'yellow' }, // Basic enemy
+    { speed: 2, health: 55, color: 'yellow', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 2, nextType: 'white' }, // Fast enemy
+    { speed: 0.8, health: 125, color: 'brown', canShoot: false, range: 100, fireRate: 0, damage: 0, level: 3, nextType: null }, // Tank enemy, no further transformation
+    { speed: 1, health: 65, color: 'white', canShoot: true, range: 100, fireRate: 2000, damage: 15, level: 4, nextType: null }, // Shooting enemy, no further transformation
+    { speed: 1.2, health: 85, color: 'yellow', canShoot: true, range: 100, fireRate: 1500, damage: 10, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
 ];
 
 function spawnEnemies() {

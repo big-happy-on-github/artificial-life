@@ -353,9 +353,9 @@ function update(deltaTime) {
     }
 }
 
-// Simplified isOutsidePath to make tower placement easier
+// Function to check if position is outside the path
 function isOutsidePath(x, y) {
-    const buffer = 50; // Increase buffer to make placing towers easier
+    const buffer = 10; // Small buffer to check for proximity to the path
 
     for (let i = 0; i < path.length - 1; i++) {
         const start = path[i];
@@ -363,16 +363,20 @@ function isOutsidePath(x, y) {
 
         const length = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2);
         const t = ((x - start.x) * (end.x - start.x) + (y - start.y) * (end.y - start.y)) / (length * length);
-        const closestX = start.x + t * (end.x - start.x);
-        const closestY = start.y + t * (end.y - start.y);
+        
+        // Clamp 't' to the segment bounds to find the closest point on the segment
+        const clampedT = Math.max(0, Math.min(1, t));
+        const closestX = start.x + clampedT * (end.x - start.x);
+        const closestY = start.y + clampedT * (end.y - start.y);
 
         const distance = Math.sqrt((x - closestX) ** 2 + (y - closestY) ** 2);
 
+        // Return false if the point is too close to the path
         if (distance < buffer) {
-            return false; // Position is too close to the path
+            return false;
         }
     }
-    return true; // Position is safe to place a tower
+    return true; // The point is far enough from all path segments
 }
 
 // Updated canvas click event to simplify tower placement

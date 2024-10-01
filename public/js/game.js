@@ -532,7 +532,7 @@ const occupiedSquares = new Set();
 
 // Draw the grid and the path
 function drawGrid() {
-    ctx.strokeStyle = '#ccc'; // Light gray for grid lines
+    ctx.strokeStyle = '#A9A9A9'; // Light gray for grid lines
     for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
             ctx.strokeRect(x, y, gridSize, gridSize);

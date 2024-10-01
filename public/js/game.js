@@ -94,7 +94,7 @@ class Tower {
 
     upgrade() {
         if (this.level >= 10) {
-            alert(no upgrades available past lvl ${this.level});
+            alert(`no upgrades available past lvl ${this.level}`);
             return;
         }
     
@@ -107,7 +107,7 @@ class Tower {
             } else if (this.type == '3') {
                 targetType = 'evan';
             }
-        if (confirm(you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?)) {
+        if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
             if (currency >= upgradePrice) {
                 this.level++;
                 this.range += 50;

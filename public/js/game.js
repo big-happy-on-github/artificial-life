@@ -237,19 +237,19 @@ class Enemy {
                 if (lives <= 0) {
                     endGame();
                 }
-            }
-            updateHUD();
-
-            // Transform into the next enemy type if available
-            if (this.nextType) {
-                const nextEnemyType = enemyTypes.find(type => type.color === this.nextType);
-                if (nextEnemyType) {
-                    const newEnemy = new Enemy(nextEnemyType);
-                    newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
-                    newEnemy.y = this.y;
-                    enemies.push(newEnemy);
+            } else {
+                // Transform into the next enemy type if available
+                if (this.nextType) {
+                    const nextEnemyType = enemyTypes.find(type => type.color === this.nextType);
+                    if (nextEnemyType) {
+                        const newEnemy = new Enemy(nextEnemyType);
+                        newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
+                        newEnemy.y = this.y;
+                        enemies.push(newEnemy);
+                    }
                 }
             }
+            updateHUD();
         }
     }
 }

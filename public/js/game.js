@@ -39,36 +39,27 @@ class Tower {
         this.y = y;
         this.type = type;
         this.level = 1;
-        this.health = 100; // Add health property for the tower
+        this.health = 100;
+        this.target = null; // Add target property to track the current enemy
+
         if (type == '1') {
             this.range = 150;
-        } else if (type == '2') {
-            this.range = 100;
-        } else if (type == '3') {
-            this.range = 1000;
-        }
-        if (type == '1') {
             this.fireRate = 1000;
-        } else if (type == '2') {
-            this.fireRate = 1500;
-        } else if (type == '3') {
-            this.fireRate = 800;
-        }
-        this.lastFired = 0;
-        if (type == '1') {
             this.damage = 20;
-        } else if (type == '2') {
-            this.damage = 35;
-        } else if (type == '3') {
-            this.damage = 45;
-        }
-        if (type == '1') {
             this.price = 2;
         } else if (type == '2') {
+            this.range = 100;
+            this.fireRate = 1500;
+            this.damage = 35;
             this.price = 3;
         } else if (type == '3') {
+            this.range = 1000;
+            this.fireRate = 800;
+            this.damage = 45;
             this.price = 3;
         }
+
+        this.lastFired = 0;
     }
 
     draw() {
@@ -103,7 +94,7 @@ class Tower {
 
     upgrade() {
         if (this.level >= 10) {
-            alert(`no upgrades available past lvl ${this.level}`);
+            alert(no upgrades available past lvl ${this.level});
             return;
         }
     
@@ -116,7 +107,7 @@ class Tower {
             } else if (this.type == '3') {
                 targetType = 'evan';
             }
-        if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
+        if (confirm(you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?)) {
             if (currency >= upgradePrice) {
                 this.level++;
                 this.range += 50;
@@ -129,15 +120,32 @@ class Tower {
         }
     }
 
+    shoot() {
+        if (!this.target) return; // No target to shoot at
+
+        const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+    }
+
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
-        const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
-        
-        if (nearestEnemy && Date.now() - this.lastFired > this.fireRate) {
-            this.shoot(nearestEnemy);
+
+        // Check if the current target is valid (within range and alive)
+        if (this.target && (!this.isInRange(this.target) || this.target.health <= 0)) {
+            this.target = null; // Clear target if it's out of range or dead
+        }
+
+        // Acquire a new target if there is none
+        if (!this.target) {
+            this.target = enemies.find(enemy => this.isInRange(enemy));
+        }
+
+        // Attack the target if it's time to fire
+        if (this.target && Date.now() - this.lastFired > this.fireRate) {
+            this.shoot();
             this.lastFired = Date.now();
         }
-        
+
         this.draw();
     }
 
@@ -146,6 +154,7 @@ class Tower {
         return distance <= this.range;
     }
 }
+
 
 class Enemy {
     constructor(type) {

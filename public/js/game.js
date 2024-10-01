@@ -176,6 +176,14 @@ class Enemy {
         }
     }
 
+    shoot(tower) {
+        if (this.canShoot && Date.now() - this.lastFired > this.fireRate) {
+            const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
+            enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+            this.lastFired = Date.now();
+        }
+    }
+
     update() {
         // Check if there are more waypoints to follow
         if (this.currentPathIndex < path.length) {

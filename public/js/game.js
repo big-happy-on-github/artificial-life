@@ -318,7 +318,7 @@ const enemyTypes = [
 ];
 
 function spawnEnemies() {
-    const enemyCount = wave * 2;
+    const enemyCount = 5 + wave;
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
             const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);

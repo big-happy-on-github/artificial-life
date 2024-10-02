@@ -312,10 +312,14 @@ class Enemy {
 const enemyTypes = [
     { speed: 1, health: 65, color: 'red', canShoot: false, range: null, fireRate: null, damage: null, level: 1, nextType: null }, // Basic enemy
     { speed: 4, health: 45, color: 'orange', canShoot: false, range: null, fireRate: null, damage: null, level: 2, nextType: null }, // Fast enemy
-    { speed: 0.7, health: 220, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: "orange" }, // Tank enemy, no further transformation
+    { speed: 0.7, health: 220, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: 'orange' }, // Tank enemy, no further transformation
     { speed: 1, health: 70, color: 'green', canShoot: true, range: 100, fireRate: 2000, damage: 25, level: 4, nextType: null }, // Shooting enemy, no further transformation
     { speed: 2, health: 80, color: 'blue', canShoot: true, range: 100, fireRate: 1500, damage: 20, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
-    { speed: 0.3, health: 500, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: "yellow" },
+    { speed: 0.3, health: 500, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
+];
+
+const bossEnemyTypes = [
+    { speed: 0.3, health: 1000, color: 'pink', canShoot: true, range: 1000, fireRate: 500, damage: 25, level: 10, nextType: 'purple' },
 ];
 
 function spawnEnemies() {
@@ -327,6 +331,12 @@ function spawnEnemies() {
             const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
+    }
+    for (let boss in bossEnemyTypes) {
+        if (wave == boss.level) {
+            const bossEnemy = new Enemy(boss);
+            enemies.push(bossEnemy);
+        }
     }
     setTimeout(() => {
         waveInProgress = false;
@@ -671,6 +681,12 @@ function nextWave() {
     wave++;
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", JSON.stringify(wave));
+    }
+
+    for (let boss in bossEnemyTypes) {
+        if (wave - 1 == boss.level) {
+            alert(`boss on wave ${wave + 1}!`);
+        }
     }
     updateHUD();
 }

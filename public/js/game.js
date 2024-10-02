@@ -44,12 +44,12 @@ class Tower {
 
         if (type == '1') {
             this.range = 150;
-            this.fireRate = 1000;
+            this.fireRate = 1;
             this.damage = 20;
             this.price = 2;
         } else if (type == '2') {
             this.range = 100;
-            this.fireRate = 1500;
+            this.fireRate = 1.5;
             this.damage = 35;
             this.price = 3;
         } else if (type == '3') {
@@ -102,7 +102,7 @@ class Tower {
         }
 
         // Attack the target if it's time to fire
-        if (this.target && Date.now() - this.lastFired > this.fireRate) {
+        if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
             this.shoot();
             this.lastFired = Date.now();
         }
@@ -221,7 +221,7 @@ class Enemy {
 
 
     shoot(tower) {
-        if (this.canShoot && Date.now() - this.lastFired > this.fireRate) {
+        if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
             const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
             enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
             this.lastFired = Date.now();
@@ -310,12 +310,12 @@ class Enemy {
 
 // Define different enemy types with a transformation sequence
 const enemyTypes = [
-    { speed: 1, health: 65, color: 'red', canShoot: false, range: null, fireRate: null, damage: null, level: 1, nextType: null }, // Basic enemy
-    { speed: 4, health: 45, color: 'orange', canShoot: false, range: null, fireRate: null, damage: null, level: 2, nextType: null }, // Fast enemy
-    { speed: 0.7, health: 220, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: 'orange' }, // Tank enemy, no further transformation
-    { speed: 1, health: 70, color: 'green', canShoot: true, range: 100, fireRate: 2000, damage: 25, level: 4, nextType: null }, // Shooting enemy, no further transformation
-    { speed: 2, health: 80, color: 'blue', canShoot: true, range: 100, fireRate: 1500, damage: 20, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
-    { speed: 0.3, health: 500, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
+    { speed: 1, health: 105, color: 'red', canShoot: false, range: null, fireRate: null, damage: null, level: 1, nextType: null }, // Basic enemy
+    { speed: 4, health: 85, color: 'orange', canShoot: false, range: null, fireRate: null, damage: null, level: 2, nextType: null }, // Fast enemy
+    { speed: 0.7, health: 260, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: 'orange' }, // Tank enemy, no further transformation
+    { speed: 1, health: 110, color: 'green', canShoot: true, range: 100, fireRate: 2, damage: 25, level: 4, nextType: null }, // Shooting enemy, no further transformation
+    { speed: 2, health: 120, color: 'blue', canShoot: true, range: 100, fireRate: 1.5, damage: 20, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
+    { speed: 0.3, health: 700, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
 ];
 
 const bossEnemyTypes = [
@@ -653,9 +653,9 @@ function drawTooltip() {
         } else if (hoverTarget.type == '3') {
             towerType = 'evan';
         }
-        tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+        tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}`;
+        tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
     }
 
     // Draw tooltip background

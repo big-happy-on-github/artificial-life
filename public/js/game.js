@@ -332,12 +332,15 @@ function spawnEnemies() {
             enemies.push(enemy);
         }, i * 1000);
     }
-    for (let boss in bossEnemyTypes) {
-        if (wave == boss.level) {
+    
+    // Spawn boss if wave matches boss level
+    bossEnemyTypes.forEach(boss => {
+        if (wave === boss.level) {
             const bossEnemy = new Enemy(boss);
             enemies.push(bossEnemy);
         }
-    }
+    });
+    
     setTimeout(() => {
         waveInProgress = false;
         startWaveButton.disabled = false;
@@ -676,18 +679,20 @@ function updateHUD() {
     livesDisplay.textContent = `${lives} lives`;
 }
 
-// Move to the next wave
 function nextWave() {
     wave++;
+    
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", JSON.stringify(wave));
     }
 
-    for (let boss in bossEnemyTypes) {
-        if (wave - 1 == boss.level) {
-            alert(`boss on wave ${wave + 1}!`);
+    // Check for boss in the next wave
+    bossEnemyTypes.forEach(boss => {
+        if (wave === boss.level) {
+            alert(`Boss on wave ${wave}!`);
         }
-    }
+    });
+
     updateHUD();
 }
 

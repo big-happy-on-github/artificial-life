@@ -75,31 +75,32 @@ class Tower {
 
     shoot() {
         if (!this.target) return; // No target to shoot at
-
+    
         const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+        console.log("Fired at target:", this.target); // Debug log
     }
 
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
 
-        // Check if the current target is valid (within range and alive)
-        if (this.target && (!this.isInRange(this.target) || this.target.health <= 0)) {
-            this.target = null; // Clear target if it's out of range or dead
+        if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+            this.shoot();
+            this.lastFired = Date.now();
         }
 
-        // Acquire a new target if there is none
         if (!this.target) {
             const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
             if (enemiesInRange.length > 0) {
-                // Find the enemy with the greatest progress along the path
                 this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
                     return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
                         ? currentEnemy
                         : farthestEnemy;
                 });
+                console.log("New target acquired:", this.target); // Debug log
             }
         }
+
 
         // Attack the target if it's time to fire
         if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {

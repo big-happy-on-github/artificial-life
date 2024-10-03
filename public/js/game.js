@@ -111,9 +111,11 @@ class Tower {
     }
 
     isInRange(enemy) {
+        const buffer = 5; // Small buffer to account for floating-point inaccuracies
         const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
-        return distance <= this.range;
+        return distance <= this.range + buffer;
     }
+
 
     takeDamage(amount) {
         this.health -= amount;
@@ -267,9 +269,11 @@ class Enemy {
     }
 
     isInRange(tower) {
+        const buffer = 5; // Small buffer to account for floating-point inaccuracies
         const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
-        return distance <= this.range; // Adjust range as necessary
+        return distance <= this.range + buffer;
     }
+
 
     die(crossed) {
         const index = enemies.indexOf(this);
@@ -371,20 +375,21 @@ class Projectile {
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
         this.draw();
-
+    
+        const buffer = 5; // Add a buffer for collision detection
+    
         if (this.type == 'tower') {
             enemies.forEach(enemy => {
                 const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
-                if (distance < 20) {
+                if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
                     this.destroy();
                 }
             });
         } else if (this.type == 'enemy') {
-            // Check collision with towers
             towers.forEach(tower => {
                 const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
-                if (distance < 20) {
+                if (distance < 20 + buffer) {
                     tower.takeDamage(this.damage);
                     this.destroy();
                 }

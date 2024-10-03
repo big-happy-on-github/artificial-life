@@ -657,7 +657,7 @@ let lastClickTime = 0; // To store the timestamp of the last click
 
 // Handle single and double clicks for upgrading towers
 canvas.addEventListener('click', (event) => {
-    const currentTime = new Date().getTime();
+    /*const currentTime = new Date().getTime();
     const timeDifference = currentTime - lastClickTime;
 
     // Check if the second click happened within 500 milliseconds
@@ -683,7 +683,7 @@ canvas.addEventListener('click', (event) => {
     }
 
     // Update the last click time
-    lastClickTime = currentTime;
+    lastClickTime = currentTime;*/
 });
 
 // Handle start wave button click
@@ -725,7 +725,7 @@ canvas.addEventListener('mousemove', (event) => {
 
 // Function to draw the tooltip
 function drawTooltip() {
-    if (!hoverTarget) return;
+    /*if (!hoverTarget) return;
 
     const tooltipX = hoverTarget.x + 20; // Position tooltip near the hovered object
     const tooltipY = hoverTarget.y - 20;
@@ -760,7 +760,7 @@ function drawTooltip() {
     const lines = tooltipText.split('\n');
     lines.forEach((line, index) => {
         ctx.fillText(line, tooltipX + 5, tooltipY + 15 + index * 15);
-    });
+    });*/
 }
 
 

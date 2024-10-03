@@ -39,23 +39,23 @@ class Tower {
         this.y = y;
         this.type = type;
         this.level = 1;
-        this.health = 100;
+        this.health = 10;
         this.target = null;
 
         if (type == '1') {
             this.range = 150;
             this.fireRate = 1;
-            this.damage = 20;
+            this.damage = 2;
             this.price = 2;
         } else if (type == '2') {
             this.range = 1;
             this.fireRate = 1.5;
-            this.damage = 35;
+            this.damage = 3.5;
             this.price = 3;
         } else if (type == '3') {
             this.range = 1000;
             this.fireRate = 0.8;
-            this.damage = 45;
+            this.damage = 4.5;
             this.price = 3;
         }
 
@@ -259,6 +259,17 @@ class Enemy {
         if (this.currentPathIndex >= path.length) {
             this.die(true); // Enemy crossed the path
         }
+
+        // Check for specials
+        if (this.type.special) {
+            if (this.color == '#33fff9') {
+                const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
+                if (nearestEnemy && Date.now() - this.lastFired > this.fireRate * 1000) {
+                    nearestEnemy.health += 1;
+                    this.lastFired = Date.now();
+                }
+            }
+        }
     
         // Check for nearby towers and shoot
         const nearestTower = towers.find(tower => this.isInRange(tower));
@@ -274,7 +285,6 @@ class Enemy {
         const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
         return distance <= this.range + buffer;
     }
-
 
     die(crossed) {
         const index = enemies.indexOf(this);
@@ -315,16 +325,18 @@ class Enemy {
 
 // Define different enemy types with a transformation sequence
 const enemyTypes = [
-    { speed: 1, health: 105, color: 'red', canShoot: false, range: null, fireRate: null, damage: null, level: 1, nextType: null }, // Basic enemy
-    { speed: 4, health: 85, color: 'orange', canShoot: false, range: null, fireRate: null, damage: null, level: 2, nextType: null }, // Fast enemy
-    { speed: 0.7, health: 260, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: 'orange' }, // Tank enemy, no further transformation
-    { speed: 1, health: 110, color: 'green', canShoot: true, range: 100, fireRate: 2, damage: 25, level: 4, nextType: null }, // Shooting enemy, no further transformation
-    { speed: 2, health: 120, color: 'blue', canShoot: true, range: 100, fireRate: 1.5, damage: 20, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
-    { speed: 0.3, health: 700, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
+    { speed: 1, health: 12.5, color: 'red', canShoot: false, range: null, fireRate: null, damage: null, level: 1, nextType: null }, // Basic enemy
+    { speed: 4, health: 10.5, color: 'orange', canShoot: false, range: null, fireRate: null, damage: null, level: 2, nextType: null }, // Fast enemy
+    { speed: 0.7, health: 28, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: 'orange' }, // Tank enemy, no further transformation
+    { speed: 1, health: 13, color: 'green', canShoot: true, range: 100, fireRate: 2, damage: 2.5, level: 4, nextType: null }, // Shooting enemy, no further transformation
+    { speed: 2, health: 15, color: 'blue', canShoot: true, range: 100, fireRate: 1.5, damage: 2, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
+    { speed: 0.3, health: 72, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
+    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 0.5, damage: 2.5, level: 12, nextType: 'purple' },
+    { speed: 1, health: 15, color: '#33fff9', canShoot: false, range: 100, fireRate: 1, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies' },
 ];
 
 const bossEnemyTypes = [
-    { speed: 0.3, health: 1000, color: 'pink', canShoot: true, range: 1000, fireRate: 500, damage: 25, level: 10, nextType: 'purple' },
+    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 0.5, damage: 2.5, level: 10, nextType: 'purple' },
 ];
 
 function spawnEnemies() {
@@ -661,7 +673,11 @@ function drawTooltip() {
         }
         tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
     } else if (hoverTarget instanceof Enemy) {
-        tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
+        if (hoverTarget.special) {
+            tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nSPECIAL: ${hoverTarget.special}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
+        } else {
+            tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
+        }
     }
 
     // Draw tooltip background
@@ -695,7 +711,13 @@ function nextWave() {
     // Check for boss in the next wave
     bossEnemyTypes.forEach(boss => {
         if (wave === boss.level) {
-            alert(`Boss on wave ${wave}!`);
+            alert(`${boss.color} boss on wave ${wave}!`);
+        }
+    });
+
+    enemyTypes.forEach(enemy => {
+        if (enemy.special && enemy.level == wave) {
+            alert(`Special ${enemy.color} enemy on wave ${wave}!`);
         }
     });
 

@@ -48,13 +48,13 @@ class Tower {
             this.damage = 20;
             this.price = 2;
         } else if (type == '2') {
-            this.range = 100;
+            this.range = 1;
             this.fireRate = 1.5;
             this.damage = 35;
             this.price = 3;
         } else if (type == '3') {
             this.range = 1000;
-            this.fireRate = 800;
+            this.fireRate = 0.8;
             this.damage = 45;
             this.price = 3;
         }

@@ -74,7 +74,7 @@ class Tower {
     }
 
     shoot() {
-        if (!this.target || this.target.health <= 0) return; // No target to shoot at
+        if (!this.target || this.target.getPathProgress >= 0.99 || this.target.health <= 0) return; // No target to shoot at
     
         const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
@@ -89,7 +89,7 @@ class Tower {
             this.lastFired = Date.now();
         }
 
-        if (!this.target || this.target.health <= 0) {
+        if (!this.target || this.target.getPathProgress >= 0.99 || this.target.health <= 0) {
             const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
             if (enemiesInRange.length > 0) {
                 this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {

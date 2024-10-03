@@ -267,6 +267,7 @@ class Enemy {
                 if (nearestEnemy && Date.now() - this.lastFired > this.fireRate * 1000) {
                     nearestEnemy.health += 1;
                     this.lastFired = Date.now();
+                    console.log(`'#33fff9' healed ${nearestEnemy} to ${nearestEnemy.health}`);
                 }
             }
         }
@@ -725,9 +726,18 @@ function nextWave() {
     updateHUD();
 }
 
+//cheats
 function skipToWave(newWave) {
     wave += (newWave - 1);
     nextWave();
+}
+
+function giveMoney(money) {
+    currency += money;
+}
+
+function help() {
+    console.log("skipToWave, giveMoney");
 }
 
 // Reset the game

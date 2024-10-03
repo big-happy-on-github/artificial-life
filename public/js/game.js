@@ -730,10 +730,12 @@ function nextWave() {
 function skipToWave(newWave) {
     wave += (newWave - 1);
     nextWave();
+    updateHUD();
 }
 
 function giveMoney(money) {
     currency += money;
+    updateHUD();
 }
 
 function help() {

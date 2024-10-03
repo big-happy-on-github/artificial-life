@@ -712,13 +712,13 @@ function nextWave() {
     // Check for boss in the next wave
     bossEnemyTypes.forEach(boss => {
         if (wave === boss.level) {
-            alert(`${boss.color} boss on wave ${wave}!`);
+            alert(`new color boss on wave ${wave}!`);
         }
     });
 
     enemyTypes.forEach(enemy => {
         if (enemy.special && enemy.level == wave) {
-            alert(`Special ${enemy.color} enemy on wave ${wave}!`);
+            alert(`new color special enemy on wave ${wave}!`);
         }
     });
 

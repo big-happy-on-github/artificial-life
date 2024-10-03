@@ -43,17 +43,17 @@ class Tower {
         this.target = null;
 
         if (type == '1') {
-            this.range = 150;
+            this.range = 15;
             this.fireRate = 1;
             this.damage = 2;
             this.price = 2;
         } else if (type == '2') {
-            this.range = 100;
+            this.range = 10;
             this.fireRate = 1.5;
             this.damage = 3.5;
             this.price = 3;
         } else if (type == '3') {
-            this.range = 1000;
+            this.range = 100;
             this.fireRate = 0.8;
             this.damage = 4.5;
             this.price = 3;
@@ -329,11 +329,11 @@ const enemyTypes = [
     { speed: 1, health: 12.5, color: 'red', canShoot: false, range: null, fireRate: null, damage: null, level: 1, nextType: null }, // Basic enemy
     { speed: 4, health: 10.5, color: 'orange', canShoot: false, range: null, fireRate: null, damage: null, level: 2, nextType: null }, // Fast enemy
     { speed: 0.7, health: 28, color: 'yellow', canShoot: false, range: null, fireRate: null, damage: null, level: 3, nextType: 'orange' }, // Tank enemy, no further transformation
-    { speed: 1, health: 13, color: 'green', canShoot: true, range: 100, fireRate: 2, damage: 2.5, level: 4, nextType: null }, // Shooting enemy, no further transformation
-    { speed: 2, health: 15, color: 'blue', canShoot: true, range: 100, fireRate: 1.5, damage: 2, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
+    { speed: 1, health: 13, color: 'green', canShoot: true, range: 10, fireRate: 2, damage: 2.5, level: 4, nextType: null }, // Shooting enemy, no further transformation
+    { speed: 2, health: 15, color: 'blue', canShoot: true, range: 10, fireRate: 1.5, damage: 2, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
     { speed: 0.3, health: 72, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
-    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 0.5, damage: 2.5, level: 12, nextType: 'purple' },
-    { speed: 1, health: 15, color: '#33fff9', canShoot: false, range: 100, fireRate: 1, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies' },
+    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 100, fireRate: 0.5, damage: 2.5, level: 12, nextType: 'purple' },
+    { speed: 1, health: 15, color: '#33fff9', canShoot: false, range: 10, fireRate: 1, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies' },
 ];
 
 const bossEnemyTypes = [

@@ -337,7 +337,7 @@ const enemyTypes = [
 ];
 
 const bossEnemyTypes = [
-    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 0.5, damage: 2.5, level: 10, nextType: 'purple' },
+    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 0.125, damage: 2.5, level: 10, nextType: 'purple' },
 ];
 
 function spawnEnemies() {

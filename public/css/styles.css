@@ -88,3 +88,23 @@ body {
 #start-wave-button:hover {
     background-color: #666;
 }
+
+/* Pop-up menu for tower stats */
+#tower-stats-popup {
+    position: absolute;
+    top: 50px;
+    right: -200px; /* Initially hide off-screen */
+    width: 180px;
+    padding: 10px;
+    background-color: #444;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    display: none; /* Hidden by default */
+    transition: right 0.3s; /* Smooth transition when shown */
+}
+
+/* Show the pop-up when it is triggered */
+#tower-stats-popup.show {
+    right: 10px;
+}

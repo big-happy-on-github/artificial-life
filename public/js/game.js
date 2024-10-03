@@ -48,7 +48,7 @@ class Tower {
             this.damage = 2;
             this.price = 2;
         } else if (type == '2') {
-            this.range = 1;
+            this.range = 100;
             this.fireRate = 1.5;
             this.damage = 3.5;
             this.price = 3;
@@ -114,7 +114,7 @@ class Tower {
     isInRange(enemy) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
         const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
-        return distance <= this.range + buffer;
+        return distance <= this.range * 10 + buffer;
     }
 
 
@@ -283,7 +283,7 @@ class Enemy {
     isInRange(tower) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
         const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
-        return distance <= this.range + buffer;
+        return distance <= this.range * 10 + buffer;
     }
 
     die(crossed) {

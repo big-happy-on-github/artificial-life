@@ -725,6 +725,11 @@ function nextWave() {
     updateHUD();
 }
 
+function skipToWave(newWave) {
+    wave += (newWave - 1);
+    nextWave();
+}
+
 // Reset the game
 function endGame() {
     alert(`game over! died on wave ${wave}`);

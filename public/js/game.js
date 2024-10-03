@@ -8,6 +8,74 @@ const towerSelection = document.getElementById('tower-selection');
 const startWaveButton = document.getElementById('start-wave-button');
 const autoStartCheckbox = document.getElementById('auto-start');
 
+// Get reference to the tower stats pop-up
+const towerStatsPopup = document.getElementById('tower-stats-popup');
+const towerTypeDisplay = document.getElementById('tower-type');
+const towerLevelDisplay = document.getElementById('tower-level');
+const towerHealthDisplay = document.getElementById('tower-health');
+const towerRangeDisplay = document.getElementById('tower-range');
+const towerDamageDisplay = document.getElementById('tower-damage');
+const towerFireRateDisplay = document.getElementById('tower-fire-rate');
+
+// Function to show the tower stats pop-up
+function showTowerStats(tower) {
+    let towerType;
+    if (tower.type == '1') {
+        towerType = 'jack';
+    } else if (tower.type == '2') {
+        towerType = 'liam';
+    } else if (tower.type == '3') {
+        towerType = 'evan';
+    }
+
+    towerTypeDisplay.textContent = `${towerType} tower`;
+    towerLevelDisplay.textContent = `Level: ${tower.level}`;
+    towerHealthDisplay.textContent = `Health: ${tower.health}`;
+    towerRangeDisplay.textContent = `Range: ${tower.range}`;
+    towerDamageDisplay.textContent = `Damage: ${tower.damage}`;
+    towerFireRateDisplay.textContent = `Fire Rate: ${tower.fireRate}s`;
+
+    // Show the pop-up by setting its style
+    towerStatsPopup.style.display = 'block';
+}
+
+// Function to hide the tower stats pop-up
+function hideTowerStats() {
+    towerStatsPopup.style.display = 'none';
+}
+
+// Handle single and double clicks for upgrading towers
+canvas.addEventListener('click', (event) => {
+    const currentTime = new Date().getTime();
+    const timeDifference = currentTime - lastClickTime;
+
+    // Check if the second click happened within 500 milliseconds
+    if (timeDifference < 500) {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        // Loop through towers to find one within range of the click
+        let towerFound = false;
+
+        towers.forEach(tower => {
+            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+            if (distance < 30) { // Assuming 30 is the size of the tower
+                showTowerStats(tower); // Show stats on click
+                towerFound = true;
+            }
+        });
+
+        if (!towerFound) {
+            console.log('No tower found within range to show stats.');
+            hideTowerStats(); // Hide the pop-up if no tower is clicked
+        }
+    }
+
+    // Update the last click time
+    lastClickTime = currentTime;
+});
+
 // Game State
 let currency = 10;
 let wave = 1;

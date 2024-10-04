@@ -71,6 +71,7 @@ canvas.addEventListener('click', (event) => {
         if (!towerFound || statsShowing) {
             console.log('No tower found within range to show stats.');
             hideTowerStats(); // Hide the pop-up if no tower is clicked
+            statsShowing = false;
         }
     }
 

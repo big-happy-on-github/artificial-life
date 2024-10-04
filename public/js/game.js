@@ -15,23 +15,24 @@ const towerLevelDisplay = document.getElementById('tower-level');
 const towerHealthDisplay = document.getElementById('tower-health');
 const towerRangeDisplay = document.getElementById('tower-range');
 const towerDamageDisplay = document.getElementById('tower-damage');
-const upgradeButton = document.getElementById('upgrade-button');
+const upgrade1Button = document.getElementById('upgrade1-button');
+const upgrade2Button = document.getElementById('upgrade2-button');
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
 
 // Define the upgrades for each tower type and level
 const upgrade = {
     '1': {
-        'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 },
-        'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }
+        'lvl2': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } },
+        'lvl3': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } }
     },
     '2': {
-        'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 },
-        'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }
+        'lvl2': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } },
+        'lvl3': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } }
     },
     '3': {
-        'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 },
-        'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }
+        'lvl2': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } },
+        'lvl3': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } }
     }
 };
 
@@ -51,7 +52,8 @@ function showTowerStats(tower) {
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
     towerDamageDisplay.textContent = `${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}`;
-    upgradeButton.textContent = `upgrade to lvl ${tower.level + 1}`;
+    upgrade1Button.textContent = `upgrade to lvl ${tower.level + 1} (for damage)`;
+    upgrade2Button.textContent = `upgrade to lvl ${tower.level + 1} (for range)`;
 
     // Show the pop-up
     towerStatsPopup.classList.add('show');
@@ -66,17 +68,17 @@ function hideTowerStats() {
 }
 
 // Handle upgrade button click
-upgradeButton.addEventListener('click', (event) => {
+upgrade1Button.addEventListener('click', (event) => {
     if (!showing) {
         return; // No tower selected
     }
 
     const currentLevel = showing.level;
-    const nextLevel = `lvl${currentLevel + 1}`;
+    const nextLevel = `lvl ${currentLevel + 1}`;
     const towerUpgrades = upgrade[showing.type];
 
     if (towerUpgrades[nextLevel]) {
-        const upgradeInfo = towerUpgrades[nextLevel];
+        const upgradeInfo = towerUpgrades[nextLevel]['1'];
 
         if (!upgradePressed) {
             // Show confirmation details
@@ -90,7 +92,58 @@ upgradeButton.addEventListener('click', (event) => {
             const dpsIncrease = (newDPS - currentDPS).toFixed(2);
             towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
 
-            upgradeButton.textContent = `pay $${upgradeInfo.cost}`;
+            upgrade1Button.textContent = `pay $${upgradeInfo.cost}`;
+            upgrade2Button.textContent = "";
+            upgradePressed = true; // Set confirmation flag
+        } else {
+            if (currency >= upgradeInfo.cost) {
+                currency -= upgradeInfo.cost;
+                console.log("upgraded");
+            } else {
+                return;
+            }
+            // Perform the upgrade
+            showing.level++;
+            showing.health += upgradeInfo.health;
+            showing.range += upgradeInfo.range;
+            showing.damage += upgradeInfo.damage;
+            showing.fireRate += upgradeInfo.fireRate;
+
+            updateHUD();
+            upgradePressed = false; // Reset the confirmation flag
+        }
+    } else {
+        towerTypeDisplay.textContent = "max level reached!";
+    }
+});
+
+// Handle upgrade button click
+upgrade2Button.addEventListener('click', (event) => {
+    if (!showing) {
+        return; // No tower selected
+    }
+
+    const currentLevel = showing.level;
+    const nextLevel = `lvl ${currentLevel + 1}`;
+    const towerUpgrades = upgrade[showing.type];
+
+    if (towerUpgrades[nextLevel]) {
+        const upgradeInfo = towerUpgrades[nextLevel]['2'];
+
+        if (!upgradePressed) {
+            // Show confirmation details
+            towerTypeDisplay.textContent = "are you sure?";
+            towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
+            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health+upgradeInfo.health}`;
+            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range+upgradeInfo.range}`;
+
+            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            const dpsIncrease = (newDPS - currentDPS).toFixed(2);
+            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
+
+            upgrade1Button.textContent = `pay $${upgradeInfo.cost}`;
+            upgrade2Button.textContent = "";
             upgradePressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {

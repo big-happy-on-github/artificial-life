@@ -16,6 +16,7 @@ const towerHealthDisplay = document.getElementById('tower-health');
 const towerRangeDisplay = document.getElementById('tower-range');
 const towerDamageDisplay = document.getElementById('tower-damage');
 const towerFireRateDisplay = document.getElementById('tower-fire-rate');
+let showing = false;
 
 // Function to show the tower stats pop-up
 function showTowerStats(tower) {
@@ -37,6 +38,7 @@ function showTowerStats(tower) {
 
     // Show the pop-up by setting its style
     towerStatsPopup.style.display = 'block';
+    showing = true;
 }
 
 // Function to hide the tower stats pop-up
@@ -61,9 +63,10 @@ canvas.addEventListener('click', (event) => {
         }
     });
 
-    if (!towerFound) {
+    if (!towerFound || showing) {
         console.log('No tower found within range to show stats.');
         hideTowerStats(); // Hide the pop-up if no tower is clicked
+        showing = false;
     }
 });
 

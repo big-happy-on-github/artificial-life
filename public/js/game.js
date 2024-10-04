@@ -152,6 +152,7 @@ const projectiles = [];
 const enemyProjectiles = []; // Array to hold projectiles fired by enemies
 let selectedTowerType = null;
 let waveInProgress = false; // Track if a wave is in progress
+let occupiedSquares = new Set();
 
 // Canvas settings
 canvas.width = 800;
@@ -603,8 +604,6 @@ function update(deltaTime) {
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
     enemyProjectiles.forEach(projectile => projectile.update()); // Update enemy projectiles
-
-    drawTooltip(); // Draw tooltip if hovering over an object
 
     if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;

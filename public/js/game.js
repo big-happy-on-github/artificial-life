@@ -557,13 +557,6 @@ function drawPath() {
     ctx.stroke();
 }
 
-// Check if a square is available for tower placement and outside the path
-function isSquareAvailable(x, y) {
-    const gridX = Math.floor(x / gridSize);
-    const gridY = Math.floor(y / gridSize);
-    return !occupiedSquares.has(`${gridX},${gridY}`) && isOutsidePath(x, y);
-}
-
 // Handle tower placement
 canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingClientRect();
@@ -574,8 +567,12 @@ canvas.addEventListener('click', (event) => {
         // Snap to grid center
         const gridX = Math.floor(x / gridSize) * gridSize + gridSize / 2;
         const gridY = Math.floor(y / gridSize) * gridSize + gridSize / 2;
+
+        // Create a temporary tower to get its price
+        const tempTower = new Tower(gridX, gridY, selectedTowerType);
         
-        if (currency >= Tower.price) {
+        if (currency >= tempTower.price) {
+            // Place the tower
             const tower = new Tower(gridX, gridY, selectedTowerType);
             occupiedSquares.add(`${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`);
             towers.push(tower);

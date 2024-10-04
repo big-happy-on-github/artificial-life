@@ -36,6 +36,11 @@ const upgrade = {
         'lvl2': { '1': { health: 6, range: 0, damage: 2, fireRate: -0.2, cost: 7 }, '2': { health: 0, range: 35, damage: 0, fireRate: 0, cost: 5 } },
         'lvl3': { '1': { health: 15, range: 0, damage: 4, fireRate: -0.4, cost: 14 }, '2': { health: 0, range: 70, damage: 2, fireRate: 0, cost: 11 } },
         'lvl4': { '1': { health: 30, range: 80, damage: 10, fireRate: -0.7, cost: 35 }, '2': { health: 30, range: 150, damage: 10, fireRate: -0.7, cost: 35 } }
+    },
+    '4': {
+        'lvl2': { '1': { health: 0, range: 0, damage: 6, fireRate: 0, cost: 12 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 8, fireRate: 0, cost: 14 } },
+        'lvl4': { '1': { health: 0, range: 0, damage: 10, fireRate: 0, cost: 18 } }
     }
 };
 
@@ -48,6 +53,8 @@ function showTowerStats(tower) {
         towerType = 'liam';
     } else if (tower.type == '3') {
         towerType = 'evan';
+    } else if (tower.type == '4') {
+        towerType = 'christian';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -57,17 +64,32 @@ function showTowerStats(tower) {
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
 
     // Set upgrade button text based on tower level
-    if (tower.level < 3) {
-        upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} (+dmg)`;
-        upgrade2Button.textContent = `Upgrade to lvl ${tower.level + 1} (+range)`;
-    } else if (tower.level === 3) {
-        // Mega upgrade options for level 3 towers
-        upgrade1Button.textContent = `FINAL STAGE (+dmg)`;
-        upgrade2Button.textContent = `FINAL STAGE (+range)`;
+    if (upgrade[tower.type][`lvl${tower.level}`]['2']) {
+        if (tower.level < 3) {
+            upgrade1Button.textContent = `upgrade damage`;
+            upgrade2Button.textContent = `upgrade range`;
+        } else if (tower.level === 3) {
+            // Mega upgrade options for level 3 towers
+            upgrade1Button.textContent = `FINAL STAGE damage`;
+            upgrade2Button.textContent = `FINAL STAGE range`;
+        } else {
+            // If at max level
+            upgrade1Button.textContent = "Max level reached!";
+            upgrade2Button.textContent = "";
+        }
     } else {
-        // If at max level
-        upgrade1Button.textContent = "Max level reached!";
-        upgrade2Button.textContent = "";
+        if (tower.level < 3) {
+            upgrade1Button.textContent = `upgrade money`;
+            upgrade2Button.textContent = ``;
+        } else if (tower.level === 3) {
+            // Mega upgrade options for level 3 towers
+            upgrade1Button.textContent = `FINAL STAGE money`;
+            upgrade2Button.textContent = ``;
+        } else {
+            // If at max level
+            upgrade1Button.textContent = "Max level reached!";
+            upgrade2Button.textContent = "";
+        }
     }
 
     // Show the pop-up
@@ -261,6 +283,11 @@ class Tower {
             this.fireRate = 1.5;
             this.damage = 4.5;
             this.price = 3;
+        } else if (type == '4') {
+            this.range = 0;
+            this.fireRate = 0;
+            this.damage = 4;
+            this.price = 20;
         }
 
         this.lastFired = 0;
@@ -273,6 +300,8 @@ class Tower {
             ctx.fillStyle = 'green';
         } else if (this.type == '3') {
             ctx.fillStyle = 'purple';
+        } else if (this.type == '4') {
+            ctx.fillStyle = 'blue';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -724,6 +753,8 @@ towerSelection.addEventListener('click', (event) => {
             selectedTowerType = '2';
         } else if (event.target.id == '3-tower') {
             selectedTowerType = '3';
+        } else if (event.target.id == '4-tower') {
+            selectedTowerType = '4';
         }
     }
 });

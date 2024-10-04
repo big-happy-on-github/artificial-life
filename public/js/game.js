@@ -23,16 +23,19 @@ let upgradePressed = false; // Flag for upgrade confirmation
 // Define the upgrades for each tower type and level
 const upgrade = {
     '1': {
-        'lvl2': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } },
-        'lvl3': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } }
+        'lvl2': { '1': { health: 5, range: 0, damage: 1, fireRate: -0.1, cost: 5 }, '2': { health: 0, range: 30, damage: 0, fireRate: 0, cost: 3 } },
+        'lvl3': { '1': { health: 10, range: 0, damage: 2, fireRate: -0.2, cost: 10 }, '2': { health: 0, range: 50, damage: 1, fireRate: 0, cost: 8 } },
+        'lvl4': { '1': { health: 20, range: 50, damage: 5, fireRate: -0.5, cost: 25 }, '2': { health: 20, range: 100, damage: 5, fireRate: -0.5, cost: 25 } }
     },
     '2': {
-        'lvl2': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } },
-        'lvl3': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } }
+        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
     },
     '3': {
-        'lvl2': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } },
-        'lvl3': { '1': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 }, '2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25, cost: 2 } }
+        'lvl2': { '1': { health: 6, range: 0, damage: 2, fireRate: -0.2, cost: 7 }, '2': { health: 0, range: 35, damage: 0, fireRate: 0, cost: 5 } },
+        'lvl3': { '1': { health: 15, range: 0, damage: 4, fireRate: -0.4, cost: 14 }, '2': { health: 0, range: 70, damage: 2, fireRate: 0, cost: 11 } },
+        'lvl4': { '1': { health: 30, range: 80, damage: 10, fireRate: -0.7, cost: 35 }, '2': { health: 30, range: 150, damage: 10, fireRate: -0.7, cost: 35 } }
     }
 };
 
@@ -51,9 +54,21 @@ function showTowerStats(tower) {
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
-    towerDamageDisplay.textContent = `${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
-    upgrade1Button.textContent = `upgrade to lvl ${tower.level + 1} (for damage)`;
-    upgrade2Button.textContent = `upgrade to lvl ${tower.level + 1} (for range)`;
+    towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
+
+    // Set upgrade button text based on tower level
+    if (tower.level < 3) {
+        upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for damage)`;
+        upgrade2Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for range)`;
+    } else if (tower.level === 3) {
+        // Mega upgrade options for level 3 towers
+        upgrade1Button.textContent = `FINAL STAGE \n(for massive damage)`;
+        upgrade2Button.textContent = `FINAL STAGE \n(for massive range)`;
+    } else {
+        // If at max level
+        upgrade1Button.textContent = "Max level reached!";
+        upgrade2Button.textContent = "";
+    }
 
     // Show the pop-up
     towerStatsPopup.classList.add('show');

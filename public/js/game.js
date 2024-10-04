@@ -85,6 +85,16 @@ function showTowerStats(tower) {
         // If at max level
         upgrade1Button.textContent = "Max level reached!";
         upgrade2Button.textContent = "";
+        // Determine the next level for the upgrade
+        const nextLevelKey = `lvl${tower.level + 1}`;
+        const towerUpgrades = upgrade[tower.type];
+    
+        if (towerUpgrades && towerUpgrades[nextLevelKey]) {
+            const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
+            if (!hasSecondUpgrade) {
+                towerDamageDisplay.textContent = `0dps`;
+            }
+        }
     }
 
     // Show the pop-up

@@ -82,13 +82,13 @@ upgradeButton.addEventListener('click', (event) => {
             // Show confirmation details
             towerTypeDisplay.textContent = "are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
-            towerHealthDisplay.textContent = `${showing.health}hp (+${upgradeInfo.health})`;
-            towerRangeDisplay.textContent = `${showing.range}px range (+${upgradeInfo.range})`;
+            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health+upgradeInfo.health}`;
+            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range+upgradeInfo.range}`;
 
             const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
             const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
             const dpsIncrease = (newDPS - currentDPS).toFixed(2);
-            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s (+${dpsIncrease})`;
+            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
 
             upgradeButton.textContent = "yes";
             upgradePressed = true; // Set confirmation flag

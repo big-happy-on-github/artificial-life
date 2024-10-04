@@ -557,6 +557,13 @@ function drawPath() {
     ctx.stroke();
 }
 
+// Check if a square is available for tower placement and outside the path
+function isSquareAvailable(x, y) {
+    const gridX = Math.floor(x / gridSize);
+    const gridY = Math.floor(y / gridSize);
+    return !occupiedSquares.has(`${gridX},${gridY}`) && isOutsidePath(x, y);
+}
+
 // Handle tower placement
 canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingClientRect();

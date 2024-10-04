@@ -69,7 +69,7 @@ function showTowerStats(tower) {
 
     if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
-        if (hasSecondUpgrade === undefined) {
+        if (!hasSecondUpgrade) {
             towerDamageDisplay.textContent = `0 dps`;
         }
 

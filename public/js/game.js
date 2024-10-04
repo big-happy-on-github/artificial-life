@@ -54,7 +54,7 @@ function showTowerStats(tower) {
     upgradeButton.textContent = `upgrade to lvl ${tower.level + 1}`;
 
     // Show the pop-up
-    towerStatsPopup.style.display = 'block';
+    towerStatsPopup.show;
     showing = tower; // Store the currently selected tower
 }
 

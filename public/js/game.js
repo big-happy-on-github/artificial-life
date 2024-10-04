@@ -56,13 +56,13 @@ function showTowerStats(tower) {
     // Show the pop-up
     towerStatsPopup.style.display = 'block';
     showing = tower; // Store the currently selected tower
-    upgradePressed = false; // Reset the upgrade confirmation flag
 }
 
 // Function to hide the tower stats pop-up
 function hideTowerStats() {
     towerStatsPopup.style.display = 'none';
     showing = null;
+    upgradePressed = false;
 }
 
 // Handle upgrade button click
@@ -95,6 +95,7 @@ upgradeButton.addEventListener('click', (event) => {
         } else {
             if (currency >= showing.cost) {
                 currency -= showing.cost;
+                console.log("upgraded");
             } else {
                 return;
             }

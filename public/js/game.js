@@ -201,7 +201,7 @@ class Tower {
     }
 
     upgrade() {
-        if (this.level >= 10) {
+        /*if (this.level >= 10) {
             alert(`no upgrades available past lvl ${this.level}`);
             return;
         }
@@ -226,7 +226,7 @@ class Tower {
                 alert("not enough money to upgrade...");
             }
         }
-    }
+    }*/
 }
 
 class Enemy {

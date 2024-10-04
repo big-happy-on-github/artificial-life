@@ -46,34 +46,25 @@ function hideTowerStats() {
 
 // Handle single and double clicks for upgrading towers
 canvas.addEventListener('click', (event) => {
-    const currentTime = new Date().getTime();
-    const timeDifference = currentTime - lastClickTime;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    // Check if the second click happened within 500 milliseconds
-    if (timeDifference < 500) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+    // Loop through towers to find one within range of the click
+    let towerFound = false;
 
-        // Loop through towers to find one within range of the click
-        let towerFound = false;
-
-        towers.forEach(tower => {
-            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-            if (distance < 30) { // Assuming 30 is the size of the tower
-                showTowerStats(tower); // Show stats on click
-                towerFound = true;
-            }
-        });
-
-        if (!towerFound) {
-            console.log('No tower found within range to show stats.');
-            hideTowerStats(); // Hide the pop-up if no tower is clicked
+    towers.forEach(tower => {
+        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+        if (distance < 30) { // Assuming 30 is the size of the tower
+            showTowerStats(tower); // Show stats on click
+            towerFound = true;
         }
-    }
+    });
 
-    // Update the last click time
-    lastClickTime = currentTime;
+    if (!towerFound) {
+        console.log('No tower found within range to show stats.');
+        hideTowerStats(); // Hide the pop-up if no tower is clicked
+    }
 });
 
 // Game State

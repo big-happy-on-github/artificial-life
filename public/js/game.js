@@ -57,9 +57,6 @@ function showTowerStats(tower) {
     towerStatsPopup.style.display = 'block';
     showing = tower; // Store the currently selected tower
     upgradePressed = false; // Reset the upgrade confirmation flag
-    if (showing) {
-        showTowerStats(tower);
-    }
 }
 
 // Function to hide the tower stats pop-up
@@ -535,9 +532,6 @@ const gridSize = 50; // Size of each grid square
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
 
-// Tracks which squares are occupied by the path
-const occupiedSquares = new Set();
-
 // Draw the grid and the path
 function drawGrid() {
     ctx.strokeStyle = '	#3b3b3b'; // Light gray for grid lines
@@ -557,42 +551,9 @@ function drawPath() {
 
     for (let i = 1; i < path.length; i++) {
         ctx.lineTo(path[i].x, path[i].y);
-        // Mark squares occupied by the path as unavailable for tower placement
-        markPathSquares(path[i - 1], path[i]);
     }
 
     ctx.stroke();
-}
-
-// Mark grid squares occupied by the path using Bresenham's line algorithm
-function markPathSquares(start, end) {
-    /*let x0 = Math.floor(start.x / gridSize);
-    let y0 = Math.floor(start.y / gridSize);
-    const x1 = Math.floor(end.x / gridSize);
-    const y1 = Math.floor(end.y / gridSize);
-
-    const dx = Math.abs(x1 - x0);
-    const dy = Math.abs(y1 - y0);
-    const sx = (x0 < x1) ? 1 : -1;
-    const sy = (y0 < y1) ? 1 : -1;
-    let err = dx - dy;
-
-    while (true) {
-        occupiedSquares.add(`${x0},${y0}`);
-
-        // If we've reached the end point, break out of the loop
-        if (x0 === x1 && y0 === y1) break;
-
-        const e2 = 2 * err;
-        if (e2 > -dy) {
-            err -= dy;
-            x0 += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            y0 += sy;
-        }
-    }*/
 }
 
 // Check if a square is available for tower placement
@@ -608,12 +569,9 @@ canvas.addEventListener('click', (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // Align placement to the center of the grid square
-    const gridX = Math.floor(x / gridSize) * gridSize + gridSize / 2;
-    const gridY = Math.floor(y / gridSize) * gridSize + gridSize / 2;
-
-    if (selectedTowerType && isSquareAvailable(gridX, gridY)) {
+    if (selectedTowerType && isSquareAvailable(x, y)) {
         const tower = new Tower(gridX, gridY, selectedTowerType);
+        occupiedSquares.add(`${gridX}, ${gridY}`);
         if (currency >= tower.price) {
             towers.push(tower);
             currency -= tower.price;
@@ -694,39 +652,6 @@ towerSelection.addEventListener('click', (event) => {
     }
 });
 
-let lastClickTime = 0; // To store the timestamp of the last click
-
-// Handle single and double clicks for upgrading towers
-canvas.addEventListener('click', (event) => {
-    /*const currentTime = new Date().getTime();
-    const timeDifference = currentTime - lastClickTime;
-
-    // Check if the second click happened within 500 milliseconds
-    if (timeDifference < 500) {
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        // Loop through towers to find one within range of the click
-        let towerUpgraded = false;
-
-        towers.forEach(tower => {
-            const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-            if (distance < 30) { // Assuming 30 is the size of the tower
-                tower.upgrade();
-                towerUpgraded = true;
-            }
-        });
-
-        if (!towerUpgraded) {
-            console.log('No tower found within range to upgrade.');
-        }
-    }
-
-    // Update the last click time
-    lastClickTime = currentTime;*/
-});
-
 // Handle start wave button click
 startWaveButton.addEventListener('click', () => {
     if (!waveInProgress) {
@@ -764,52 +689,14 @@ canvas.addEventListener('mousemove', (event) => {
     });
 });
 
-// Function to draw the tooltip
-function drawTooltip() {
-    /*if (!hoverTarget) return;
-
-    const tooltipX = hoverTarget.x + 20; // Position tooltip near the hovered object
-    const tooltipY = hoverTarget.y - 20;
-
-    // Determine if hoverTarget is a tower or an enemy
-    let tooltipText;
-    if (hoverTarget instanceof Tower) {
-        let towerType;
-        if (hoverTarget.type == '1') {
-            towerType = 'jack';
-        } else if (hoverTarget.type == '2') {
-            towerType = 'liam';
-        } else if (hoverTarget.type == '3') {
-            towerType = 'evan';
-        }
-        tooltipText = `${towerType} tower\nlvl ${hoverTarget.level}\nHealth: ${hoverTarget.health}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
-    } else if (hoverTarget instanceof Enemy) {
-        if (hoverTarget.special) {
-            tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nSPECIAL: ${hoverTarget.special}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
-        } else {
-            tooltipText = `${hoverTarget.color} enemy\nlvl ${hoverTarget.level}\nCan shoot: ${hoverTarget.canShoot}\nHealth: ${hoverTarget.health}\nSpeed: ${hoverTarget.speed}\nRange: ${hoverTarget.range}\nDamage: ${hoverTarget.damage}\nFire Rate: ${hoverTarget.fireRate}s`;
-        }
-    }
-
-    // Draw tooltip background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent black background
-    ctx.fillRect(tooltipX, tooltipY, 120, 60); // Adjust size based on text length
-
-    // Draw tooltip text
-    ctx.fillStyle = 'white';
-    ctx.font = '12px Arial';
-    const lines = tooltipText.split('\n');
-    lines.forEach((line, index) => {
-        ctx.fillText(line, tooltipX + 5, tooltipY + 15 + index * 15);
-    });*/
-}
-
-
-
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
     livesDisplay.textContent = `${lives} lives`;
+
+    if (showing) {
+        showTowerStats();
+    }
 }
 
 function nextWave() {

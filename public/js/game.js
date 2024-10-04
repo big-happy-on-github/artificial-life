@@ -54,13 +54,13 @@ function showTowerStats(tower) {
     upgradeButton.textContent = `upgrade to lvl ${tower.level + 1}`;
 
     // Show the pop-up
-    towerStatsPopup.style.display = "block";
+    towerStatsPopup.classList.add('show');
     showing = tower; // Store the currently selected tower
 }
 
 // Function to hide the tower stats pop-up
 function hideTowerStats() {
-    towerStatsPopup.style.display = 'none';
+    towerStatsPopup.classList.remove('show');
     showing = null;
     upgradePressed = false;
 }

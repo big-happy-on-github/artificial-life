@@ -127,20 +127,9 @@ upgrade1Button.addEventListener('click', (event) => {
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
             towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            // Determine the next level for the upgrade
-            const nextLevelKey = `lvl${tower.level + 1}`;
-            const towerUpgrades = upgrade[tower.type];
-        
-            if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-                const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
-                let newDPS;
-                if (hasSecondUpgrade) {
-                    const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-                    newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-                } else {
-                    newDPS = 0;
-                }
-                towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
+            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
 
             upgrade1Button.textContent = `Pay $${upgradeInfo.cost}`;
             upgrade2Button.textContent = ""; // Hide other upgrade button
@@ -169,7 +158,8 @@ upgrade1Button.addEventListener('click', (event) => {
     } else {
         towerTypeDisplay.textContent = "Max level reached!";
     }
-});
+}); // This parenthesis and brace close the event listener properly
+
 
 // Handle upgrade button click for range upgrade
 upgrade2Button.addEventListener('click', (event) => {

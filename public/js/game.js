@@ -15,7 +15,8 @@ const towerLevelDisplay = document.getElementById('tower-level');
 const towerHealthDisplay = document.getElementById('tower-health');
 const towerRangeDisplay = document.getElementById('tower-range');
 const towerDamageDisplay = document.getElementById('tower-damage');
-let showing = false;
+const upgradeButton = document.getElementById('upgrade-button');
+let showing;
 
 // Function to show the tower stats pop-up
 function showTowerStats(tower) {
@@ -33,17 +34,38 @@ function showTowerStats(tower) {
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
     towerDamageDisplay.textContent = `${tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)}dmg/s`;
+    upgradeButton.textContent = `upgrade to lvl ${tower.level + 1}`;
 
     // Show the pop-up
     towerStatsPopup.style.display = 'block';
-    showing = true;
+    showing = tower;
 }
 
 // Function to hide the tower stats pop-up
 function hideTowerStats() {
     towerStatsPopup.style.display = 'none';
-    showing = false;
+    showing = null;
 }
+
+let upgradePressed = false;
+const upgrade = { '1': { 'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }, 'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 } }, '2': { 'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }, 'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 } }, '3': { 'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }, 'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 } } };
+upgradeButton.addEventListener('click', (event) => {
+    if (!showing) {
+        return;
+    }
+
+    if (!upgradePressed) {
+        towerTypeDisplay.textContent = "are you sure?";
+        towerLevelDisplay.textContent = `lvl ${tower.level} +1`;
+        const info = upgrade.showing.`lvl${showing.level}`;
+        towerHealthDisplay.textContent = `${tower.health}hp (+${info.health})`;
+        towerRangeDisplay.textContent = `${tower.range}px range (+${info.range})`;
+        towerDamageDisplay.textContent = `${tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)}dmg/s (+${(tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)) - ((tower.damage + info.damage) * (Math.round((1 / (tower.fireRate + info.fireRate)) * 100) / 100))}/s)`;
+        upgradeButton.textContent = "yes";
+    } else {
+        //upgrade
+    }
+});
 
 // Handle single and double clicks for upgrading towers
 canvas.addEventListener('click', (event) => {
@@ -194,34 +216,6 @@ class Tower {
         if (index > -1) {
             towers.splice(index, 1);
         }
-    }
-
-    upgrade() {
-        /*if (this.level >= 10) {
-            alert(`no upgrades available past lvl ${this.level}`);
-            return;
-        }
-    
-        const upgradePrice = this.price * this.level;
-        let targetType;
-            if (this.type == '1') {
-                targetType = 'jack';
-            } else if (this.type == '2') {
-                targetType = 'liam';
-            } else if (this.type == '3') {
-                targetType = 'evan';
-            }
-        if (confirm(`you sure you want to upgrade this level ${this.level} ${targetType} tower for $${upgradePrice}?`)) {
-            if (currency >= upgradePrice) {
-                this.level++;
-                this.range += 50;
-                this.damage += 10;
-                currency -= upgradePrice;
-                updateHUD();
-            } else {
-                alert("not enough money to upgrade...");
-            }
-        }*/
     }
 }
 

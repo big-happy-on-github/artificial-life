@@ -36,7 +36,7 @@ function showTowerStats(tower) {
     towerDamageDisplay.textContent = `Damage: ${tower.damage}`;
     towerFireRateDisplay.textContent = `Fire Rate: ${tower.fireRate}s`;
 
-    // Show the pop-up by setting its style
+    // Show the pop-up
     towerStatsPopup.style.display = 'block';
     showing = true;
 }
@@ -44,6 +44,7 @@ function showTowerStats(tower) {
 // Function to hide the tower stats pop-up
 function hideTowerStats() {
     towerStatsPopup.style.display = 'none';
+    showing = false;
 }
 
 // Handle single and double clicks for upgrading towers
@@ -58,15 +59,18 @@ canvas.addEventListener('click', (event) => {
     towers.forEach(tower => {
         const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
-            showTowerStats(tower); // Show stats on click
+            if (showing) {
+                hideTowerStats(); // Hide the stats if already showing
+            } else {
+                showTowerStats(tower); // Show stats on click
+            }
             towerFound = true;
         }
     });
 
-    if (!towerFound || showing) {
-        console.log('No tower found within range to show stats.');
-        hideTowerStats(); // Hide the pop-up if no tower is clicked
-        showing = false;
+    // Hide the pop-up if no tower is clicked
+    if (!towerFound) {
+        hideTowerStats();
     }
 });
 

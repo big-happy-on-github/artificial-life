@@ -67,103 +67,105 @@ function hideTowerStats() {
     upgradePressed = false;
 }
 
-// Handle upgrade button click
+// Handle upgrade button click for damage upgrade
 upgrade1Button.addEventListener('click', (event) => {
-    if (!showing) {
-        return; // No tower selected
-    }
+    if (!showing) return; // No tower selected
 
     const currentLevel = showing.level;
-    const nextLevel = `lvl ${currentLevel + 1}`;
+    const nextLevel = `lvl${currentLevel + 1}`; // Corrected key
     const towerUpgrades = upgrade[showing.type];
 
     if (towerUpgrades[nextLevel]) {
-        const upgradeInfo = towerUpgrades[nextLevel]['1'];
+        const upgradeInfo = towerUpgrades[nextLevel]['1']; // Damage upgrade
 
         if (!upgradePressed) {
             // Show confirmation details
-            towerTypeDisplay.textContent = "are you sure?";
+            towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
-            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health+upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range+upgradeInfo.range}`;
+            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
+            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
             const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
             const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            const dpsIncrease = (newDPS - currentDPS).toFixed(2);
             towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
 
-            upgrade1Button.textContent = `pay $${upgradeInfo.cost}`;
-            upgrade2Button.textContent = "";
+            upgrade1Button.textContent = `Pay $${upgradeInfo.cost}`;
+            upgrade2Button.textContent = ""; // Hide other upgrade button
             upgradePressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {
                 currency -= upgradeInfo.cost;
-                console.log("upgraded");
-            } else {
-                return;
-            }
-            // Perform the upgrade
-            showing.level++;
-            showing.health += upgradeInfo.health;
-            showing.range += upgradeInfo.range;
-            showing.damage += upgradeInfo.damage;
-            showing.fireRate += upgradeInfo.fireRate;
+                console.log("Upgraded");
 
-            updateHUD();
-            upgradePressed = false; // Reset the confirmation flag
+                // Perform the upgrade
+                showing.level++;
+                showing.health += upgradeInfo.health;
+                showing.range += upgradeInfo.range;
+                showing.damage += upgradeInfo.damage;
+                showing.fireRate += upgradeInfo.fireRate;
+
+                // Update the tower stats pop-up
+                showTowerStats(showing);
+
+                updateHUD();
+                upgradePressed = false; // Reset the confirmation flag
+            } else {
+                console.log("Not enough currency.");
+            }
         }
     } else {
-        towerTypeDisplay.textContent = "max level reached!";
+        towerTypeDisplay.textContent = "Max level reached!";
     }
 });
 
-// Handle upgrade button click
+// Handle upgrade button click for range upgrade
 upgrade2Button.addEventListener('click', (event) => {
-    if (!showing) {
-        return; // No tower selected
-    }
+    if (!showing) return; // No tower selected
 
     const currentLevel = showing.level;
-    const nextLevel = `lvl ${currentLevel + 1}`;
+    const nextLevel = `lvl${currentLevel + 1}`; // Corrected key
     const towerUpgrades = upgrade[showing.type];
 
     if (towerUpgrades[nextLevel]) {
-        const upgradeInfo = towerUpgrades[nextLevel]['2'];
+        const upgradeInfo = towerUpgrades[nextLevel]['2']; // Range upgrade
 
         if (!upgradePressed) {
             // Show confirmation details
-            towerTypeDisplay.textContent = "are you sure?";
+            towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
-            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health+upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range+upgradeInfo.range}`;
+            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
+            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
             const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
             const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            const dpsIncrease = (newDPS - currentDPS).toFixed(2);
             towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
 
-            upgrade1Button.textContent = `pay $${upgradeInfo.cost}`;
-            upgrade2Button.textContent = "";
+            upgrade2Button.textContent = `Pay $${upgradeInfo.cost}`;
+            upgrade1Button.textContent = ""; // Hide other upgrade button
             upgradePressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {
                 currency -= upgradeInfo.cost;
-                console.log("upgraded");
-            } else {
-                return;
-            }
-            // Perform the upgrade
-            showing.level++;
-            showing.health += upgradeInfo.health;
-            showing.range += upgradeInfo.range;
-            showing.damage += upgradeInfo.damage;
-            showing.fireRate += upgradeInfo.fireRate;
+                console.log("Upgraded");
 
-            updateHUD();
-            upgradePressed = false; // Reset the confirmation flag
+                // Perform the upgrade
+                showing.level++;
+                showing.health += upgradeInfo.health;
+                showing.range += upgradeInfo.range;
+                showing.damage += upgradeInfo.damage;
+                showing.fireRate += upgradeInfo.fireRate;
+
+                // Update the tower stats pop-up
+                showTowerStats(showing);
+
+                updateHUD();
+                upgradePressed = false; // Reset the confirmation flag
+            } else {
+                console.log("Not enough currency.");
+            }
         }
     } else {
-        towerTypeDisplay.textContent = "max level reached!";
+        towerTypeDisplay.textContent = "Max level reached!";
     }
 });
 

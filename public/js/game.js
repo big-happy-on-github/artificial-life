@@ -249,17 +249,17 @@ class Tower {
         if (type == '1') {
             this.range = 150;
             this.fireRate = 1;
-            this.damage = 2;
+            this.damage = 3;
             this.price = 2;
         } else if (type == '2') {
             this.range = 100;
             this.fireRate = 0.5;
-            this.damage = 3;
+            this.damage = 4;
             this.price = 3;
         } else if (type == '3') {
             this.range = 300;
             this.fireRate = 1.5;
-            this.damage = 3.5;
+            this.damage = 4.5;
             this.price = 3;
         }
 

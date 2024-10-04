@@ -16,7 +16,24 @@ const towerHealthDisplay = document.getElementById('tower-health');
 const towerRangeDisplay = document.getElementById('tower-range');
 const towerDamageDisplay = document.getElementById('tower-damage');
 const upgradeButton = document.getElementById('upgrade-button');
-let showing;
+let showing = null; // Currently selected tower
+let upgradePressed = false; // Flag for upgrade confirmation
+
+// Define the upgrades for each tower type and level
+const upgrade = {
+    '1': {
+        'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 },
+        'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }
+    },
+    '2': {
+        'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 },
+        'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }
+    },
+    '3': {
+        'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 },
+        'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }
+    }
+};
 
 // Function to show the tower stats pop-up
 function showTowerStats(tower) {
@@ -33,12 +50,13 @@ function showTowerStats(tower) {
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
-    towerDamageDisplay.textContent = `${tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)}dmg/s`;
+    towerDamageDisplay.textContent = `${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dmg/s`;
     upgradeButton.textContent = `upgrade to lvl ${tower.level + 1}`;
 
     // Show the pop-up
     towerStatsPopup.style.display = 'block';
-    showing = tower;
+    showing = tower; // Store the currently selected tower
+    upgradePressed = false; // Reset the upgrade confirmation flag
 }
 
 // Function to hide the tower stats pop-up
@@ -47,27 +65,52 @@ function hideTowerStats() {
     showing = null;
 }
 
-let upgradePressed = false;
-const upgrade = { '1': { 'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }, 'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 } }, '2': { 'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }, 'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 } }, '3': { 'lvl2': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 }, 'lvl3': { health: 10, range: 20, damage: 0.5, fireRate: -0.25 } } };
+// Handle upgrade button click
 upgradeButton.addEventListener('click', (event) => {
     if (!showing) {
-        return;
+        return; // No tower selected
     }
 
-    if (!upgradePressed) {
-        towerTypeDisplay.textContent = "are you sure?";
-        towerLevelDisplay.textContent = `lvl ${tower.level} +1`;
-        const info = upgrade.showing.`lvl${showing.level}`;
-        towerHealthDisplay.textContent = `${tower.health}hp (+${info.health})`;
-        towerRangeDisplay.textContent = `${tower.range}px range (+${info.range})`;
-        towerDamageDisplay.textContent = `${tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)}dmg/s (+${(tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)) - ((tower.damage + info.damage) * (Math.round((1 / (tower.fireRate + info.fireRate)) * 100) / 100))}/s)`;
-        upgradeButton.textContent = "yes";
+    const currentLevel = showing.level;
+    const nextLevel = `lvl${currentLevel + 1}`;
+    const towerUpgrades = upgrade[showing.type];
+
+    if (towerUpgrades[nextLevel]) {
+        const upgradeInfo = towerUpgrades[nextLevel];
+
+        if (!upgradePressed) {
+            // Show confirmation details
+            towerTypeDisplay.textContent = "are you sure?";
+            towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
+            towerHealthDisplay.textContent = `${showing.health}hp (+${upgradeInfo.health})`;
+            towerRangeDisplay.textContent = `${showing.range}px range (+${upgradeInfo.range})`;
+
+            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            const dpsIncrease = (newDPS - currentDPS).toFixed(2);
+            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s (+${dpsIncrease})`;
+
+            upgradeButton.textContent = "yes";
+            upgradePressed = true; // Set confirmation flag
+        } else {
+            // Perform the upgrade
+            showing.level++;
+            showing.health += upgradeInfo.health;
+            showing.range += upgradeInfo.range;
+            showing.damage += upgradeInfo.damage;
+            showing.fireRate += upgradeInfo.fireRate;
+
+            // Update the tower stats display
+            showTowerStats(showing);
+
+            upgradePressed = false; // Reset the confirmation flag
+        }
     } else {
-        //upgrade
+        towerTypeDisplay.textContent = "Max level reached!";
     }
 });
 
-// Handle single and double clicks for upgrading towers
+// Handle clicks on the canvas to show/hide tower stats
 canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -79,7 +122,7 @@ canvas.addEventListener('click', (event) => {
     towers.forEach(tower => {
         const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
-            if (showing) {
+            if (showing === tower) {
                 hideTowerStats(); // Hide the stats if already showing
             } else {
                 showTowerStats(tower); // Show stats on click

@@ -15,7 +15,6 @@ const towerLevelDisplay = document.getElementById('tower-level');
 const towerHealthDisplay = document.getElementById('tower-health');
 const towerRangeDisplay = document.getElementById('tower-range');
 const towerDamageDisplay = document.getElementById('tower-damage');
-const towerFireRateDisplay = document.getElementById('tower-fire-rate');
 let showing = false;
 
 // Function to show the tower stats pop-up
@@ -30,11 +29,10 @@ function showTowerStats(tower) {
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
-    towerLevelDisplay.textContent = `Level: ${tower.level}`;
-    towerHealthDisplay.textContent = `Health: ${tower.health}`;
-    towerRangeDisplay.textContent = `Range: ${tower.range}`;
-    towerDamageDisplay.textContent = `Damage: ${tower.damage}`;
-    towerFireRateDisplay.textContent = `Fire Rate: ${tower.fireRate}s`;
+    towerLevelDisplay.textContent = `lvl ${tower.level}`;
+    towerHealthDisplay.textContent = `${tower.health}hp`;
+    towerRangeDisplay.textContent = `${tower.range}px range`;
+    towerDamageDisplay.textContent = `${tower.damage * (1 / tower.fireRate)}/s`;
 
     // Show the pop-up
     towerStatsPopup.style.display = 'block';

@@ -169,7 +169,7 @@ upgrade1Button.addEventListener('click', (event) => {
     } else {
         towerTypeDisplay.textContent = "Max level reached!";
     }
-};
+});
 
 // Handle upgrade button click for range upgrade
 upgrade2Button.addEventListener('click', (event) => {

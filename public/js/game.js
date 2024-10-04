@@ -701,7 +701,7 @@ function updateHUD() {
     livesDisplay.textContent = `${lives} lives`;
 
     if (showing) {
-        showTowerStats();
+        showTowerStats(showing);
     }
 }
 

@@ -225,8 +225,8 @@ class Tower {
             } else {
                 alert("not enough money to upgrade...");
             }
-        }
-    }*/
+        }*/
+    }
 }
 
 class Enemy {

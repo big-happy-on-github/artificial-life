@@ -70,6 +70,9 @@ function showTowerStats(tower) {
     // Check if there are upgrades available for the next level
     if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
+        if (hasSecondUpgrade === undefined) {
+            towerDamageDisplay.textContent = `0 dps`;
+        }
 
         if (tower.level < 3) {
             upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for ${hasSecondUpgrade ? 'damage' : 'money'})`;
@@ -805,6 +808,15 @@ function nextWave() {
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", JSON.stringify(wave));
     }
+
+    towers.forEach(tower => {
+        const nextLevelKey = `lvl${tower.level + 1}`;
+        const towerUpgrades = upgrade[tower.type];
+        if (towerUpgrades[nextLevelKey]['2'] === undefined) {
+            currency += tower.damage;
+            console.log("added money");
+        }
+    });
 
     // Check for boss in the next wave
     bossEnemyTypes.forEach(boss => {

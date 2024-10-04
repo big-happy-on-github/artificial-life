@@ -51,7 +51,7 @@ function showTowerStats(tower) {
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
-    towerDamageDisplay.textContent = `${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}`;
+    towerDamageDisplay.textContent = `${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
     upgrade1Button.textContent = `upgrade to lvl ${tower.level + 1} (for damage)`;
     upgrade2Button.textContent = `upgrade to lvl ${tower.level + 1} (for range)`;
 
@@ -87,7 +87,7 @@ upgrade1Button.addEventListener('click', (event) => {
 
             const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
             const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
+            towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
 
             upgrade1Button.textContent = `Pay $${upgradeInfo.cost}`;
             upgrade2Button.textContent = ""; // Hide other upgrade button

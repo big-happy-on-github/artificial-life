@@ -63,33 +63,26 @@ function showTowerStats(tower) {
     towerRangeDisplay.textContent = `${tower.range}px range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
 
-    // Set upgrade button text based on tower level
-    if (upgrade[tower.type][`lvl${tower.level}`]['2']) {
+    // Determine the next level for the upgrade
+    const nextLevelKey = `lvl${tower.level + 1}`;
+    const towerUpgrades = upgrade[tower.type];
+
+    // Check if there are upgrades available for the next level
+    if (towerUpgrades && towerUpgrades[nextLevelKey]) {
+        const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
+
         if (tower.level < 3) {
-            upgrade1Button.textContent = `upgrade damage`;
-            upgrade2Button.textContent = `upgrade range`;
+            upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for ${hasSecondUpgrade ? 'damage' : 'money'})`;
+            upgrade2Button.textContent = hasSecondUpgrade ? `Upgrade to lvl ${tower.level + 1} \n(for range)` : '';
         } else if (tower.level === 3) {
             // Mega upgrade options for level 3 towers
-            upgrade1Button.textContent = `FINAL STAGE damage`;
-            upgrade2Button.textContent = `FINAL STAGE range`;
-        } else {
-            // If at max level
-            upgrade1Button.textContent = "Max level reached!";
-            upgrade2Button.textContent = "";
+            upgrade1Button.textContent = `FINAL STAGE upgrade \n(for ${hasSecondUpgrade ? 'massive damage' : 'money'})`;
+            upgrade2Button.textContent = hasSecondUpgrade ? `FINAL STAGE upgrade \n(for massive range)` : '';
         }
     } else {
-        if (tower.level < 3) {
-            upgrade1Button.textContent = `upgrade money`;
-            upgrade2Button.textContent = ``;
-        } else if (tower.level === 3) {
-            // Mega upgrade options for level 3 towers
-            upgrade1Button.textContent = `FINAL STAGE money`;
-            upgrade2Button.textContent = ``;
-        } else {
-            // If at max level
-            upgrade1Button.textContent = "Max level reached!";
-            upgrade2Button.textContent = "";
-        }
+        // If at max level
+        upgrade1Button.textContent = "Max level reached!";
+        upgrade2Button.textContent = "";
     }
 
     // Show the pop-up

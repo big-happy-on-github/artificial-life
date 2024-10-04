@@ -106,13 +106,11 @@ upgradeButton.addEventListener('click', (event) => {
             showing.damage += upgradeInfo.damage;
             showing.fireRate += upgradeInfo.fireRate;
 
-            // Update the tower stats display
-            showTowerStats(showing);
-
+            updateHUD();
             upgradePressed = false; // Reset the confirmation flag
         }
     } else {
-        towerTypeDisplay.textContent = "Max level reached!";
+        towerTypeDisplay.textContent = "max level reached!";
     }
 });
 

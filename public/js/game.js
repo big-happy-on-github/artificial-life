@@ -32,7 +32,7 @@ function showTowerStats(tower) {
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
-    towerDamageDisplay.textContent = `${tower.damage * (1 / tower.fireRate)}dmg/s`;
+    towerDamageDisplay.textContent = `${tower.damage * (Math.round((1 / tower.fireRate) * 100) / 100)}dmg/s`;
 
     // Show the pop-up
     towerStatsPopup.style.display = 'block';

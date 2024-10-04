@@ -62,7 +62,7 @@ canvas.addEventListener('click', (event) => {
 
         towers.forEach(tower => {
             const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-            if (distance < 30) { // Assuming 30 is the size of the tower
+            if (distance < 50) { // Assuming 30 is the size of the tower
                 showTowerStats(tower); // Show stats on click
                 towerFound = true;
             }

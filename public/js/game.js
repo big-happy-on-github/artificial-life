@@ -93,8 +93,8 @@ upgradeButton.addEventListener('click', (event) => {
             upgradeButton.textContent = `pay $${upgradeInfo.cost}`;
             upgradePressed = true; // Set confirmation flag
         } else {
-            if (currency >= showing.cost) {
-                currency -= showing.cost;
+            if (currency >= upgradeInfo.cost) {
+                currency -= upgradeInfo.cost;
                 console.log("upgraded");
             } else {
                 return;

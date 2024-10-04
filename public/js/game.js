@@ -571,6 +571,8 @@ canvas.addEventListener('click', (event) => {
     const y = event.clientY - rect.top;
 
     if (selectedTowerType && isSquareAvailable(x, y)) {
+        const gridX = Math.floor(x / gridSize);
+        const gridY = Math.floor(y / gridSize);
         const tower = new Tower(gridX, gridY, selectedTowerType);
         occupiedSquares.add(`${gridX}, ${gridY}`);
         if (currency >= tower.price) {

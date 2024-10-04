@@ -16,7 +16,6 @@ const towerHealthDisplay = document.getElementById('tower-health');
 const towerRangeDisplay = document.getElementById('tower-range');
 const towerDamageDisplay = document.getElementById('tower-damage');
 const towerFireRateDisplay = document.getElementById('tower-fire-rate');
-let statsShowing = false;
 
 // Function to show the tower stats pop-up
 function showTowerStats(tower) {
@@ -38,7 +37,6 @@ function showTowerStats(tower) {
 
     // Show the pop-up by setting its style
     towerStatsPopup.style.display = 'block';
-    statsShowing = true;
 }
 
 // Function to hide the tower stats pop-up
@@ -62,16 +60,15 @@ canvas.addEventListener('click', (event) => {
 
         towers.forEach(tower => {
             const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
-            if (distance < 100) { // Assuming 30 is the size of the tower
+            if (distance < 30) { // Assuming 30 is the size of the tower
                 showTowerStats(tower); // Show stats on click
                 towerFound = true;
             }
         });
 
-        if (!towerFound || statsShowing) {
+        if (!towerFound) {
             console.log('No tower found within range to show stats.');
             hideTowerStats(); // Hide the pop-up if no tower is clicked
-            statsShowing = false;
         }
     }
 

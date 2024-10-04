@@ -58,12 +58,16 @@ function showTowerStats(tower) {
 
     // Set upgrade button text based on tower level
     if (tower.level < 3) {
-        upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for damage)`;
-        upgrade2Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for range)`;
+        upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} 
+        (for damage)`;
+        upgrade2Button.textContent = `Upgrade to lvl ${tower.level + 1} 
+        (for range)`;
     } else if (tower.level === 3) {
         // Mega upgrade options for level 3 towers
-        upgrade1Button.textContent = `FINAL STAGE \n(for massive damage)`;
-        upgrade2Button.textContent = `FINAL STAGE \n(for massive range)`;
+        upgrade1Button.textContent = `FINAL STAGE 
+        (for massive damage)`;
+        upgrade2Button.textContent = `FINAL STAGE 
+        (for massive range)`;
     } else {
         // If at max level
         upgrade1Button.textContent = "Max level reached!";

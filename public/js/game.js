@@ -1,22 +1,22 @@
-// Get references to game elements
 const canvas = document.getElementById('game-canvas');
-const ctx = canvas.getContext('2d');
-const currencyDisplay = document.getElementById('currency');
-const waveDisplay = document.getElementById('wave');
-const livesDisplay = document.getElementById('lives');
-const towerSelection = document.getElementById('tower-selection');
-const startWaveButton = document.getElementById('start-wave-button');
-const autoStartCheckbox = document.getElementById('auto-start');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
-// Get reference to the tower stats pop-up
-const towerStatsPopup = document.getElementById('tower-stats-popup');
-const towerTypeDisplay = document.getElementById('tower-type');
-const towerLevelDisplay = document.getElementById('tower-level');
-const towerHealthDisplay = document.getElementById('tower-health');
-const towerRangeDisplay = document.getElementById('tower-range');
-const towerDamageDisplay = document.getElementById('tower-damage');
-const upgrade1Button = document.getElementById('upgrade1-button');
-const upgrade2Button = document.getElementById('upgrade2-button');
+const currencyDisplay = document.getElementById('currency') || { textContent: '' };
+const waveDisplay = document.getElementById('wave') || { textContent: '' };
+const livesDisplay = document.getElementById('lives') || { textContent: '' };
+const towerSelection = document.getElementById('tower-selection') || null;
+const startWaveButton = document.getElementById('start-wave-button') || null;
+const autoStartCheckbox = document.getElementById('auto-start') || null;
+
+// Tower stats pop-up
+const towerStatsPopup = document.getElementById('tower-stats-popup') || null;
+const towerTypeDisplay = document.getElementById('tower-type') || { textContent: '' };
+const towerLevelDisplay = document.getElementById('tower-level') || { textContent: '' };
+const towerHealthDisplay = document.getElementById('tower-health') || { textContent: '' };
+const towerRangeDisplay = document.getElementById('tower-range') || { textContent: '' };
+const towerDamageDisplay = document.getElementById('tower-damage') || { textContent: '' };
+const upgrade1Button = document.getElementById('upgrade1-button') || null;
+const upgrade2Button = document.getElementById('upgrade2-button') || null;
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
 
@@ -67,7 +67,6 @@ function showTowerStats(tower) {
     const nextLevelKey = `lvl${tower.level + 1}`;
     const towerUpgrades = upgrade[tower.type];
 
-    // Check if there are upgrades available for the next level
     if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
         if (hasSecondUpgrade === undefined) {
@@ -812,9 +811,12 @@ function nextWave() {
     towers.forEach(tower => {
         const nextLevelKey = `lvl${tower.level + 1}`;
         const towerUpgrades = upgrade[tower.type];
-        if (towerUpgrades[nextLevelKey]['2'] === undefined) {
-            currency += tower.damage;
-            console.log("added money");
+        if (towerUpgrades && towerUpgrades[nextLevelKey]) {
+            const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'] !== undefined;
+            if (!hasSecondUpgrade) {
+                currency += tower.damage;
+                console.log("added money");
+            }
         }
     });
 

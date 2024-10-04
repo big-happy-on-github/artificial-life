@@ -100,11 +100,14 @@ body {
     color: #fff;
     border: 2px solid #fff;
     border-radius: 5px;
-    display: none; /* Hidden by default */
-    transition: right 0.3s; /* Smooth transition when shown */
+    opacity: 0; /* Make it invisible */
+    visibility: hidden; /* Hide it from screen readers */
+    transition: right 0.3s, opacity 0.3s; /* Smooth transition */
 }
 
 /* Show the pop-up when it is triggered */
 #tower-stats-popup.show {
     right: 10px;
+    opacity: 1; /* Make it visible */
+    visibility: visible; /* Make it accessible */
 }

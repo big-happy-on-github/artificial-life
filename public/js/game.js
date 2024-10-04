@@ -51,12 +51,15 @@ function showTowerStats(tower) {
     towerHealthDisplay.textContent = `${tower.health}hp`;
     towerRangeDisplay.textContent = `${tower.range}px range`;
     towerDamageDisplay.textContent = `${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}`;
-    upgradeButton.textContent = `upgrade to lvl ${tower.level + 1} ($${showing.cost})`;
+    upgradeButton.textContent = `upgrade to lvl ${tower.level + 1}`;
 
     // Show the pop-up
     towerStatsPopup.style.display = 'block';
     showing = tower; // Store the currently selected tower
     upgradePressed = false; // Reset the upgrade confirmation flag
+    if (showing) {
+        showTowerStats(tower);
+    }
 }
 
 // Function to hide the tower stats pop-up
@@ -90,7 +93,7 @@ upgradeButton.addEventListener('click', (event) => {
             const dpsIncrease = (newDPS - currentDPS).toFixed(2);
             towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
 
-            upgradeButton.textContent = `pay $${showing.cost}`;
+            upgradeButton.textContent = `pay $${upgradeInfo.cost}`;
             upgradePressed = true; // Set confirmation flag
         } else {
             if (currency >= showing.cost) {

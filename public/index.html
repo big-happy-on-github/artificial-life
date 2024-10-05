@@ -72,18 +72,18 @@
         // Function to add data to Firestore
         function addData(feedback) {
             try {
-                const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+                const response = fetch('https://ipinfo.io/json?token=ca3a9249251d12');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const ipInfo = await response.json();
+                const ipInfo = response.json();
                 console.log(ipInfo); // Logs the IP information
             } catch (error) {
                 console.error('Error fetching IP information:', error);
             }
             
             try {
-              const docRef = await addDoc(collection(db, "feedback"), {
+              const docRef = addDoc(collection(db, "feedback"), {
                 ip: ipInfo,
                 feedback: feedback
               });
@@ -95,7 +95,7 @@
         
         // Function to get data from Firestore
         function getData() {
-            const querySnapshot = await getDocs(collection(db, "feedback"));
+            const querySnapshot = getDocs(collection(db, "feedback"));
             querySnapshot.forEach((doc) => {
               console.log(`${doc.id} => `, doc.data());
             });

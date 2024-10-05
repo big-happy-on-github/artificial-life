@@ -94,7 +94,7 @@
         }
         
         // Function to get data from Firestore
-        async function getData() {
+        function getData() {
             const querySnapshot = await getDocs(collection(db, "feedback"));
             querySnapshot.forEach((doc) => {
               console.log(`${doc.id} => `, doc.data());

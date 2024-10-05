@@ -137,7 +137,7 @@ header h1 {
     display: flex;
     align-items: center;
     gap: 10px; /* Adjust the spacing between elements */
-    margin-left: auto;
+    margin-left: 60%;
 }
 
 header label {

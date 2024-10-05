@@ -70,7 +70,7 @@
                 const { data, error } = await supabase
                     .from('feedback') // Assuming 'feedback' is the name of your table
                     .insert([
-                        { ip: ipInfo.ip, feedback: feedback }
+                        { ip: ipInfo, feedback: feedback }
                     ]);
 
                 if (error) {

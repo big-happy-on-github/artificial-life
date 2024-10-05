@@ -103,17 +103,6 @@ body {
     visibility: visible; /* Make it accessible */
 }
 
-/* Adsbygoogle Styles */
-.adsbygoogle {
-    position: absolute; /* Use absolute positioning */
-    left: -250px; /* Adjust the value as needed to place it to the left of the canvas */
-    top: 0; /* Aligns the ad with the top of the game canvas */
-    width: 200px; /* Set a width for the ad */
-    height: 600px; /* Set a height for the ad to match the game canvas */
-    background-color: #222; /* Placeholder background color */
-    border: 2px solid #fff; /* Optional border for visualization */
-}
-
 /* Game Container Adjustment */
 #game-container {
     position: relative;

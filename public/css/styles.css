@@ -132,8 +132,14 @@ header h1 {
     font-size: 24px;
 }
 
+/* Group the feedback label, input, and button */
+.feedback-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the spacing between elements */
+}
+
 header label {
-    margin-right: 10px;
     font-size: 16px;
 }
 

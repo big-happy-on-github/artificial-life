@@ -74,16 +74,16 @@ function showTowerStats(tower) {
         }
 
         if (tower.level < 3) {
-            upgrade1Button.textContent = `Upgrade to lvl ${tower.level + 1} \n(for ${hasSecondUpgrade ? 'damage' : 'money'})`;
-            upgrade2Button.textContent = hasSecondUpgrade ? `Upgrade to lvl ${tower.level + 1} \n(for range)` : '';
+            upgrade1Button.textContent = `upgrade (for ${hasSecondUpgrade ? 'dmg' : 'money'})`;
+            upgrade2Button.textContent = hasSecondUpgrade ? `upgrade (for range)` : '';
         } else if (tower.level === 3) {
             // Mega upgrade options for level 3 towers
-            upgrade1Button.textContent = `FINAL STAGE upgrade \n(for ${hasSecondUpgrade ? 'massive damage' : 'money'})`;
-            upgrade2Button.textContent = hasSecondUpgrade ? `FINAL STAGE upgrade \n(for massive range)` : '';
+            upgrade1Button.textContent = `final upgrade \n(for ${hasSecondUpgrade ? 'dmg' : 'money'})`;
+            upgrade2Button.textContent = hasSecondUpgrade ? `final upgrade (for range)` : '';
         }
     } else {
         // If at max level
-        upgrade1Button.textContent = "Max level reached!";
+        upgrade1Button.textContent = "max upgrade lvl reached!";
         upgrade2Button.textContent = "";
         // Determine the next level for the upgrade
         const nextLevelKey = `lvl${tower.level + 1}`;

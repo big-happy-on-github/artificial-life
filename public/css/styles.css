@@ -122,14 +122,8 @@ header {
     background-color: #222;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     border-bottom: 2px solid #444;
     z-index: 1000;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
 }
 
 /* Group the feedback label, input, and button */
@@ -137,11 +131,16 @@ header h1 {
     display: flex;
     align-items: center;
     gap: 10px; /* Adjust the spacing between elements */
-    margin-left: 60%;
+    margin-left: auto; /* Pushes this container to the right */
 }
 
 header label {
     font-size: 16px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
 }
 
 header input {

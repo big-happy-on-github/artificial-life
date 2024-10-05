@@ -132,7 +132,7 @@ header {
     display: flex;
     align-items: center;
     gap: 10px; /* Adjust the spacing between elements */
-    margin-left: 50%;
+    margin-left: 70%;
 }
 
 header label {

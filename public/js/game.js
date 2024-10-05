@@ -475,10 +475,17 @@ class Enemy {
         if (this.type.special) {
             if (this.color == '#33fff9') {
                 const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
-                if (nearestEnemy && Date.now() - this.lastFired > this.fireRate * 1000) {
+                if (nearestEnemy && Date.now() - this.lastFired > 1000) {
                     nearestEnemy.health += 1;
                     this.lastFired = Date.now();
                     console.log(`'#33fff9' healed ${nearestEnemy} to ${nearestEnemy.health}`);
+                }
+            } else if (this.color == '#ff7433') {
+                const max_health = this.health;
+                if (Date.now() - this.lastFired > 1000 && max_health >= this.health + 1) {
+                    this.health + 1;
+                    this.lastFired = Date.now();
+                    console.log(`'#ff7433' healed`);
                 }
             }
         }
@@ -544,12 +551,14 @@ const enemyTypes = [
     { speed: 1, health: 13, color: 'green', canShoot: true, range: 10, fireRate: 2, damage: 2.5, level: 4, nextType: null }, // Shooting enemy, no further transformation
     { speed: 2, health: 15, color: 'blue', canShoot: true, range: 10, fireRate: 1.5, damage: 2, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
     { speed: 0.3, health: 72, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
-    { speed: 1, health: 15, color: '#33fff9', canShoot: false, range: 10, fireRate: 1, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies' },
+    { speed: 1, health: 20, color: '#33fff9', canShoot: false, range: 10, fireRate: null, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies every second' },
     { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 100, fireRate: 0.5, damage: 2.5, level: 17, nextType: 'purple' },
+    { speed: 0.7, health: 20, color: '#ff7433', canShoot: false, range: null, fireRate: null, damage: null, level: 23, nextType: null, special: 'Regrows health every second' },
 ];
 
 const bossEnemyTypes = [
     { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 3, damage: 2.5, level: 10, nextType: 'purple' },
+    { speed: 8, health: 75, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 20, nextType: null },
 ];
 
 function spawnEnemies() {
@@ -840,7 +849,7 @@ function nextWave() {
 
     enemyTypes.forEach(enemy => {
         if (enemy.special && enemy.level == wave) {
-            alert(`new color special enemy on wave ${wave}!`);
+            alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
         }
     });
 

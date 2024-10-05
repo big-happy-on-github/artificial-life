@@ -11,9 +11,11 @@
 <body>
     <header>
         <h1>LiamsTD</h1>
-        <label for="feedbackInput">got feedback?: </label>
-        <input id="feedbackInput">
-        <button onclick="addData(document.getElementById('feedbackInput').value)">send</button>
+        <div class="feedback-container">
+            <label for="feedbackInput">got feedback?: </label>
+            <input id="feedbackInput">
+            <button onclick="addData(document.getElementById('feedbackInput').value)">send</button>
+        </div>
     </header>
     <div id="game-container">
         <canvas id="game-canvas"></canvas>

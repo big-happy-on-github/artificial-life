@@ -129,10 +129,10 @@ header {
 
 /* Group the feedback label, input, and button */
 .feedback-container {
-    display: flex;
+    display: fixed;
     align-items: center;
     gap: 10px; /* Adjust the spacing between elements */
-    margin-left: auto; /* Pushes this container to the right */
+    right: 10px;
 }
 
 header label {

@@ -268,25 +268,28 @@ class Tower {
         this.y = y;
         this.type = type;
         this.level = 1;
-        this.health = 10;
         this.target = null;
 
         if (type == '1') {
+            this.health = 13;
             this.range = 150;
             this.fireRate = 1;
             this.damage = 3;
             this.price = 2;
         } else if (type == '2') {
+            this.health = 15;
             this.range = 100;
             this.fireRate = 0.5;
             this.damage = 4;
             this.price = 3;
         } else if (type == '3') {
+            this.health = 10;
             this.range = 300;
             this.fireRate = 1.5;
             this.damage = 4.5;
             this.price = 3;
         } else if (type == '4') {
+            this.health = 5;
             this.range = 0;
             this.fireRate = 0;
             this.damage = 4;

@@ -172,6 +172,8 @@ body {
 @media (max-width: 600px) {
     /* Adjust game container for small screens */
     #game-container {
+        position: fixed;
+        top: 50%;
         width: 100vw;
         height: auto; /* Adjust height based on canvas size */
         padding: 5px;
@@ -232,11 +234,7 @@ body {
     }
 
     .feedback-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        width: 100%;
+        display: none;
     }
 
     header input {

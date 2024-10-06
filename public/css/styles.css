@@ -175,23 +175,23 @@ body {
 @media (max-width: 600px) {
     /* Adjust header styles */
     header {
-        position: fixed; /* Fix header to the top */
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 50px; /* Set fixed height */
+        height: 50px;
         padding: 5px;
-        font-size: 12px; /* Smaller text */
+        font-size: 12px;
         display: flex;
-        flex-direction: column; /* Stack elements vertically */
+        flex-direction: column;
         align-items: center;
-        background-color: #222; /* Background color for visibility */
-        z-index: 1000; /* Ensure it's on top */
+        background-color: #222;
+        z-index: 1000;
     }
 
     header h1 {
-        font-size: 16px; /* Smaller title */
-        margin-bottom: 5px; /* Reduce margin */
+        font-size: 16px;
+        margin-bottom: 5px;
     }
 
     .feedback-container {
@@ -200,7 +200,7 @@ body {
 
     header input {
         padding: 3px;
-        width: 70%; /* Reduce width */
+        width: 70%;
     }
 
     /* Adjust game container for small screens */
@@ -210,14 +210,19 @@ body {
         left: 0;
         width: 100vw;
         height: calc(100vh - 50px - 120px); /* Adjust height to fit between header and bottom elements */
-        padding: 5px; /* Reduce padding */
+        padding: 5px;
         box-sizing: border-box;
+        display: flex;
+        justify-content: center; /* Center the canvas horizontally */
+        align-items: center; /* Center the canvas vertically */
     }
 
-    /* Adjust the canvas to fit the screen */
+    /* Maintain canvas aspect ratio */
     #game-canvas {
-        width: 100%;
-        height: 100%; /* Make the canvas occupy the available space */
+        width: 100%; /* Make canvas responsive to container's width */
+        max-width: 800px; /* Set a max width to preserve proportions */
+        height: auto; /* Automatically adjust height to maintain aspect ratio */
+        aspect-ratio: 4 / 3; /* Set the aspect ratio (e.g., 4:3) */
     }
 
     /* Position HUD and other elements below the canvas */
@@ -226,10 +231,10 @@ body {
         display: flex;
         justify-content: space-around;
         gap: 5px;
-        font-size: 12px; /* Smaller text */
+        font-size: 12px;
         padding: 5px;
         margin-top: 5px;
-        background-color: rgba(0, 0, 0, 0.5); /* Background for better visibility */
+        background-color: rgba(0, 0, 0, 0.5);
     }
 
     /* Stack tower selection and controls vertically with spacing */
@@ -240,8 +245,8 @@ body {
     /* Adjust individual tower selection elements */
     .tower {
         padding: 5px;
-        font-size: 12px; /* Make text smaller */
-        margin: 3px; /* Reduce margin */
+        font-size: 12px;
+        margin: 3px;
     }
 
     /* Adjust pop-up menu for tower stats */
@@ -252,23 +257,21 @@ body {
         top: 10%;
         max-height: 70%;
         overflow-y: auto;
-        padding: 5px; /* Reduce padding */
-        margin-top: 10px; /* Reduce margin */
-        font-size: 12px; /* Smaller text */
+        padding: 5px;
+        margin-top: 10px;
+        font-size: 12px;
     }
 
     /* Button adjustments for mobile */
     button {
-        padding: 5px 8px; /* Smaller button size */
-        font-size: 12px; /* Smaller text */
+        padding: 5px 8px;
+        font-size: 12px;
     }
 
     /* Adjust the start wave button */
     #start-wave-button {
         padding: 5px 8px;
         font-size: 12px;
-        margin-top: 5px; /* Reduce margin */
+        margin-top: 5px;
     }
 }
-
-

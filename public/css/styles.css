@@ -189,26 +189,23 @@ body {
     }
 
     /* Keep all other elements in their original positions */
-    #hud, #tower-selection {
+    #hud, #tower-selection, #controls-container {
         position: relative;
         display: flex;
         justify-content: space-around;
         gap: 10px;
         font-size: 12px;
         padding: 5px;
-        margin-top: 5px;
         background-color: rgba(0, 0, 0, 0.5);
     }
-
+    
+    /* Adjust individual margins for specific elements if needed */
+    #hud, #tower-selection {
+        margin-top: 5px;
+    }
+    
     #controls-container {
-        position: relative;
-        display: flex;
-        justify-content: space-around;
-        gap: 10px;
-        font-size: 12px;
-        padding: 5px;
         margin-top: 2px;
-        background-color: rgba(0, 0, 0, 0.5);
     }
 
     /* Stack tower selection and controls vertically if needed */

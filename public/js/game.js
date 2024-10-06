@@ -110,8 +110,9 @@ upgrade1Button.addEventListener('click', (event) => {
     if (!showing) return; // No tower selected
 
     const currentLevel = showing.level;
-    const nextLevel = `lvl${currentLevel + 1}`; // Corrected key
-    const towerUpgradess = upgrade[showing.type];
+
+    const towerUpgrades = upgrade[showing.type];
+    const nextLevelKey = `lvl${currentLevel + 1}`;
 
     if (towerUpgrades[nextLevel]) {
         const upgradeInfo = towerUpgrades[nextLevel]['1']; // Damage upgrade
@@ -163,7 +164,7 @@ upgrade2Button.addEventListener('click', (event) => {
 
     const currentLevel = showing.level;
     const nextLevel = `lvl${currentLevel + 1}`; // Corrected key
-    const towerUpgradess = upgrade[showing.type];
+    const towerUpgrades = upgrade[showing.type];
 
     if (towerUpgrades[nextLevel]) {
         const upgradeInfo = towerUpgrades[nextLevel]['2']; // Range upgrade

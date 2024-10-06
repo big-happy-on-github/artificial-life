@@ -64,9 +64,9 @@ function showTowerStats(tower) {
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
 
     const towerUpgrades = upgrade[tower.type];
-    const nextLevelKeyKey = `lvl${tower.level + 1}`;
+    const nextLevelKey = `lvl${tower.level + 1}`;
 
-    if (towerUpgrades && towerUpgrades[nextLevelKeyKey]) {
+    if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = tower.type !== '4';
         if (!hasSecondUpgrade) {
             towerDamageDisplay.textContent = `0dps`;
@@ -85,7 +85,7 @@ function showTowerStats(tower) {
         upgrade1Button.textContent = "max upgrade lvl reached!";
         upgrade2Button.textContent = "";
     
-        if (towerUpgrades && towerUpgrades[nextLevelKeyKey]) {
+        if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const hasSecondUpgrade = tower.type !== '4';
             if (!hasSecondUpgrade) {
                 towerDamageDisplay.textContent = `0dps`;
@@ -112,7 +112,7 @@ upgrade1Button.addEventListener('click', (event) => {
     const currentLevel = showing.level;
 
     const towerUpgrades = upgrade[showing.type];
-    const nextLevelKeyKey = `lvl${currentLevel + 1}`;
+    const nextLevelKey = `lvl${currentLevel + 1}`;
 
     if (towerUpgrades[nextLevelKey]) {
         const upgradeInfo = towerUpgrades[nextLevelKey]['1']; // Damage upgrade
@@ -826,7 +826,7 @@ function nextWave() {
     }
 
     towers.forEach(tower => {
-        if (towerUpgradess && towerUpgrades[nextLevelKeyKey]) {
+        if (towerUpgradess && towerUpgrades[nextLevelKey]) {
             const hasSecondUpgrade = tower.type !== '4';
             if (!hasSecondUpgrade) {
                 currency += tower.damage;

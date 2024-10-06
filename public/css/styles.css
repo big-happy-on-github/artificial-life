@@ -170,3 +170,86 @@ header button:hover {
 body {
     padding-top: 60px;
 }
+
+/* Mobile styles */
+@media (max-width: 600px) {
+    /* Adjust game container for small screens */
+    #game-container {
+        width: 100vw;
+        height: 100vh;
+        border: none;
+    }
+
+    /* Adjust the canvas to fit the screen */
+    #game-canvas {
+        width: 100%;
+        height: calc(100% - 60px); /* Leave space for the header */
+    }
+
+    /* Stack the tower selection and controls vertically */
+    #tower-selection, #controls-container {
+        position: static;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+
+    /* Adjust HUD elements for better readability */
+    #hud {
+        top: 0;
+        left: 0;
+        right: 0;
+        justify-content: center;
+        gap: 10px;
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    /* Adjust header styles */
+    header {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    header h1 {
+        font-size: 18px;
+    }
+
+    .feedback-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        margin-left: 0;
+    }
+
+    /* Adjust pop-up menu for tower stats */
+    #tower-stats-popup {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+        top: 10%;
+        max-height: 80%;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    /* Button adjustments for mobile */
+    button {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    /* Adjust the start wave button */
+    #start-wave-button {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    /* Adjust tower elements for readability */
+    .tower {
+        padding: 5px;
+        font-size: 14px;
+    }
+}

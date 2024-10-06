@@ -173,6 +173,46 @@ body {
 
 /* Mobile styles */
 @media (max-width: 600px) {
+    /* Adjust game container for small screens */
+    #game-container {
+        width: 100vw;
+        height: auto; /* Adjust height based on canvas size */
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Maintain the aspect ratio of the canvas */
+    #game-canvas {
+        width: 100%; /* Make canvas responsive to container's width */
+        max-width: 800px; /* Set a max width for larger screens */
+        height: auto; /* Adjust height automatically to maintain aspect ratio */
+        aspect-ratio: 4 / 3; /* Maintain a 4:3 aspect ratio */
+    }
+
+    /* Keep all other elements in their original positions */
+    #hud, #tower-selection, #controls-container {
+        position: relative;
+        display: flex;
+        justify-content: space-around;
+        gap: 5px;
+        font-size: 12px;
+        padding: 5px;
+        margin-top: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Stack tower selection and controls vertically if needed */
+    #tower-selection, #controls-container {
+        flex-wrap: wrap;
+    }
+
+    /* Adjust individual tower selection elements */
+    .tower {
+        padding: 5px;
+        font-size: 12px;
+        margin: 3px;
+    }
+
     /* Adjust header styles */
     header {
         position: fixed;
@@ -195,58 +235,16 @@ body {
     }
 
     .feedback-container {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        width: 100%;
     }
 
     header input {
         padding: 3px;
         width: 70%;
-    }
-
-    /* Adjust game container for small screens */
-    #game-container {
-        position: absolute;
-        top: 50px; /* Place below the fixed header */
-        left: 0;
-        width: 100vw;
-        height: calc(100vh - 50px - 120px); /* Adjust height to fit between header and bottom elements */
-        padding: 5px;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center; /* Center the canvas horizontally */
-        align-items: center; /* Center the canvas vertically */
-    }
-
-    /* Maintain canvas aspect ratio */
-    #game-canvas {
-        width: 100%; /* Make canvas responsive to container's width */
-        max-width: 800px; /* Set a max width to preserve proportions */
-        height: auto; /* Automatically adjust height to maintain aspect ratio */
-        aspect-ratio: 4 / 3; /* Set the aspect ratio (e.g., 4:3) */
-    }
-
-    /* Position HUD and other elements below the canvas */
-    #hud, #tower-selection, #controls-container {
-        position: static;
-        display: flex;
-        justify-content: space-around;
-        gap: 5px;
-        font-size: 12px;
-        padding: 5px;
-        margin-top: 5px;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    /* Stack tower selection and controls vertically with spacing */
-    #tower-selection, #controls-container {
-        flex-wrap: wrap;
-    }
-
-    /* Adjust individual tower selection elements */
-    .tower {
-        padding: 5px;
-        font-size: 12px;
-        margin: 3px;
     }
 
     /* Adjust pop-up menu for tower stats */

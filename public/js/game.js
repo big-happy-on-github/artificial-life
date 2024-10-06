@@ -826,7 +826,7 @@ function nextWave() {
     }
 
     towers.forEach(tower => {
-        if (towerUpgradess && towerUpgrades[nextLevelKey]) {
+        if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const hasSecondUpgrade = tower.type !== '4';
             if (!hasSecondUpgrade) {
                 currency += tower.damage;

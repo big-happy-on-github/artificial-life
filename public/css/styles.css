@@ -173,7 +173,7 @@ body {
     /* Adjust game container for small screens */
     #game-container {
         position: fixed;
-        top: 50%;
+        top: 20%;
         width: 100vw;
         height: auto; /* Adjust height based on canvas size */
         padding: 5px;

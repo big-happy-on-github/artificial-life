@@ -189,7 +189,7 @@ body {
     }
 
     /* Keep all other elements in their original positions */
-    #hud, #tower-selection, #controls-container {
+    #hud, #tower-selection {
         position: relative;
         display: flex;
         justify-content: space-around;
@@ -197,6 +197,17 @@ body {
         font-size: 12px;
         padding: 5px;
         margin-top: 5px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    #controls-container {
+        position: relative;
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+        font-size: 12px;
+        padding: 5px;
+        margin-top: 2px;
         background-color: rgba(0, 0, 0, 0.5);
     }
 

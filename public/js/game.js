@@ -63,6 +63,9 @@ function showTowerStats(tower) {
     towerRangeDisplay.textContent = `${tower.range}px range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
 
+    const towerUpgrades = upgrades[tower.type];
+    const nextLevelKey = `lvl${tower.level + 1}`;
+
     if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = tower.type !== '4';
         if (!hasSecondUpgrade) {

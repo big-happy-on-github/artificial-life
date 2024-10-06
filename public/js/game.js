@@ -63,7 +63,7 @@ function showTowerStats(tower) {
     towerRangeDisplay.textContent = `${tower.range}px range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
 
-    const towerUpgrades = upgrades[tower.type];
+    const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
 
     if (towerUpgrades && towerUpgrades[nextLevelKey]) {
@@ -111,7 +111,7 @@ upgrade1Button.addEventListener('click', (event) => {
 
     const currentLevel = showing.level;
     const nextLevel = `lvl${currentLevel + 1}`; // Corrected key
-    const towerUpgrades = upgrade[showing.type];
+    const towerUpgradess = upgrade[showing.type];
 
     if (towerUpgrades[nextLevel]) {
         const upgradeInfo = towerUpgrades[nextLevel]['1']; // Damage upgrade
@@ -163,7 +163,7 @@ upgrade2Button.addEventListener('click', (event) => {
 
     const currentLevel = showing.level;
     const nextLevel = `lvl${currentLevel + 1}`; // Corrected key
-    const towerUpgrades = upgrade[showing.type];
+    const towerUpgradess = upgrade[showing.type];
 
     if (towerUpgrades[nextLevel]) {
         const upgradeInfo = towerUpgrades[nextLevel]['2']; // Range upgrade
@@ -825,7 +825,7 @@ function nextWave() {
     }
 
     towers.forEach(tower => {
-        if (towerUpgrades && towerUpgrades[nextLevelKey]) {
+        if (towerUpgradess && towerUpgrades[nextLevelKey]) {
             const hasSecondUpgrade = tower.type !== '4';
             if (!hasSecondUpgrade) {
                 currency += tower.damage;

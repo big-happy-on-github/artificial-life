@@ -173,57 +173,20 @@ body {
 
 /* Mobile styles */
 @media (max-width: 600px) {
-    /* Adjust game container for small screens */
-    #game-container {
-        width: 100vw;
-        height: 100vh;
-        padding: 5px; /* Reduce padding */
-        box-sizing: border-box;
-    }
-
-    /* Adjust the canvas to fit the screen */
-    #game-canvas {
-        width: 100%;
-        height: 60vh; /* Reduce height to make room for controls */
-    }
-
-    /* Stack tower selection and controls vertically with spacing */
-    #tower-selection, #controls-container {
-        position: static;
-        display: flex;
-        justify-content: center;
-        gap: 5px; /* Reduce gap */
-        margin-top: 5px; /* Reduce margin */
-        flex-wrap: wrap;
-    }
-
-    /* Adjust individual tower selection elements */
-    .tower {
-        padding: 5px;
-        font-size: 12px; /* Make text smaller */
-        margin: 3px; /* Reduce margin */
-    }
-
-    /* Adjust HUD elements for better readability and spacing */
-    #hud {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        justify-content: space-around;
-        gap: 5px; /* Reduce gap */
-        font-size: 10px; /* Smaller text */
-        padding: 5px; /* Reduce padding */
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    }
-
     /* Adjust header styles */
     header {
+        position: fixed; /* Fix header to the top */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px; /* Set fixed height */
         padding: 5px;
         font-size: 12px; /* Smaller text */
         display: flex;
         flex-direction: column; /* Stack elements vertically */
         align-items: center;
+        background-color: #222; /* Background color for visibility */
+        z-index: 1000; /* Ensure it's on top */
     }
 
     header h1 {
@@ -236,12 +199,53 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 5px; /* Reduce gap */
-        width: 100%; 
+        width: 100%;
     }
 
     header input {
         padding: 3px;
         width: 70%; /* Reduce width */
+    }
+
+    /* Adjust game container for small screens */
+    #game-container {
+        position: absolute;
+        top: 50px; /* Place below the fixed header */
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 50px - 120px); /* Adjust height to fit between header and bottom elements */
+        padding: 5px; /* Reduce padding */
+        box-sizing: border-box;
+    }
+
+    /* Adjust the canvas to fit the screen */
+    #game-canvas {
+        width: 100%;
+        height: 100%; /* Make the canvas occupy the available space */
+    }
+
+    /* Position HUD and other elements below the canvas */
+    #hud, #tower-selection, #controls-container {
+        position: static;
+        display: flex;
+        justify-content: space-around;
+        gap: 5px;
+        font-size: 12px; /* Smaller text */
+        padding: 5px;
+        margin-top: 5px;
+        background-color: rgba(0, 0, 0, 0.5); /* Background for better visibility */
+    }
+
+    /* Stack tower selection and controls vertically with spacing */
+    #tower-selection, #controls-container {
+        flex-wrap: wrap;
+    }
+
+    /* Adjust individual tower selection elements */
+    .tower {
+        padding: 5px;
+        font-size: 12px; /* Make text smaller */
+        margin: 3px; /* Reduce margin */
     }
 
     /* Adjust pop-up menu for tower stats */
@@ -270,4 +274,5 @@ body {
         margin-top: 5px; /* Reduce margin */
     }
 }
+
 

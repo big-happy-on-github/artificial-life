@@ -855,24 +855,33 @@ function checkMultipleSelections() {
     }
 }
 
+function showTempTower(selectedTower) {
+    const tempTower = new Tower(-99999, -99999, selectedTower);
+    showTowerStats(tempTower);
+}
+
 document.getElementById('general-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkMultipleSelections();
+    showTempTower(selectedTowerType);
 });
 
 document.getElementById('close-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkMultipleSelections();
+    showTempTower(selectedTowerType);
 });
 
 document.getElementById('far-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkMultipleSelections();
+    showTempTower(selectedTowerType);
 });
 
 document.getElementById('special-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkMultipleSelections();
+    showTempTower(selectedTowerType);
 });
 
 // Handle start wave button click

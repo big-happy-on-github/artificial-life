@@ -1,24 +1,24 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 
-const currencyDisplay = document.getElementById('currency') || { textcontent: '' };
-const waveDisplay = document.getElementById('wave') || { textcontent: '' };
-const livesDisplay = document.getElementById('lives') || { textcontent: '' };
+const currencyDisplay = document.getElementById('currency') || { textContent: '' };
+const waveDisplay = document.getElementById('wave') || { textContent: '' };
+const livesDisplay = document.getElementById('lives') || { textContent: '' };
 const towerSelection = document.getElementById('tower-selection') || null;
-const startwaveButton = document.getElementById('start-wave-button') || null;
-const autoStartcheckbox = document.getElementById('auto-start') || null;
+const startWaveButton = document.getElementById('start-wave-button') || null;
+const autoStartCheckbox = document.getElementById('auto-start') || null;
 
 // Tower stats pop-up
-const towerStatspopup = document.getElementById('tower-stats-popup') || null;
-const towerTypeDisplay = document.getElementById('tower-type') || { textcontent: '' };
-const towerlevelDisplay = document.getElementById('tower-level') || { textcontent: '' };
-const towerHealthDisplay = document.getElementById('tower-health') || { textcontent: '' };
-const towerRangeDisplay = document.getElementById('tower-range') || { textcontent: '' };
-const towerDamageDisplay = document.getElementById('tower-damage') || { textcontent: '' };
+const towerStatsPopup = document.getElementById('tower-stats-popup') || null;
+const towerTypeDisplay = document.getElementById('tower-type') || { textContent: '' };
+const towerLevelDisplay = document.getElementById('tower-level') || { textContent: '' };
+const towerHealthDisplay = document.getElementById('tower-health') || { textContent: '' };
+const towerRangeDisplay = document.getElementById('tower-range') || { textContent: '' };
+const towerDamageDisplay = document.getElementById('tower-damage') || { textContent: '' };
 const upgrade1Button = document.getElementById('upgrade1-button') || null;
 const upgrade2Button = document.getElementById('upgrade2-button') || null;
 let showing = null; // currently selected tower
-let upgradepressed = false; // Flag for upgrade confirmation
+let upgradePressed = false; // Flag for upgrade confirmation
 
 // Define the upgrades for each tower type and level
 const upgrade = {

@@ -759,19 +759,20 @@ function isOutsidePath(x, y) {
     return true; // The point is far enough from all path segments
 }
 
-// Handle tower selection
-towerSelection.addEventListener('click', (event) => {
-    if (event.target.classList.contains('tower')) {
-        if (event.target.id == '1-tower') {
-            selectedTowerType = '1';
-        } else if (event.target.id == '2-tower') {
-            selectedTowerType = '2';
-        } else if (event.target.id == '3-tower') {
-            selectedTowerType = '3';
-        } else if (event.target.id == '4-tower') {
-            selectedTowerType = '4';
-        }
-    }
+document.getElementById('general-towers').addEventListener('change', (event) => {
+    selectedTowerType = event.target.value;
+});
+
+document.getElementById('close-range-towers').addEventListener('change', (event) => {
+    selectedTowerType = event.target.value;
+});
+
+document.getElementById('far-range-towers').addEventListener('change', (event) => {
+    selectedTowerType = event.target.value;
+});
+
+document.getElementById('special-towers').addEventListener('change', (event) => {
+    selectedTowerType = event.target.value;
 });
 
 // Handle start wave button click

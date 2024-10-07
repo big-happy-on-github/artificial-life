@@ -904,7 +904,7 @@ canvas.addEventListener('mousemove', (event) => {
 
 function updateHUD() {
     currencyDisplay.textcontent = `$${currency}`;
-    waveDisplay.textcontent = `wave ${wave} (pr: ${jSOn.parse(localStorage.getItem("topScore"))})`;
+    waveDisplay.textcontent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
     livesDisplay.textcontent = `${lives} lives`;
 
     if (showing) {
@@ -991,7 +991,7 @@ function gameloop(timestamp) {
 }
 
 if (!localStorage.getItem("topScore")) {
-    localStorage.setItem("topScore", jSOn.stringify(1));
+    localStorage.setItem("topScore", JSON.stringify(1));
 }
 
 // Initialize the game

@@ -272,7 +272,7 @@ class Tower {
 
         if (type == '1') {
             this.health = 13;
-            this.range = 150;
+            this.range = 50;
             this.fireRate = 1;
             this.damage = 3;
             this.price = 2;
@@ -284,7 +284,7 @@ class Tower {
             this.price = 3;
         } else if (type == '3') {
             this.health = 10;
-            this.range = 300;
+            this.range = 500;
             this.fireRate = 1.5;
             this.damage = 4.5;
             this.price = 3;

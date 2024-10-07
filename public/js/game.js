@@ -1,24 +1,24 @@
-const canvas = document.getElementById('game-canvas');
-const ctx = canvas ? canvas.getContext('2d') : null;
+const canvas = document.getelementById('game-canvas');
+const ctx = canvas ? canvas.getcontext('2d') : null;
 
-const currencyDisplay = document.getElementById('currency') || { textContent: '' };
-const waveDisplay = document.getElementById('wave') || { textContent: '' };
-const livesDisplay = document.getElementById('lives') || { textContent: '' };
-const towerSelection = document.getElementById('tower-selection') || null;
-const startWaveButton = document.getElementById('start-wave-button') || null;
-const autoStartCheckbox = document.getElementById('auto-start') || null;
+const currencyDisplay = document.getelementById('currency') || { textcontent: '' };
+const waveDisplay = document.getelementById('wave') || { textcontent: '' };
+const livesDisplay = document.getelementById('lives') || { textcontent: '' };
+const towerSelection = document.getelementById('tower-selection') || null;
+const startwaveButton = document.getelementById('start-wave-button') || null;
+const autoStartcheckbox = document.getelementById('auto-start') || null;
 
 // Tower stats pop-up
-const towerStatsPopup = document.getElementById('tower-stats-popup') || null;
-const towerTypeDisplay = document.getElementById('tower-type') || { textContent: '' };
-const towerLevelDisplay = document.getElementById('tower-level') || { textContent: '' };
-const towerHealthDisplay = document.getElementById('tower-health') || { textContent: '' };
-const towerRangeDisplay = document.getElementById('tower-range') || { textContent: '' };
-const towerDamageDisplay = document.getElementById('tower-damage') || { textContent: '' };
-const upgrade1Button = document.getElementById('upgrade1-button') || null;
-const upgrade2Button = document.getElementById('upgrade2-button') || null;
-let showing = null; // Currently selected tower
-let upgradePressed = false; // Flag for upgrade confirmation
+const towerStatspopup = document.getelementById('tower-stats-popup') || null;
+const towerTypeDisplay = document.getelementById('tower-type') || { textcontent: '' };
+const towerlevelDisplay = document.getelementById('tower-level') || { textcontent: '' };
+const towerHealthDisplay = document.getelementById('tower-health') || { textcontent: '' };
+const towerRangeDisplay = document.getelementById('tower-range') || { textcontent: '' };
+const towerDamageDisplay = document.getelementById('tower-damage') || { textcontent: '' };
+const upgrade1Button = document.getelementById('upgrade1-button') || null;
+const upgrade2Button = document.getelementById('upgrade2-button') || null;
+let showing = null; // currently selected tower
+let upgradepressed = false; // Flag for upgrade confirmation
 
 // Define the upgrades for each tower type and level
 const upgrade = {
@@ -38,13 +38,33 @@ const upgrade = {
         'lvl4': { '1': { health: 30, range: 80, damage: 10, fireRate: -0.7, cost: 35 }, '2': { health: 30, range: 150, damage: 10, fireRate: -0.7, cost: 35 } }
     },
     '4': {
-        'lvl2': { '1': { health: 0, range: 0, damage: 6, fireRate: 0, cost: 12 } },
-        'lvl3': { '1': { health: 0, range: 0, damage: 8, fireRate: 0, cost: 14 } },
-        'lvl4': { '1': { health: 0, range: 0, damage: 10, fireRate: 0, cost: 18 } }
+        'lvl2': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 12, money: 6 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 14, money: 8 } },
+        'lvl4': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 18, money: 10 } }
+    },
+    '5': {
+        'lvl2': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 12, money: 6 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 14, money: 8 } },
+        'lvl4': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 18, money: 10 } }
+    },
+    '6': {
+        'lvl2': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 12, money: 6 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 14, money: 8 } },
+        'lvl4': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 18, money: 10 } }
+    },
+    '7': {},
+    '8': {
+        'lvl2': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 12, money: 6 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 14, money: 8 } },
+        'lvl4': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 18, money: 10 } }
+    },
+    '9': {
+        'lvl2': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 12, money: 6 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 14, money: 8 } },
+        'lvl4': { '1': { health: 0, range: 0, damage: 0, fireRate: 0, cost: 18, money: 10 } }
     }
 };
 
-// Function to show the tower stats pop-up
 function showTowerStats(tower) {
     let towerType;
     if (tower.type == '1') {
@@ -55,88 +75,105 @@ function showTowerStats(tower) {
         towerType = 'evan';
     } else if (tower.type == '4') {
         towerType = 'christian';
+    } else if (tower.type == '5') {
+        towerType = 'philip';
+    } else if (tower.type == '6') {
+        towerType = 'mitchell';
+    } else if (tower.type == '7') {
+        towerType = 'walker';
+    } else if (tower.type == '8') {
+        towerType = 'larse';
+    } else if (tower.type == '9') {
+        towerType = 'nick';
     }
 
-    towerTypeDisplay.textContent = `${towerType} tower`;
-    towerLevelDisplay.textContent = `lvl ${tower.level}`;
-    towerHealthDisplay.textContent = `${tower.health}hp`;
-    towerRangeDisplay.textContent = `${tower.range}px range`;
-    towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
+    towerTypeDisplay.textcontent = `${towerType} tower`;
+    towerlevelDisplay.textcontent = `lvl ${tower.level}`;
+    towerHealthDisplay.textcontent = `${tower.health}hp`;
+    towerRangeDisplay.textcontent = `${tower.range}px range`;
+    towerDamageDisplay.textcontent = `~${(tower.damage * math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
 
+    if (tower.type == '7') {
+        towerDamageDisplay.textcontent = `~${tower.damage}/${tower.fireRate}`;
+    }
+    
     const towerUpgrades = upgrade[tower.type];
-    const nextLevelKey = `lvl${tower.level + 1}`;
+    const nextlevelKey = `lvl${tower.level + 1}`;
 
-    if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-        const hasSecondUpgrade = tower.type !== '4';
-        if (!hasSecondUpgrade) {
-            towerDamageDisplay.textContent = `0dps`;
+    if (towerUpgrades && !towerUpgrades[nextlevelKey] && tower.level == 1) {
+        upgrade1Button.textcontent = `cannot upgrade this tower`;
+        upgrade2Button.textcontent = ``;
+    } else if (towerUpgrades && towerUpgrades[nextlevelKey]) {
+        let hasSecondUpgrade = true;
+        if (towerUpgrades[nextLevelKey]['2']) {
+            hasSecondUpgrade = false;
         }
 
         if (tower.level < 3) {
-            upgrade1Button.textContent = `upgrade (for ${hasSecondUpgrade ? 'dmg' : 'money'})`;
-            upgrade2Button.textContent = hasSecondUpgrade ? `upgrade (for range)` : '';
+            upgrade1Button.textcontent = `upgrade ${hasSecondUpgrade ? '(for dmg)'}`;
+            upgrade2Button.textcontent = hasSecondUpgrade ? `upgrade (for range)`;
         } else if (tower.level === 3) {
-            // Mega upgrade options for level 3 towers
-            upgrade1Button.textContent = `final upgrade \n(for ${hasSecondUpgrade ? 'dmg' : 'money'})`;
-            upgrade2Button.textContent = hasSecondUpgrade ? `final upgrade (for range)` : '';
+            // mega upgrade options for level 3 towers
+            upgrade1Button.textcontent = `final upgrade ${hasSecondUpgrade ? '(for dmg)'}`;
+            upgrade2Button.textcontent = hasSecondUpgrade ? `final upgrade (for range)`;
         }
     } else {
         // If at max level
-        upgrade1Button.textContent = "max upgrade lvl reached!";
-        upgrade2Button.textContent = "";
+        upgrade1Button.textcontent = "max upgrade lvl reached!";
+        upgrade2Button.textcontent = "";
     
-        if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-            const hasSecondUpgrade = tower.type !== '4';
-            if (!hasSecondUpgrade) {
-                towerDamageDisplay.textContent = `0dps`;
+        if (towerUpgrades && towerUpgrades[nextlevelKey]) {
+            let hasSecondUpgrade = true;
+            if (towerUpgrades[nextLevelKey]['2']) {
+                hasSecondUpgrade = false;
             }
         }
     }
 
     // Show the pop-up
-    towerStatsPopup.classList.add('show');
+    towerStatspopup.classlist.add('show');
     showing = tower; // Store the currently selected tower
 }
 
 // Function to hide the tower stats pop-up
 function hideTowerStats() {
-    towerStatsPopup.classList.remove('show');
+    towerStatspopup.classlist.remove('show');
     showing = null;
-    upgradePressed = false;
+    upgradepressed = false;
 }
 
 // Handle upgrade button click for damage upgrade
-upgrade1Button.addEventListener('click', (event) => {
-    if (!showing) return; // No tower selected
+upgrade1Button.addeventlistener('click', (event) => {
+    if (!showing) return; // no tower selected
 
-    const currentLevel = showing.level;
+    const currentlevel = showing.level;
 
     const towerUpgrades = upgrade[showing.type];
-    const nextLevelKey = `lvl${currentLevel + 1}`;
+    const nextlevelKey = `lvl${currentlevel + 1}`;
 
-    if (towerUpgrades[nextLevelKey]) {
-        const upgradeInfo = towerUpgrades[nextLevelKey]['1']; // Damage upgrade
+    if (towerUpgrades[nextlevelKey]) {
+        const upgradeInfo = towerUpgrades[nextlevelKey]['1']; // Damage upgrade
 
-        if (!upgradePressed) {
+        if (!upgradepressed) {
             // Show confirmation details
-            towerTypeDisplay.textContent = "Are you sure?";
-            towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
-            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
+            towerTypeDisplay.textcontent = "Are you sure?";
+            towerlevelDisplay.textcontent = `lvl ${currentlevel} ➔ ${currentlevel + 1}`;
+            towerHealthDisplay.textcontent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
+            towerRangeDisplay.textcontent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
+            const currentDpS = (showing.damage * math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDpS = ((showing.damage + upgradeInfo.damage) * math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            towerDamageDisplay.textcontent = `${currentDpS}dps ➔ ${newDpS}`;
 
-            upgrade1Button.textContent = `Pay $${upgradeInfo.cost}`;
-            upgrade2Button.textContent = ""; // Hide other upgrade button
-            upgradePressed = true; // Set confirmation flag
+            upgrade1Button.textcontent = `pay $${upgradeInfo.cost}`;
+            upgrade2Button.textcontent = ""; // Hide other upgrade button
+            upgradepressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {
                 currency -= upgradeInfo.cost;
                 console.log("Upgraded");
 
-                // Perform the upgrade
+                // perform the upgrade
                 showing.level++;
                 showing.health += upgradeInfo.health;
                 showing.range += upgradeInfo.range;
@@ -147,48 +184,48 @@ upgrade1Button.addEventListener('click', (event) => {
                 showTowerStats(showing);
 
                 updateHUD();
-                upgradePressed = false; // Reset the confirmation flag
+                upgradepressed = false; // Reset the confirmation flag
             } else {
-                console.log("Not enough currency.");
+                console.log("not enough currency.");
             }
         }
     } else {
-        towerTypeDisplay.textContent = "Max level reached!";
+        towerTypeDisplay.textcontent = "max level reached!";
     }
 }); // This parenthesis and brace close the event listener properly
 
 
 // Handle upgrade button click for range upgrade
-upgrade2Button.addEventListener('click', (event) => {
-    if (!showing) return; // No tower selected
+upgrade2Button.addeventlistener('click', (event) => {
+    if (!showing) return; // no tower selected
 
-    const currentLevel = showing.level;
-    const nextLevelKey = `lvl${currentLevel + 1}`; // Corrected key
+    const currentlevel = showing.level;
+    const nextlevelKey = `lvl${currentlevel + 1}`; // corrected key
     const towerUpgrades = upgrade[showing.type];
 
-    if (towerUpgrades[nextLevelKey]) {
-        const upgradeInfo = towerUpgrades[nextLevelKey]['2']; // Range upgrade
+    if (towerUpgrades[nextlevelKey]) {
+        const upgradeInfo = towerUpgrades[nextlevelKey]['2']; // Range upgrade
 
-        if (!upgradePressed) {
+        if (!upgradepressed) {
             // Show confirmation details
-            towerTypeDisplay.textContent = "Are you sure?";
-            towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
-            towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
+            towerTypeDisplay.textcontent = "Are you sure?";
+            towerlevelDisplay.textcontent = `lvl ${currentlevel} ➔ ${currentlevel + 1}`;
+            towerHealthDisplay.textcontent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
+            towerRangeDisplay.textcontent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
+            const currentDpS = (showing.damage * math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDpS = ((showing.damage + upgradeInfo.damage) * math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            towerDamageDisplay.textcontent = `${currentDpS} dmg/s ➔ ${newDpS} dmg/s`;
 
-            upgrade2Button.textContent = `Pay $${upgradeInfo.cost}`;
-            upgrade1Button.textContent = ""; // Hide other upgrade button
-            upgradePressed = true; // Set confirmation flag
+            upgrade2Button.textcontent = `pay $${upgradeInfo.cost}`;
+            upgrade1Button.textcontent = ""; // Hide other upgrade button
+            upgradepressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {
                 currency -= upgradeInfo.cost;
                 console.log("Upgraded");
 
-                // Perform the upgrade
+                // perform the upgrade
                 showing.level++;
                 showing.health += upgradeInfo.health;
                 showing.range += upgradeInfo.range;
@@ -199,27 +236,27 @@ upgrade2Button.addEventListener('click', (event) => {
                 showTowerStats(showing);
 
                 updateHUD();
-                upgradePressed = false; // Reset the confirmation flag
+                upgradepressed = false; // Reset the confirmation flag
             } else {
-                console.log("Not enough currency.");
+                console.log("not enough currency.");
             }
         }
     } else {
-        towerTypeDisplay.textContent = "Max level reached!";
+        towerTypeDisplay.textcontent = "max level reached!";
     }
 });
 
 // Handle clicks on the canvas to show/hide tower stats
-canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingClientRect();
+canvas.addeventlistener('click', (event) => {
+    const rect = canvas.getBoundingclientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // Loop through towers to find one within range of the click
+    // loop through towers to find one within range of the click
     let towerFound = false;
 
-    towers.forEach(tower => {
-        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+    towers.foreach(tower => {
+        const distance = math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
             if (showing === tower) {
                 hideTowerStats(); // Hide the stats if already showing
@@ -243,12 +280,12 @@ let lives = 9;
 const towers = [];
 const enemies = [];
 const projectiles = [];
-const enemyProjectiles = []; // Array to hold projectiles fired by enemies
+const enemyprojectiles = []; // Array to hold projectiles fired by enemies
 let selectedTowerType = null;
-let waveInProgress = false; // Track if a wave is in progress
+let waveInprogress = false; // Track if a wave is in progress
 let occupiedSquares = new Set();
 
-// Canvas settings
+// canvas settings
 canvas.width = 800;
 canvas.height = 600;
 
@@ -270,53 +307,104 @@ class Tower {
         this.level = 1;
         this.target = null;
 
-        if (type == '1') {
-            this.health = 13;
-            this.range = 50;
-            this.fireRate = 1;
-            this.damage = 3;
-            this.price = 2;
-        } else if (type == '2') {
+        // Define properties for each new tower type
+        if (type == '1') { // existing "jack" tower//
+            this.health = 10;
+            this.range = 125;
+            this.fireRate = 1.5;
+            this.damage = 2;
+            this.price = 1;
+            this.desc = "overall just bad"
+        } else if (type == '2') { // existing "liam" tower//
             this.health = 15;
             this.range = 100;
             this.fireRate = 0.5;
             this.damage = 4;
             this.price = 3;
-        } else if (type == '3') {
+            this.desc = "short range, fast shots";
+        } else if (type == '3') { // existing "evan" tower//
             this.health = 10;
             this.range = 500;
             this.fireRate = 1.5;
-            this.damage = 4.5;
+            this.damage = 5;
             this.price = 3;
-        } else if (type == '4') {
+            this.desc = "far range, powerful shots";
+        } else if (type == '4') { // existing "christian" tower//
             this.health = 5;
             this.range = 0;
             this.fireRate = 0;
-            this.damage = 4;
+            this.damage = 0;
             this.price = 20;
+            this.desc = "extra money per wave";
+            this.money = 6;
+        } else if (type == '5') { // new "philip" tower//
+            this.health = 16;
+            this.range = 9999;
+            this.fireRate = 2;
+            this.damage = 8;
+            this.price = 5;
+            this.desc = "super high range sniper";
+        } else if (type == '6') { // new "mitchell" tower//
+            this.health = 22;
+            this.range = 225;
+            this.fireRate = 0.8;
+            this.damage = 3;
+            this.price = 2;
+            this.desc = "generally good at everything";
+        } else if (type == '7') { // new "walker" tower
+            this.health = 50;
+            this.range = 1/0; //inf
+            this.fireRate = "5 waves";
+            this.damage = 1/0;
+            this.price = 80;
+            this.desc = "..."
+        } else if (type == '8') { // new "larse" tower
+            this.health = 18;
+            this.range = 220;
+            this.fireRate = 0.9;
+            this.damage = 7;
+            this.price = 5;
+        } else if (type == '9') { // new "nick" tower
+            this.health = 10;
+            this.range = 175;
+            this.fireRate = 0.2;
+            this.damage = 1;
+            this.price = 4;
+            this.desc = "rapid fire low damage shots";
         }
 
         this.lastFired = 0;
     }
 
     draw() {
+        // Set a different color for each tower type
         if (this.type == '1') {
-            ctx.fillStyle = 'grey';
+            ctx.fillStyle = 'grey'; // "jack"
         } else if (this.type == '2') {
-            ctx.fillStyle = 'green';
+            ctx.fillStyle = 'green'; // "liam"
         } else if (this.type == '3') {
-            ctx.fillStyle = 'purple';
+            ctx.fillStyle = 'purple'; // "evan"
         } else if (this.type == '4') {
-            ctx.fillStyle = 'blue';
+            ctx.fillStyle = 'blue'; // "christian"
+        } else if (this.type == '5') {
+            ctx.fillStyle = 'red'; // "philip"
+        } else if (this.type == '6') {
+            ctx.fillStyle = 'orange'; // "mitchell"
+        } else if (this.type == '7') {
+            ctx.fillStyle = 'yellow'; // "walker"
+        } else if (this.type == '8') {
+            ctx.fillStyle = 'pink'; // "larse"
+        } else if (this.type == '9') {
+            ctx.fillStyle = 'cyan'; // "nick"
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
     shoot() {
-        if (!this.target || this.target.health <= 0) return; // No target to shoot at
+        if (!this.target || this.target.health <= 0) return; // no target to shoot at
     
-        const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+        const angle = math.atan2(this.target.y - this.y, this.target.x - this.x);
+        projectiles.push(new projectile(this.x, this.y, angle, this.damage));
         console.log("Fired at target:", this.target); // Debug log
     }
 
@@ -331,12 +419,12 @@ class Tower {
         if (!this.target || this.target.health <= 0) {
             const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
             if (enemiesInRange.length > 0) {
-                this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
-                    return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
-                        ? currentEnemy
-                        : farthestEnemy;
+                this.target = enemiesInRange.reduce((farthestenemy, currentenemy) => {
+                    return currentenemy.getpathprogress() > farthestenemy.getpathprogress()
+                        ? currentenemy
+                        : farthestenemy;
                 });
-                console.log("New target acquired:", this.target); // Debug log
+                console.log("new target acquired:", this.target); // Debug log
             }
         }
 
@@ -352,7 +440,7 @@ class Tower {
 
     isInRange(enemy) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
-        const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+        const distance = math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
         return distance <= this.range + buffer;
     }
 
@@ -372,7 +460,7 @@ class Tower {
     }
 }
 
-class Enemy {
+class enemy {
     constructor(type) {
         this.x = path[0].x; // Start at the first waypoint
         this.y = path[0].y;
@@ -385,36 +473,36 @@ class Enemy {
         this.damage = type.damage;
         this.range = type.range;
         this.level = type.level;
-        this.currentPathIndex = 1; // Start moving to the second waypoint
+        this.currentpathIndex = 1; // Start moving to the second waypoint
         this.lastFired = 0;
         this.nextType = type.nextType;
     }
 
-    // New method to calculate the progress of the enemy along the path
-    getPathProgress() {
+    // new method to calculate the progress of the enemy along the path
+    getpathprogress() {
         let totalDistance = 0;
         let progressDistance = 0;
 
-        // Calculate total path length
+        // calculate total path length
         for (let i = 0; i < path.length - 1; i++) {
             const dx = path[i + 1].x - path[i].x;
             const dy = path[i + 1].y - path[i].y;
-            totalDistance += Math.sqrt(dx * dx + dy * dy);
+            totalDistance += math.sqrt(dx * dx + dy * dy);
         }
 
-        // Calculate the progress distance
-        for (let i = 0; i < this.currentPathIndex - 1; i++) {
+        // calculate the progress distance
+        for (let i = 0; i < this.currentpathIndex - 1; i++) {
             const dx = path[i + 1].x - path[i].x;
             const dy = path[i + 1].y - path[i].y;
-            progressDistance += Math.sqrt(dx * dx + dy * dy);
+            progressDistance += math.sqrt(dx * dx + dy * dy);
         }
 
         // Add the partial progress in the current segment
-        if (this.currentPathIndex < path.length) {
-            const target = path[this.currentPathIndex];
+        if (this.currentpathIndex < path.length) {
+            const target = path[this.currentpathIndex];
             const dx = target.x - this.x;
             const dy = target.y - this.y;
-            progressDistance += Math.sqrt(dx * dx + dy * dy);
+            progressDistance += math.sqrt(dx * dx + dy * dy);
         }
 
         // Return progress as a percentage of the total path length
@@ -436,49 +524,49 @@ class Enemy {
 
     shoot(tower) {
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
-            const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
-            enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+            const angle = math.atan2(tower.y - this.y, tower.x - this.x);
+            enemyprojectiles.push(new projectile(this.x, this.y, angle, this.damage, 'enemy')); // create enemy projectile
             this.lastFired = Date.now();
         }
     }
 
     update() {
-        if (this.currentPathIndex < path.length) {
-            const target = path[this.currentPathIndex];
+        if (this.currentpathIndex < path.length) {
+            const target = path[this.currentpathIndex];
             const dx = target.x - this.x;
             const dy = target.y - this.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            const distance = math.sqrt(dx * dx + dy * dy);
     
-            // Move in the direction of the target
+            // move in the direction of the target
             const moveX = (dx / distance) * this.speed;
             const moveY = (dy / distance) * this.speed;
     
-            // Check if the enemy will overshoot the target
+            // check if the enemy will overshoot the target
             if (distance < this.speed) {
-                // Move directly to the target waypoint
+                // move directly to the target waypoint
                 this.x = target.x;
                 this.y = target.y;
-                this.currentPathIndex++; // Move to the next waypoint
+                this.currentpathIndex++; // move to the next waypoint
             } else {
-                // Normal movement towards the target
+                // normal movement towards the target
                 this.x += moveX;
                 this.y += moveY;
             }
         }
     
-        // Check if the enemy reached the end of the path
-        if (this.currentPathIndex >= path.length) {
-            this.die(true); // Enemy crossed the path
+        // check if the enemy reached the end of the path
+        if (this.currentpathIndex >= path.length) {
+            this.die(true); // enemy crossed the path
         }
 
-        // Check for specials
+        // check for specials
         if (this.type.special) {
             if (this.color == '#33fff9') {
-                const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
-                if (nearestEnemy && Date.now() - this.lastFired > 1000) {
-                    nearestEnemy.health += 1;
+                const nearestenemy = enemies.find(enemy => this.isInRange(enemy));
+                if (nearestenemy && Date.now() - this.lastFired > 1000) {
+                    nearestenemy.health += 1;
                     this.lastFired = Date.now();
-                    console.log(`'#33fff9' healed ${nearestEnemy} to ${nearestEnemy.health}`);
+                    console.log(`'#33fff9' healed ${nearestenemy} to ${nearestenemy.health}`);
                 }
             } else if (this.color == '#ff7433') {
                 const max_health = this.health;
@@ -490,7 +578,7 @@ class Enemy {
             }
         }
     
-        // Check for nearby towers and shoot
+        // check for nearby towers and shoot
         const nearestTower = towers.find(tower => this.isInRange(tower));
         if (nearestTower) {
             this.shoot(nearestTower);
@@ -501,7 +589,7 @@ class Enemy {
 
     isInRange(tower) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
-        const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+        const distance = math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
         return distance <= this.range * 10 + buffer;
     }
 
@@ -518,23 +606,23 @@ class Enemy {
             } else {
                 // Transform into the next enemy type if available
                 if (this.nextType) {
-                    const nextEnemyType = enemyTypes.find(type => type.color === this.nextType);
-                    if (nextEnemyType) {
-                        const newEnemy = new Enemy(nextEnemyType);
-                        newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
-                        newEnemy.y = this.y;
+                    const nextenemyType = enemyTypes.find(type => type.color === this.nextType);
+                    if (nextenemyType) {
+                        const newenemy = new enemy(nextenemyType);
+                        newenemy.x = this.x; // Set the new enemy's position to the current enemy's position
+                        newenemy.y = this.y;
     
-                        // Calculate the nearest path index for the new enemy, ensuring it's ahead on the path
+                        // calculate the nearest path index for the new enemy, ensuring it's ahead on the path
                         let closestDistance = Infinity;
-                        for (let i = this.currentPathIndex; i < path.length; i++) { // Start from the current path index
-                            const distance = Math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
+                        for (let i = this.currentpathIndex; i < path.length; i++) { // Start from the current path index
+                            const distance = math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
                             if (distance < closestDistance) {
                                 closestDistance = distance;
-                                newEnemy.currentPathIndex = i;
+                                newenemy.currentpathIndex = i;
                             }
                         }
                         
-                        enemies.push(newEnemy);
+                        enemies.push(newenemy);
                     }
                 }
             }
@@ -556,39 +644,39 @@ const enemyTypes = [
     { speed: 0.7, health: 20, color: '#ff7433', canShoot: false, range: null, fireRate: null, damage: null, level: 23, nextType: null, special: 'Regrows health every second' },
 ];
 
-const bossEnemyTypes = [
+const bossenemyTypes = [
     { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 3, damage: 2.5, level: 10, nextType: 'purple' },
     { speed: 8, health: 75, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 20, nextType: null },
 ];
 
-function spawnEnemies() {
-    const enemyCount = 5 + wave;
-    for (let i = 0; i < enemyCount; i++) {
+function spawnenemies() {
+    const enemycount = 5 + wave;
+    for (let i = 0; i < enemycount; i++) {
         setTimeout(() => {
-            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
-            const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
-            const enemy = new Enemy(randomType);
+            const updatedenemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
+            const randomType = updatedenemyTypes[math.floor(math.random() * updatedenemyTypes.length)];
+            const enemy = new enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
     }
     
     // Spawn boss if wave matches boss level
-    bossEnemyTypes.forEach(boss => {
+    bossenemyTypes.foreach(boss => {
         if (wave === boss.level) {
-            const bossEnemy = new Enemy(boss);
-            enemies.push(bossEnemy);
+            const bossenemy = new enemy(boss);
+            enemies.push(bossenemy);
         }
     });
     
     setTimeout(() => {
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        currency += 1 + Math.round(wave / 2);
-        nextWave();
-    }, enemyCount * 1000);
+        waveInprogress = false;
+        startwaveButton.disabled = false;
+        currency += 1 + math.round(wave / 2);
+        nextwave();
+    }, enemycount * 1000);
 }
 
-class Projectile {
+class projectile {
     constructor(x, y, angle, damage, type = 'tower', specificType = null) {
         this.x = x;
         this.y = y;
@@ -601,29 +689,29 @@ class Projectile {
 
     draw() {
         ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
+        ctx.beginpath();
+        ctx.arc(this.x, this.y, 5, 0, math.pI * 2);
         ctx.fill();
     }
 
     update() {
-        this.x += Math.cos(this.angle) * this.speed;
-        this.y += Math.sin(this.angle) * this.speed;
+        this.x += math.cos(this.angle) * this.speed;
+        this.y += math.sin(this.angle) * this.speed;
         this.draw();
     
         const buffer = 5; // Add a buffer for collision detection
     
         if (this.type == 'tower') {
-            enemies.forEach(enemy => {
-                const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+            enemies.foreach(enemy => {
+                const distance = math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
                     this.destroy();
                 }
             });
         } else if (this.type == 'enemy') {
-            towers.forEach(tower => {
-                const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+            towers.foreach(tower => {
+                const distance = math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     tower.takeDamage(this.damage);
                     this.destroy();
@@ -633,7 +721,7 @@ class Projectile {
     }
 
     destroy() {
-        const array = this.type == 'tower' ? projectiles : enemyProjectiles;
+        const array = this.type == 'tower' ? projectiles : enemyprojectiles;
         const index = array.indexOf(this);
         if (index > -1) {
             array.splice(index, 1);
@@ -643,12 +731,12 @@ class Projectile {
 
 // Grid settings
 const gridSize = 50; // Size of each grid square
-const gridWidth = canvas.width / gridSize;
+const gridwidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
 
 // Draw the grid and the path
 function drawGrid() {
-    ctx.strokeStyle = '	#3b3b3b'; // Light gray for grid lines
+    ctx.strokeStyle = '	#3b3b3b'; // light gray for grid lines
     for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
             ctx.strokeRect(x, y, gridSize, gridSize);
@@ -656,11 +744,11 @@ function drawGrid() {
     }
 }
 
-function drawPath() {
+function drawpath() {
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = 10;
+    ctx.linewidth = 10;
 
-    ctx.beginPath();
+    ctx.beginpath();
     ctx.moveTo(path[0].x, path[0].y);
 
     for (let i = 1; i < path.length; i++) {
@@ -670,39 +758,39 @@ function drawPath() {
     ctx.stroke();
 }
 
-// Check if a square is available for tower placement and outside the path
+// check if a square is available for tower placement and outside the path
 function isSquareAvailable(x, y) {
-    const gridX = Math.floor(x / gridSize);
-    const gridY = Math.floor(y / gridSize);
+    const gridX = math.floor(x / gridSize);
+    const gridY = math.floor(y / gridSize);
     return !occupiedSquares.has(`${gridX},${gridY}`);
 }
 
 // Handle tower placement
-canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingClientRect();
+canvas.addeventlistener('click', (event) => {
+    const rect = canvas.getBoundingclientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
     if (selectedTowerType && isSquareAvailable(x, y)) {
         // Snap to grid center
-        const gridX = Math.floor(x / gridSize) * gridSize + gridSize / 2;
-        const gridY = Math.floor(y / gridSize) * gridSize + gridSize / 2;
+        const gridX = math.floor(x / gridSize) * gridSize + gridSize / 2;
+        const gridY = math.floor(y / gridSize) * gridSize + gridSize / 2;
 
-        // Create a temporary tower to get its price
+        // create a temporary tower to get its price
         const tempTower = new Tower(gridX, gridY, selectedTowerType);
         
         if (currency >= tempTower.price) {
-            // Place the tower
+            // place the tower
             const tower = new Tower(gridX, gridY, selectedTowerType);
-            occupiedSquares.add(`${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`);
+            occupiedSquares.add(`${math.floor(x / gridSize)},${math.floor(y / gridSize)}`);
             towers.push(tower);
             currency -= tower.price;
             updateHUD();
         } else {
-            console.log('Not enough currency to place the tower.');
+            console.log('not enough currency to place the tower.');
         }
     } else {
-        console.log('Cannot place tower here.');
+        console.log('cannot place tower here.');
     }
 });
 
@@ -711,9 +799,9 @@ function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawGrid(); // Draw the grid
-    drawPath(); // Draw the path
+    drawpath(); // Draw the path
 
-    towers.forEach((tower, index) => {
+    towers.foreach((tower, index) => {
         if (tower.health > 0) {
             tower.update(deltaTime);
         } else {
@@ -721,93 +809,93 @@ function update(deltaTime) {
         }
     });
 
-    enemies.forEach(enemy => enemy.update());
-    projectiles.forEach(projectile => projectile.update());
-    enemyProjectiles.forEach(projectile => projectile.update()); // Update enemy projectiles
+    enemies.foreach(enemy => enemy.update());
+    projectiles.foreach(projectile => projectile.update());
+    enemyprojectiles.foreach(projectile => projectile.update()); // Update enemy projectiles
 
-    if (autoStartCheckbox.checked && !waveInProgress) {
-        waveInProgress = true;
-        spawnEnemies();
-        startWaveButton.disabled = true;
+    if (autoStartcheckbox.checked && !waveInprogress) {
+        waveInprogress = true;
+        spawnenemies();
+        startwaveButton.disabled = true;
     }
 }
 
 function resetOtherDropdowns() {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
-    dropdownIds.forEach(id => {
-        document.getElementById(id).selectedIndex = 0;
+    dropdownIds.foreach(id => {
+        document.getelementById(id).selectedIndex = 0;
     });
 }
 
-function checkMultipleSelections() {
+function checkmultipleSelections() {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
-    let selectedCount = 0;
+    let selectedcount = 0;
 
-    dropdownIds.forEach(id => {
-        const dropdown = document.getElementById(id);
+    dropdownIds.foreach(id => {
+        const dropdown = document.getelementById(id);
         if (dropdown.selectedIndex > 0) { // If an option other than the default is selected
-            selectedCount++;
+            selectedcount++;
         }
     });
 
-    if (selectedCount > 1) {
+    if (selectedcount > 1) {
         alert('only 1 tower can be selected at a time');
         resetOtherDropdowns(); // Reset all dropdowns
-        selectedTowerType = null; // Clear the selected tower type
+        selectedTowerType = null; // clear the selected tower type
     }
 }
 
-document.getElementById('general-towers').addEventListener('change', (event) => {
+document.getelementById('general-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections();
+    checkmultipleSelections();
 });
 
-document.getElementById('close-range-towers').addEventListener('change', (event) => {
+document.getelementById('close-range-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections();
+    checkmultipleSelections();
 });
 
-document.getElementById('far-range-towers').addEventListener('change', (event) => {
+document.getelementById('far-range-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections();
+    checkmultipleSelections();
 });
 
-document.getElementById('special-towers').addEventListener('change', (event) => {
+document.getelementById('special-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections();
+    checkmultipleSelections();
 });
 
 // Handle start wave button click
-startWaveButton.addEventListener('click', () => {
-    if (!waveInProgress) {
-        waveInProgress = true;
-        spawnEnemies();
-        startWaveButton.disabled = true; // Disable button during wave
+startwaveButton.addeventlistener('click', () => {
+    if (!waveInprogress) {
+        waveInprogress = true;
+        spawnenemies();
+        startwaveButton.disabled = true; // Disable button during wave
     }
 });
 
 let hoverTarget = null; // To store the hovered object
 
 // Handle mouse movement for hover detection
-canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
+canvas.addeventlistener('mousemove', (event) => {
+    const rect = canvas.getBoundingclientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
     // Reset hover target
     hoverTarget = null;
 
-    // Check for hovering over towers
-    towers.forEach(tower => {
-        const distance = Math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
+    // check for hovering over towers
+    towers.foreach(tower => {
+        const distance = math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
             hoverTarget = tower;
         }
     });
 
-    // Check for hovering over enemies
-    enemies.forEach(enemy => {
-        const distance = Math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
+    // check for hovering over enemies
+    enemies.foreach(enemy => {
+        const distance = math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
         if (distance < 15) { // Assuming 15 is half the size of the enemy
             hoverTarget = enemy;
         }
@@ -815,40 +903,43 @@ canvas.addEventListener('mousemove', (event) => {
 });
 
 function updateHUD() {
-    currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
-    livesDisplay.textContent = `${lives} lives`;
+    currencyDisplay.textcontent = `$${currency}`;
+    waveDisplay.textcontent = `wave ${wave} (pr: ${jSOn.parse(localStorage.getItem("topScore"))})`;
+    livesDisplay.textcontent = `${lives} lives`;
 
     if (showing) {
         showTowerStats(showing);
     }
 }
 
-function nextWave() {
+function nextwave() {
     wave++;
     
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", JSON.stringify(wave));
     }
 
-    towers.forEach(tower => {
-        const hasSecondUpgrade = tower.type !== '4';
-        if (!hasSecondUpgrade) {
-            currency += tower.damage;
+    towers.foreach(tower => {
+        let hasSecondUpgrade = true;
+        if (towerUpgrades[nextLevelKey]['2']) {
+            hasSecondUpgrade = false;
+        }
+        if (tower.type == "4" && tower.money) {
+            currency += tower.money;
             console.log("added money");
         }
     });
 
-    // Check for boss in the next wave
-    bossEnemyTypes.forEach(boss => {
+    // check for boss in the next wave
+    bossenemyTypes.foreach(boss => {
         if (wave === boss.level) {
             alert(`new color boss on wave ${wave}!`);
         }
     });
 
-    enemyTypes.forEach(enemy => {
+    enemyTypes.foreach(enemy => {
         if (enemy.special && enemy.level == wave) {
-            alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
+            alert(`new color special enemy that ${enemy.special.tolowercase()} on wave ${wave}!`);
         }
     });
 
@@ -856,19 +947,19 @@ function nextWave() {
 }
 
 //cheats
-function skipToWave(newWave) {
-    wave += (newWave - 1);
-    nextWave();
+function skipTowave(newwave) {
+    wave += (newwave - 1);
+    nextwave();
     updateHUD();
 }
 
-function giveMoney(money) {
+function givemoney(money) {
     currency += money;
     updateHUD();
 }
 
 function help() {
-    console.log("skipToWave, giveMoney");
+    console.log("skipTowave, givemoney");
 }
 
 // Reset the game
@@ -882,27 +973,27 @@ function endGame() {
     enemies.length = 0;
     projectiles.length = 0;
     selectedTowerType = null;
-    waveInProgress = false;
-    startWaveButton.disabled = false;
-    autoStartCheckbox.checked = false;
+    waveInprogress = false;
+    startwaveButton.disabled = false;
+    autoStartcheckbox.checked = false;
     updateHUD();
     window.location.reload();
 }
 
 let lastTime = 0;
-function gameLoop(timestamp) {
+function gameloop(timestamp) {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
 
     update(deltaTime);
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(gameloop);
 }
 
 if (!localStorage.getItem("topScore")) {
-    localStorage.setItem("topScore", JSON.stringify(1));
+    localStorage.setItem("topScore", jSOn.stringify(1));
 }
 
 // Initialize the game
 updateHUD();
-gameLoop();
+gameloop();

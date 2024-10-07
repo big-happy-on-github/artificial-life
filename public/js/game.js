@@ -758,20 +758,49 @@ function isOutsidePath(x, y) {
     return true; // The point is far enough from all path segments
 }
 
+function resetOtherDropdowns() {
+    const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
+    dropdownIds.forEach(id => {
+        document.getElementById(id).selectedIndex = 0;
+    });
+}
+
+function checkMultipleSelections() {
+    const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
+    let selectedCount = 0;
+
+    dropdownIds.forEach(id => {
+        const dropdown = document.getElementById(id);
+        if (dropdown.selectedIndex > 0) { // If an option other than the default is selected
+            selectedCount++;
+        }
+    });
+
+    if (selectedCount > 1) {
+        alert('only 1 tower can be selected at a time');
+        resetOtherDropdowns(); // Reset all dropdowns
+        selectedTowerType = null; // Clear the selected tower type
+    }
+}
+
 document.getElementById('general-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
+    checkMultipleSelections();
 });
 
 document.getElementById('close-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
+    checkMultipleSelections();
 });
 
 document.getElementById('far-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
+    checkMultipleSelections();
 });
 
 document.getElementById('special-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
+    checkMultipleSelections();
 });
 
 // Handle start wave button click

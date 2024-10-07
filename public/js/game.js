@@ -674,7 +674,7 @@ function drawPath() {
 function isSquareAvailable(x, y) {
     const gridX = Math.floor(x / gridSize);
     const gridY = Math.floor(y / gridSize);
-    return !occupiedSquares.has(`${gridX},${gridY}`) && isOutsidePath(x, y);
+    return !occupiedSquares.has(`${gridX},${gridY}`);
 }
 
 // Handle tower placement
@@ -730,32 +730,6 @@ function update(deltaTime) {
         spawnEnemies();
         startWaveButton.disabled = true;
     }
-}
-
-// Function to check if position is outside the path
-function isOutsidePath(x, y) {
-    const buffer = 10; // Small buffer to check for proximity to the path
-
-    for (let i = 0; i < path.length - 1; i++) {
-        const start = path[i];
-        const end = path[i + 1];
-
-        const length = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2);
-        const t = ((x - start.x) * (end.x - start.x) + (y - start.y) * (end.y - start.y)) / (length * length);
-        
-        // Clamp 't' to the segment bounds to find the closest point on the segment
-        const clampedT = Math.max(0, Math.min(1, t));
-        const closestX = start.x + clampedT * (end.x - start.x);
-        const closestY = start.y + clampedT * (end.y - start.y);
-
-        const distance = Math.sqrt((x - closestX) ** 2 + (y - closestY) ** 2);
-
-        // Return false if the point is too close to the path
-        if (distance < buffer) {
-            return false;
-        }
-    }
-    return true; // The point is far enough from all path segments
 }
 
 function resetOtherDropdowns() {

@@ -423,6 +423,13 @@ class Tower {
                 this.shoot();
                 this.lastFired = Date.now();
             }
+        } else {
+            if (wave % 5 == 0) {
+                enemies.forEach(enemy => {
+                    enemy.takeDamage(enemy.health);
+                });
+                console.log("walker smash");
+            }
         }
 
         this.draw();
@@ -909,19 +916,16 @@ function nextWave() {
         localStorage.setItem("topScore", JSON.stringify(wave));
     }
 
+    if ((wave + 1) % 5 == 0) {
+        alert("last wave was a walker smash!");
+    }
+
     towers.forEach(tower => {
         const hasSecondUpgrade = upgrade[tower.type][`lvl${tower.level + 1}`]['2'];
+        let smashWave;
         if (tower.type == "4") {
             currency += tower.damage;
             console.log("added money");
-        } else if (tower.type == "9") {
-            if (wave % 5 == 0) {
-                alert("WALKER SMASH!!!!!!!!");
-                enemies.forEach(enemy => {
-                    enemy.takeDamage(enemy.health);
-                });
-                console.log("walker smash");
-            }
         }
     });
 

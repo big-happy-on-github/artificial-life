@@ -943,8 +943,6 @@ function nextWave() {
             alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
         }
     });
-
-    updateHUD();
 }
 
 //cheats

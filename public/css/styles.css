@@ -127,11 +127,6 @@ header {
     z-index: 1000;
 }
 
-/* Group the feedback label, input, and button */
-.feedback-container {
-    display: none;
-}
-
 header label {
     font-size: 16px;
 }

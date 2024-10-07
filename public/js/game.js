@@ -90,22 +90,22 @@ function showTowerStats(tower) {
 
     towerTypeDisplay.textContent = `${towerType} tower`;
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
-    towerHealthDisplay.textContent = `${tower.health}hp`;
-    towerRangeDisplay.textContent = `${tower.range}px range`;
-    towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
+    towerHealthDisplay.textContent = `${tower.health} hp`;
+    towerRangeDisplay.textContent = `${tower.range} px range`;
+    towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
 
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
 
     if (tower.type == "9") {
-        towerDamageDisplay.textContent = `~${tower.damage}/${tower.fireRate}`;
+        towerDamageDisplay.textContent = `~${tower.damage} dmg/${tower.fireRate}`;
 
         upgrade1Button.textContent = "cannot upgrade";
         upgrade2Button.textContent = "";
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
         if (tower.type == "4") {
-            towerDamageDisplay.textContent = `0dps`;
+            towerDamageDisplay.textContent = `0 dps`;
         }
 
         if (tower.level < 3) {

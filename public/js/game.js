@@ -91,7 +91,7 @@ function showTowerStats(tower) {
     towerlevelDisplay.textcontent = `lvl ${tower.level}`;
     towerHealthDisplay.textcontent = `${tower.health}hp`;
     towerRangeDisplay.textcontent = `${tower.range}px range`;
-    towerDamageDisplay.textcontent = `~${(tower.damage * math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
+    towerDamageDisplay.textcontent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)}dps`;
 
     if (tower.type == '7') {
         towerDamageDisplay.textcontent = `~${tower.damage}/${tower.fireRate}`;
@@ -131,13 +131,13 @@ function showTowerStats(tower) {
     }
 
     // Show the pop-up
-    towerStatspopup.classlist.add('show');
+    towerStatspopup.classList.add('show');
     showing = tower; // Store the currently selected tower
 }
 
 // Function to hide the tower stats pop-up
 function hideTowerStats() {
-    towerStatspopup.classlist.remove('show');
+    towerStatspopup.classList.remove('show');
     showing = null;
     upgradepressed = false;
 }
@@ -161,8 +161,8 @@ upgrade1Button.addEventListener('click', (event) => {
             towerHealthDisplay.textcontent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
             towerRangeDisplay.textcontent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            const currentDpS = (showing.damage * math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-            const newDpS = ((showing.damage + upgradeInfo.damage) * math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            const currentDpS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDpS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
             towerDamageDisplay.textcontent = `${currentDpS}dps ➔ ${newDpS}`;
 
             upgrade1Button.textcontent = `pay $${upgradeInfo.cost}`;
@@ -213,8 +213,8 @@ upgrade2Button.addEventListener('click', (event) => {
             towerHealthDisplay.textcontent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
             towerRangeDisplay.textcontent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            const currentDpS = (showing.damage * math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-            const newDpS = ((showing.damage + upgradeInfo.damage) * math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+            const currentDpS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+            const newDpS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
             towerDamageDisplay.textcontent = `${currentDpS} dmg/s ➔ ${newDpS} dmg/s`;
 
             upgrade2Button.textcontent = `pay $${upgradeInfo.cost}`;
@@ -256,7 +256,7 @@ canvas.addEventListener('click', (event) => {
     let towerFound = false;
 
     towers.forEach(tower => {
-        const distance = math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
+        const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
             if (showing === tower) {
                 hideTowerStats(); // Hide the stats if already showing
@@ -403,7 +403,7 @@ class Tower {
     shoot() {
         if (!this.target || this.target.health <= 0) return; // no target to shoot at
     
-        const angle = math.atan2(this.target.y - this.y, this.target.x - this.x);
+        const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         projectiles.push(new projectile(this.x, this.y, angle, this.damage));
         console.log("Fired at target:", this.target); // Debug log
     }
@@ -440,7 +440,7 @@ class Tower {
 
     isInRange(enemy) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
-        const distance = math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+        const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
         return distance <= this.range + buffer;
     }
 
@@ -487,14 +487,14 @@ class enemy {
         for (let i = 0; i < path.length - 1; i++) {
             const dx = path[i + 1].x - path[i].x;
             const dy = path[i + 1].y - path[i].y;
-            totalDistance += math.sqrt(dx * dx + dy * dy);
+            totalDistance += Math.sqrt(dx * dx + dy * dy);
         }
 
         // calculate the progress distance
         for (let i = 0; i < this.currentpathIndex - 1; i++) {
             const dx = path[i + 1].x - path[i].x;
             const dy = path[i + 1].y - path[i].y;
-            progressDistance += math.sqrt(dx * dx + dy * dy);
+            progressDistance += Math.sqrt(dx * dx + dy * dy);
         }
 
         // Add the partial progress in the current segment
@@ -502,7 +502,7 @@ class enemy {
             const target = path[this.currentpathIndex];
             const dx = target.x - this.x;
             const dy = target.y - this.y;
-            progressDistance += math.sqrt(dx * dx + dy * dy);
+            progressDistance += Math.sqrt(dx * dx + dy * dy);
         }
 
         // Return progress as a percentage of the total path length
@@ -524,7 +524,7 @@ class enemy {
 
     shoot(tower) {
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
-            const angle = math.atan2(tower.y - this.y, tower.x - this.x);
+            const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
             enemyprojectiles.push(new projectile(this.x, this.y, angle, this.damage, 'enemy')); // create enemy projectile
             this.lastFired = Date.now();
         }
@@ -535,7 +535,7 @@ class enemy {
             const target = path[this.currentpathIndex];
             const dx = target.x - this.x;
             const dy = target.y - this.y;
-            const distance = math.sqrt(dx * dx + dy * dy);
+            const distance = Math.sqrt(dx * dx + dy * dy);
     
             // move in the direction of the target
             const moveX = (dx / distance) * this.speed;
@@ -589,7 +589,7 @@ class enemy {
 
     isInRange(tower) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
-        const distance = math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+        const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
         return distance <= this.range * 10 + buffer;
     }
 
@@ -615,7 +615,7 @@ class enemy {
                         // calculate the nearest path index for the new enemy, ensuring it's ahead on the path
                         let closestDistance = Infinity;
                         for (let i = this.currentpathIndex; i < path.length; i++) { // Start from the current path index
-                            const distance = math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
+                            const distance = Math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
                             if (distance < closestDistance) {
                                 closestDistance = distance;
                                 newenemy.currentpathIndex = i;
@@ -654,7 +654,7 @@ function spawnenemies() {
     for (let i = 0; i < enemycount; i++) {
         setTimeout(() => {
             const updatedenemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
-            const randomType = updatedenemyTypes[math.floor(math.random() * updatedenemyTypes.length)];
+            const randomType = updatedenemyTypes[Math.floor(Math.random() * updatedenemyTypes.length)];
             const enemy = new enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
@@ -671,7 +671,7 @@ function spawnenemies() {
     setTimeout(() => {
         waveInprogress = false;
         startwaveButton.disabled = false;
-        currency += 1 + math.round(wave / 2);
+        currency += 1 + Math.round(wave / 2);
         nextwave();
     }, enemycount * 1000);
 }
@@ -690,20 +690,20 @@ class projectile {
     draw() {
         ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
         ctx.beginPath();
-        ctx.arc(this.x, this.y, 5, 0, math.pI * 2);
+        ctx.arc(this.x, this.y, 5, 0, Math.pI * 2);
         ctx.fill();
     }
 
     update() {
-        this.x += math.cos(this.angle) * this.speed;
-        this.y += math.sin(this.angle) * this.speed;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
         this.draw();
     
         const buffer = 5; // Add a buffer for collision detection
     
         if (this.type == 'tower') {
             enemies.forEach(enemy => {
-                const distance = math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
                     this.destroy();
@@ -711,7 +711,7 @@ class projectile {
             });
         } else if (this.type == 'enemy') {
             towers.forEach(tower => {
-                const distance = math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+                const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     tower.takeDamage(this.damage);
                     this.destroy();
@@ -760,8 +760,8 @@ function drawpath() {
 
 // check if a square is available for tower placement and outside the path
 function isSquareAvailable(x, y) {
-    const gridX = math.floor(x / gridSize);
-    const gridY = math.floor(y / gridSize);
+    const gridX = Math.floor(x / gridSize);
+    const gridY = Math.floor(y / gridSize);
     return !occupiedSquares.has(`${gridX},${gridY}`);
 }
 
@@ -773,8 +773,8 @@ canvas.addEventListener('click', (event) => {
 
     if (selectedTowerType && isSquareAvailable(x, y)) {
         // Snap to grid center
-        const gridX = math.floor(x / gridSize) * gridSize + gridSize / 2;
-        const gridY = math.floor(y / gridSize) * gridSize + gridSize / 2;
+        const gridX = Math.floor(x / gridSize) * gridSize + gridSize / 2;
+        const gridY = Math.floor(y / gridSize) * gridSize + gridSize / 2;
 
         // create a temporary tower to get its price
         const tempTower = new Tower(gridX, gridY, selectedTowerType);
@@ -782,7 +782,7 @@ canvas.addEventListener('click', (event) => {
         if (currency >= tempTower.price) {
             // place the tower
             const tower = new Tower(gridX, gridY, selectedTowerType);
-            occupiedSquares.add(`${math.floor(x / gridSize)},${math.floor(y / gridSize)}`);
+            occupiedSquares.add(`${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`);
             towers.push(tower);
             currency -= tower.price;
             updateHUD();
@@ -887,7 +887,7 @@ canvas.addEventListener('mousemove', (event) => {
 
     // check for hovering over towers
     towers.forEach(tower => {
-        const distance = math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
+        const distance = Math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
             hoverTarget = tower;
         }
@@ -895,7 +895,7 @@ canvas.addEventListener('mousemove', (event) => {
 
     // check for hovering over enemies
     enemies.forEach(enemy => {
-        const distance = math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
+        const distance = Math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
         if (distance < 15) { // Assuming 15 is half the size of the enemy
             hoverTarget = enemy;
         }

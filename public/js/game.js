@@ -1,22 +1,22 @@
-const canvas = document.getelementById('game-canvas');
+const canvas = document.getElementById('game-canvas');
 const ctx = canvas ? canvas.getcontext('2d') : null;
 
-const currencyDisplay = document.getelementById('currency') || { textcontent: '' };
-const waveDisplay = document.getelementById('wave') || { textcontent: '' };
-const livesDisplay = document.getelementById('lives') || { textcontent: '' };
-const towerSelection = document.getelementById('tower-selection') || null;
-const startwaveButton = document.getelementById('start-wave-button') || null;
-const autoStartcheckbox = document.getelementById('auto-start') || null;
+const currencyDisplay = document.getElementById('currency') || { textcontent: '' };
+const waveDisplay = document.getElementById('wave') || { textcontent: '' };
+const livesDisplay = document.getElementById('lives') || { textcontent: '' };
+const towerSelection = document.getElementById('tower-selection') || null;
+const startwaveButton = document.getElementById('start-wave-button') || null;
+const autoStartcheckbox = document.getElementById('auto-start') || null;
 
 // Tower stats pop-up
-const towerStatspopup = document.getelementById('tower-stats-popup') || null;
-const towerTypeDisplay = document.getelementById('tower-type') || { textcontent: '' };
-const towerlevelDisplay = document.getelementById('tower-level') || { textcontent: '' };
-const towerHealthDisplay = document.getelementById('tower-health') || { textcontent: '' };
-const towerRangeDisplay = document.getelementById('tower-range') || { textcontent: '' };
-const towerDamageDisplay = document.getelementById('tower-damage') || { textcontent: '' };
-const upgrade1Button = document.getelementById('upgrade1-button') || null;
-const upgrade2Button = document.getelementById('upgrade2-button') || null;
+const towerStatspopup = document.getElementById('tower-stats-popup') || null;
+const towerTypeDisplay = document.getElementById('tower-type') || { textcontent: '' };
+const towerlevelDisplay = document.getElementById('tower-level') || { textcontent: '' };
+const towerHealthDisplay = document.getElementById('tower-health') || { textcontent: '' };
+const towerRangeDisplay = document.getElementById('tower-range') || { textcontent: '' };
+const towerDamageDisplay = document.getElementById('tower-damage') || { textcontent: '' };
+const upgrade1Button = document.getElementById('upgrade1-button') || null;
+const upgrade2Button = document.getElementById('upgrade2-button') || null;
 let showing = null; // currently selected tower
 let upgradepressed = false; // Flag for upgrade confirmation
 
@@ -823,7 +823,7 @@ function update(deltaTime) {
 function resetOtherDropdowns() {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
     dropdownIds.foreach(id => {
-        document.getelementById(id).selectedIndex = 0;
+        document.getElementById(id).selectedIndex = 0;
     });
 }
 
@@ -832,7 +832,7 @@ function checkmultipleSelections() {
     let selectedcount = 0;
 
     dropdownIds.foreach(id => {
-        const dropdown = document.getelementById(id);
+        const dropdown = document.getElementById(id);
         if (dropdown.selectedIndex > 0) { // If an option other than the default is selected
             selectedcount++;
         }
@@ -845,22 +845,22 @@ function checkmultipleSelections() {
     }
 }
 
-document.getelementById('general-towers').addeventlistener('change', (event) => {
+document.getElementById('general-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
-document.getelementById('close-range-towers').addeventlistener('change', (event) => {
+document.getElementById('close-range-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
-document.getelementById('far-range-towers').addeventlistener('change', (event) => {
+document.getElementById('far-range-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
-document.getelementById('special-towers').addeventlistener('change', (event) => {
+document.getElementById('special-towers').addeventlistener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });

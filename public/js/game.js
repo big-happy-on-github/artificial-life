@@ -918,7 +918,7 @@ function nextWave() {
         localStorage.setItem("topScore", JSON.stringify(wave));
     }
 
-    if ((wave + 1) % 5 == 0) {
+    if ((wave - 1) % 5 == 0) {
         alert("last wave was a walker smash!");
     }
 

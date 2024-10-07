@@ -689,7 +689,7 @@ class projectile {
 
     draw() {
         ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
-        ctx.beginpath();
+        ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, math.pI * 2);
         ctx.fill();
     }
@@ -748,7 +748,7 @@ function drawpath() {
     ctx.strokeStyle = 'white';
     ctx.linewidth = 10;
 
-    ctx.beginpath();
+    ctx.beginPath();
     ctx.moveTo(path[0].x, path[0].y);
 
     for (let i = 1; i < path.length; i++) {

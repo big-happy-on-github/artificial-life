@@ -15,6 +15,7 @@ const towerLevelDisplay = document.getElementById('tower-level') || { textConten
 const towerHealthDisplay = document.getElementById('tower-health') || { textContent: '' };
 const towerRangeDisplay = document.getElementById('tower-range') || { textContent: '' };
 const towerDamageDisplay = document.getElementById('tower-damage') || { textContent: '' };
+const towerDescDisplay = document.getElementById('tower-desc') || { textContent: '' };
 const upgrade1Button = document.getElementById('upgrade1-button') || null;
 const upgrade2Button = document.getElementById('upgrade2-button') || null;
 let showing = null; // Currently selected tower
@@ -93,6 +94,7 @@ function showTowerStats(tower) {
     towerHealthDisplay.textContent = `${tower.health} hp`;
     towerRangeDisplay.textContent = `${tower.range} px range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
+    towerDescDisplay.textContent = tower.desc;
 
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
@@ -312,54 +314,63 @@ class Tower {
             this.fireRate = 1.5;
             this.damage = 2;
             this.price = 1;
+            this.desc = "overall bad";
         } else if (type == '2') {//liam
             this.health = 15;
             this.range = 100;
             this.fireRate = 0.5;
             this.damage = 4;
             this.price = 3;
+            this.desc = "short ranged, fast shots";
         } else if (type == '3') {//evan
             this.health = 10;
             this.range = 500;
             this.fireRate = 1.5;
             this.damage = 4.5;
             this.price = 3;
+            this.desc = "far range, powerful shots";
         } else if (type == '4') { //christian
             this.health = 5;
             this.range = 0;
             this.fireRate = 0;
             this.damage = 4;
             this.price = 20;
+            this.desc = "extra money after each wave";
         } else if (type == '5') {//philip
             this.health = 15;
             this.range = 1/0;
             this.fireRate = 3;
             this.damage = 10;
             this.price = 5;
+            this.desc = "sniper shots, high reload time";
         } else if (type == '6') {//mitch
             this.health = 20;
             this.range = 225;
             this.fireRate = 0.8;
             this.damage = 3.5;
             this.price = 3;
+            this.desc = "generally good at everything";
         } else if (type == '7') {//nick
             this.health = 12;
             this.range = 150;
             this.fireRate = 0.1;
             this.damage = 0.3;
             this.price = 3;
+            this.desc = "super fast, minigun-like shots";
         } else if (type == '8') {//larse
-            this.health = 5;
+            this.health = 40;
             this.range = 0;
             this.fireRate = 0;
-            this.damage = 4;
-            this.price = 20;
+            this.damage = 0;
+            this.price = 7;
+            this.desc = "a meat shield, cannot shoot";
         } else if (type == '9') {//walker
             this.health = 50;
             this.range = 1/0;
             this.fireRate = "5 waves";
             this.damage = 1/0;
             this.price = 80;
+            this.desc = "every 5 waves, insta-kills everything";
         }
 
         this.lastFired = 0;

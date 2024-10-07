@@ -1,5 +1,5 @@
 const canvas = document.getElementById('game-canvas');
-const ctx = canvas ? canvas.getcontext('2d') : null;
+const ctx = canvas ? canvas.getContext('2d') : null;
 
 const currencyDisplay = document.getElementById('currency') || { textcontent: '' };
 const waveDisplay = document.getElementById('wave') || { textcontent: '' };

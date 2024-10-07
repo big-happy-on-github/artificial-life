@@ -425,10 +425,12 @@ class Tower {
             }
         } else {
             if (wave % 5 == 0) {
-                enemies.forEach(enemy => {
-                    enemy.takeDamage(enemy.health);
-                });
-                console.log("walker smash");
+                setTimeout(() => {
+                    enemies.forEach(enemy => {
+                        enemy.takeDamage(enemy.health);
+                    });
+                    console.log("walker smash");
+                }, 200);
             }
         }
 

@@ -670,7 +670,7 @@ function spawnenemies() {
     
     setTimeout(() => {
         waveInprogress = false;
-        startwaveButton.disabled = false;
+        startWaveButton.disabled = false;
         currency += 1 + Math.round(wave / 2);
         nextwave();
     }, enemycount * 1000);
@@ -816,7 +816,7 @@ function update(deltaTime) {
     if (autoStartcheckbox.checked && !waveInprogress) {
         waveInprogress = true;
         spawnenemies();
-        startwaveButton.disabled = true;
+        startWaveButton.disabled = true;
     }
 }
 
@@ -866,11 +866,11 @@ document.getElementById('special-towers').addEventListener('change', (event) => 
 });
 
 // Handle start wave button click
-startwaveButton.addEventListener('click', () => {
+startWaveButton.addEventListener('click', () => {
     if (!waveInprogress) {
         waveInprogress = true;
         spawnenemies();
-        startwaveButton.disabled = true; // Disable button during wave
+        startWaveButton.disabled = true; // Disable button during wave
     }
 });
 
@@ -974,7 +974,7 @@ function endGame() {
     projectiles.length = 0;
     selectedTowerType = null;
     waveInprogress = false;
-    startwaveButton.disabled = false;
+    startWaveButton.disabled = false;
     autoStartcheckbox.checked = false;
     updateHUD();
     window.location.reload();

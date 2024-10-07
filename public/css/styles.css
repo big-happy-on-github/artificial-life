@@ -168,6 +168,13 @@ body {
     padding-top: 60px;
 }
 
+#tower-selection select {
+    font-size: 12px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
 /* Mobile styles */
 @media (max-width: 600px) {
     /* Adjust game container for small screens */

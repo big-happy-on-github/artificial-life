@@ -170,6 +170,11 @@ body {
     color: white;
 }
 
+.feedback-container {
+    display: flex;
+    margin-left: 70%;
+}
+
 /* Mobile styles */
 @media (max-width: 600px) {
     /* Adjust game container for small screens */

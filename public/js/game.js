@@ -697,7 +697,6 @@ canvas.addEventListener('click', (event) => {
             occupiedSquares.add(`${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`);
             towers.push(tower);
             currency -= tower.price;
-            selectedTowerType = null;
             updateHUD();
         } else {
             console.log('Not enough currency to place the tower.');

@@ -248,7 +248,7 @@ upgrade2Button.addEventListener('click', (event) => {
 
 // Handle clicks on the canvas to show/hide tower stats
 canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingclientRect();
+    const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
@@ -767,7 +767,7 @@ function isSquareAvailable(x, y) {
 
 // Handle tower placement
 canvas.addEventListener('click', (event) => {
-    const rect = canvas.getBoundingclientRect();
+    const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
@@ -878,7 +878,7 @@ let hoverTarget = null; // To store the hovered object
 
 // Handle mouse movement for hover detection
 canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingclientRect();
+    const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 

@@ -164,7 +164,7 @@ body {
 }
 
 #tower-selection select {
-    font-size: 16px; /* Increase the font size */
+    font-size: 10px; /* Increase the font size */
     padding: 10px; /* Increase the padding */
     background-color: rgba(0, 0, 0, 0.7);
     color: white;

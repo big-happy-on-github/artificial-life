@@ -270,105 +270,145 @@ class Tower {
         this.level = 1;
         this.target = null;
 
-        if (type === '1') { // Philip
-            this.health = 15;
-            this.range = 600; // Ultra long range
-            this.fireRate = 1.5;
-            this.damage = 5;
-            this.price = 5;
-        } else if (type === '2') { // Mitchell
-            this.health = 20;
-            this.range = 200; // Medium range
+        if (type == '1') {//jack
+            this.health = 13;
+            this.range = 50;
             this.fireRate = 1;
-            this.damage = 4;
-            this.price = 4;
-        } else if (type === '3') { // Nick
-            this.health = 10;
-            this.range = 100; 
-            this.fireRate = 0.2; // Rapid fire
-            this.damage = 1;
-            this.price = 3;
-        } else if (type === '4') { // Larse
-            this.health = 18;
-            this.range = 150; 
-            this.fireRate = 0.5;
             this.damage = 3;
-            this.price = 6;
-        } else if (type === '5') { // Walker
-            this.health = 50;
-            this.range = 0; // No attack
+            this.price = 2;
+        } else if (type == '2') {//liam
+            this.health = 15;
+            this.range = 100;
+            this.fireRate = 0.5;
+            this.damage = 4;
+            this.price = 3;
+        } else if (type == '3') {//evan
+            this.health = 10;
+            this.range = 500;
+            this.fireRate = 1.5;
+            this.damage = 4.5;
+            this.price = 3;
+        } else if (type == '4') { //christian
+            this.health = 5;
+            this.range = 0;
             this.fireRate = 0;
-            this.damage = 0;
-            this.price = 30;
-            this.isWalker = true; // Special property to identify Walker
+            this.damage = 4;
+            this.price = 20;
+        } else if (type == '5') {//philip
+            this.health = 15;
+            this.range = 100;
+            this.fireRate = 0.5;
+            this.damage = 4;
+            this.price = 3;
+        } else if (type == '6') {//mitch
+            this.health = 10;
+            this.range = 500;
+            this.fireRate = 1.5;
+            this.damage = 4.5;
+            this.price = 3;
+        } else if (type == '7') {//nick
+            this.health = 5;
+            this.range = 0;
+            this.fireRate = 0;
+            this.damage = 4;
+            this.price = 20;
+        } else if (type == '8') {//larse
+            this.health = 5;
+            this.range = 0;
+            this.fireRate = 0;
+            this.damage = 4;
+            this.price = 20;
+        } else if (type == '9') {//walker
+            this.health = 5;
+            this.range = 0;
+            this.fireRate = 0;
+            this.damage = 4;
+            this.price = 20;
         }
 
         this.lastFired = 0;
     }
 
     draw() {
-        if (this.type === '1') {
-            ctx.fillStyle = 'orange'; // Philip
-        } else if (this.type === '2') {
-            ctx.fillStyle = 'blue'; // Mitchell
-        } else if (this.type === '3') {
-            ctx.fillStyle = 'red'; // Nick
-        } else if (this.type === '4') {
-            ctx.fillStyle = 'yellow'; // Larse
-        } else if (this.type === '5') {
-            ctx.fillStyle = 'black'; // Walker
+        if (this.type == '1') {
+            ctx.fillStyle = 'grey';
+        } else if (this.type == '2') {
+            ctx.fillStyle = 'green';
+        } else if (this.type == '3') {
+            ctx.fillStyle = 'purple';
+        } else if (this.type == '4') {
+            ctx.fillStyle = 'blue';
+        } else if (this.type == '5') {
+            ctx.fillStyle = 'red';
+        } else if (this.type == '6') {
+            ctx.fillStyle = 'pink';
+        } else if (this.type == '7') {
+            ctx.fillStyle = 'orange';
+        } else if (this.type == '8') {
+            ctx.fillStyle = 'cyan';
+        } else if (this.type == '9') {
+            ctx.fillStyle = 'brown';
         }
-
-        // Walker occupies a 9x9 grid
-        const size = this.isWalker ? gridSize * 3 : 30;
-        ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+        ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
     shoot() {
-        if (this.type === '4') { // Larse shoots at multiple enemies
-            const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
-            enemiesInRange.forEach(enemy => {
-                const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-                projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
-            });
-        } else if (this.target && this.target.health > 0) { // Other towers' shooting logic
-            const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
-        }
+        if (!this.target || this.target.health <= 0) return; // No target to shoot at
+    
+        const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+        console.log("Fired at target:", this.target); // Debug log
     }
 
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
 
-        // Walker special effect
-        if (this.isWalker && wave % 5 === 0) {
-            enemies.forEach(enemy => enemy.takeDamage(enemy.health)); // Kill every enemy instantly
+        if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+            this.shoot();
+            this.lastFired = Date.now();
         }
 
-        // Other towers' behavior
-        if (this.type !== '5') { 
-            if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
-                this.shoot();
-                this.lastFired = Date.now();
+        if (!this.target || this.target.health <= 0) {
+            const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
+            if (enemiesInRange.length > 0) {
+                this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
+                    return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
+                        ? currentEnemy
+                        : farthestEnemy;
+                });
+                console.log("New target acquired:", this.target); // Debug log
             }
-
-            if (!this.target || this.target.health <= 0) {
-                const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
-                if (enemiesInRange.length > 0) {
-                    this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
-                        return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress() ? currentEnemy : farthestEnemy;
-                    });
-                }
-            }
-
-            this.draw();
         }
+
+
+        // Attack the target if it's time to fire
+        if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+            this.shoot();
+            this.lastFired = Date.now();
+        }
+
+        this.draw();
     }
 
     isInRange(enemy) {
         const buffer = 5; // Small buffer to account for floating-point inaccuracies
         const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
         return distance <= this.range + buffer;
+    }
+
+
+    takeDamage(amount) {
+        this.health -= amount;
+        if (this.health <= 0) {
+            this.destroy();
+        }
+    }
+
+    destroy() {
+        const index = towers.indexOf(this);
+        if (index > -1) {
+            towers.splice(index, 1);
+        }
     }
 }
 
@@ -836,12 +876,6 @@ function nextWave() {
         if (!hasSecondUpgrade) {
             currency += tower.damage;
             console.log("added money");
-        }
-    });
-
-    towers.forEach(tower => {
-        if (tower.type === '5' && wave % 5 === 0) {
-            enemies.forEach(enemy => enemy.takeDamage(enemy.health)); // Kill every enemy instantly
         }
     });
 

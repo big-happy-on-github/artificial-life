@@ -143,7 +143,7 @@ function hideTowerStats() {
 }
 
 // Handle upgrade button click for damage upgrade
-upgrade1Button.addeventlistener('click', (event) => {
+upgrade1Button.addEventListener('click', (event) => {
     if (!showing) return; // no tower selected
 
     const currentlevel = showing.level;
@@ -196,7 +196,7 @@ upgrade1Button.addeventlistener('click', (event) => {
 
 
 // Handle upgrade button click for range upgrade
-upgrade2Button.addeventlistener('click', (event) => {
+upgrade2Button.addEventListener('click', (event) => {
     if (!showing) return; // no tower selected
 
     const currentlevel = showing.level;
@@ -247,7 +247,7 @@ upgrade2Button.addeventlistener('click', (event) => {
 });
 
 // Handle clicks on the canvas to show/hide tower stats
-canvas.addeventlistener('click', (event) => {
+canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingclientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -766,7 +766,7 @@ function isSquareAvailable(x, y) {
 }
 
 // Handle tower placement
-canvas.addeventlistener('click', (event) => {
+canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingclientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -845,28 +845,28 @@ function checkmultipleSelections() {
     }
 }
 
-document.getElementById('general-towers').addeventlistener('change', (event) => {
+document.getElementById('general-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
-document.getElementById('close-range-towers').addeventlistener('change', (event) => {
+document.getElementById('close-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
-document.getElementById('far-range-towers').addeventlistener('change', (event) => {
+document.getElementById('far-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
-document.getElementById('special-towers').addeventlistener('change', (event) => {
+document.getElementById('special-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
     checkmultipleSelections();
 });
 
 // Handle start wave button click
-startwaveButton.addeventlistener('click', () => {
+startwaveButton.addEventListener('click', () => {
     if (!waveInprogress) {
         waveInprogress = true;
         spawnenemies();
@@ -877,7 +877,7 @@ startwaveButton.addeventlistener('click', () => {
 let hoverTarget = null; // To store the hovered object
 
 // Handle mouse movement for hover detection
-canvas.addeventlistener('mousemove', (event) => {
+canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingclientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;

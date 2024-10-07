@@ -813,7 +813,7 @@ function update(deltaTime) {
     projectiles.forEach(projectile => projectile.update());
     enemyprojectiles.forEach(projectile => projectile.update()); // Update enemy projectiles
 
-    if (autoStartcheckbox.checked && !waveInprogress) {
+    if (autoStartCheckbox.checked && !waveInprogress) {
         waveInprogress = true;
         spawnenemies();
         startWaveButton.disabled = true;
@@ -975,7 +975,7 @@ function endGame() {
     selectedTowerType = null;
     waveInprogress = false;
     startWaveButton.disabled = false;
-    autoStartcheckbox.checked = false;
+    autoStartCheckbox.checked = false;
     updateHUD();
     window.location.reload();
 }

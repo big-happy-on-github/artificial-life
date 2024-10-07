@@ -255,7 +255,7 @@ canvas.addEventListener('click', (event) => {
     // loop through towers to find one within range of the click
     let towerFound = false;
 
-    towers.foreach(tower => {
+    towers.forEach(tower => {
         const distance = math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
             if (showing === tower) {
@@ -661,7 +661,7 @@ function spawnenemies() {
     }
     
     // Spawn boss if wave matches boss level
-    bossenemyTypes.foreach(boss => {
+    bossenemyTypes.forEach(boss => {
         if (wave === boss.level) {
             const bossenemy = new enemy(boss);
             enemies.push(bossenemy);
@@ -702,7 +702,7 @@ class projectile {
         const buffer = 5; // Add a buffer for collision detection
     
         if (this.type == 'tower') {
-            enemies.foreach(enemy => {
+            enemies.forEach(enemy => {
                 const distance = math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
@@ -710,7 +710,7 @@ class projectile {
                 }
             });
         } else if (this.type == 'enemy') {
-            towers.foreach(tower => {
+            towers.forEach(tower => {
                 const distance = math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     tower.takeDamage(this.damage);
@@ -801,7 +801,7 @@ function update(deltaTime) {
     drawGrid(); // Draw the grid
     drawpath(); // Draw the path
 
-    towers.foreach((tower, index) => {
+    towers.forEach((tower, index) => {
         if (tower.health > 0) {
             tower.update(deltaTime);
         } else {
@@ -809,9 +809,9 @@ function update(deltaTime) {
         }
     });
 
-    enemies.foreach(enemy => enemy.update());
-    projectiles.foreach(projectile => projectile.update());
-    enemyprojectiles.foreach(projectile => projectile.update()); // Update enemy projectiles
+    enemies.forEach(enemy => enemy.update());
+    projectiles.forEach(projectile => projectile.update());
+    enemyprojectiles.forEach(projectile => projectile.update()); // Update enemy projectiles
 
     if (autoStartcheckbox.checked && !waveInprogress) {
         waveInprogress = true;
@@ -822,7 +822,7 @@ function update(deltaTime) {
 
 function resetOtherDropdowns() {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
-    dropdownIds.foreach(id => {
+    dropdownIds.forEach(id => {
         document.getElementById(id).selectedIndex = 0;
     });
 }
@@ -831,7 +831,7 @@ function checkmultipleSelections() {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
     let selectedcount = 0;
 
-    dropdownIds.foreach(id => {
+    dropdownIds.forEach(id => {
         const dropdown = document.getElementById(id);
         if (dropdown.selectedIndex > 0) { // If an option other than the default is selected
             selectedcount++;
@@ -886,7 +886,7 @@ canvas.addEventListener('mousemove', (event) => {
     hoverTarget = null;
 
     // check for hovering over towers
-    towers.foreach(tower => {
+    towers.forEach(tower => {
         const distance = math.sqrt((tower.x - mouseX) ** 2 + (tower.y - mouseY) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
             hoverTarget = tower;
@@ -894,7 +894,7 @@ canvas.addEventListener('mousemove', (event) => {
     });
 
     // check for hovering over enemies
-    enemies.foreach(enemy => {
+    enemies.forEach(enemy => {
         const distance = math.sqrt((enemy.x - mouseX) ** 2 + (enemy.y - mouseY) ** 2);
         if (distance < 15) { // Assuming 15 is half the size of the enemy
             hoverTarget = enemy;
@@ -919,7 +919,7 @@ function nextwave() {
         localStorage.setItem("topScore", JSON.stringify(wave));
     }
 
-    towers.foreach(tower => {
+    towers.forEach(tower => {
         let hasSecondUpgrade = true;
         if (towerUpgrades[nextLevelKey]['2']) {
             hasSecondUpgrade = false;
@@ -931,13 +931,13 @@ function nextwave() {
     });
 
     // check for boss in the next wave
-    bossenemyTypes.foreach(boss => {
+    bossenemyTypes.forEach(boss => {
         if (wave === boss.level) {
             alert(`new color boss on wave ${wave}!`);
         }
     });
 
-    enemyTypes.foreach(enemy => {
+    enemyTypes.forEach(enemy => {
         if (enemy.special && enemy.level == wave) {
             alert(`new color special enemy that ${enemy.special.tolowercase()} on wave ${wave}!`);
         }

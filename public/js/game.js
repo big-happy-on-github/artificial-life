@@ -41,6 +41,27 @@ const upgrade = {
         'lvl2': { '1': { health: 0, range: 0, damage: 6, fireRate: 0, cost: 12 } },
         'lvl3': { '1': { health: 0, range: 0, damage: 8, fireRate: 0, cost: 14 } },
         'lvl4': { '1': { health: 0, range: 0, damage: 10, fireRate: 0, cost: 18 } }
+    },
+    '5': {
+        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
+    },
+    '6': {
+        'lvl2': { '1': { health: 6, range: 0, damage: 2, fireRate: -0.2, cost: 7 }, '2': { health: 0, range: 35, damage: 0, fireRate: 0, cost: 5 } },
+        'lvl3': { '1': { health: 15, range: 0, damage: 4, fireRate: -0.4, cost: 14 }, '2': { health: 0, range: 70, damage: 2, fireRate: 0, cost: 11 } },
+        'lvl4': { '1': { health: 30, range: 80, damage: 10, fireRate: -0.7, cost: 35 }, '2': { health: 30, range: 150, damage: 10, fireRate: -0.7, cost: 35 } }
+    },
+    '7': {},
+    '8': {
+        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
+    },
+    '9': {
+        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
     }
 };
 
@@ -55,6 +76,16 @@ function showTowerStats(tower) {
         towerType = 'evan';
     } else if (tower.type == '4') {
         towerType = 'christian';
+    } else if (tower.type == '5') {
+        towerType = 'philip';
+    } else if (tower.type == '6') {
+        towerType = 'larse';
+    } else if (tower.type == '7') {
+        towerType = 'mitch';
+    } else if (tower.type == '8') {
+        towerType = 'nick';
+    } else if (tower.type == '9') {
+        towerType = 'waker';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -66,18 +97,23 @@ function showTowerStats(tower) {
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
 
-    if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-        const hasSecondUpgrade = tower.type !== '4';
-        if (!hasSecondUpgrade) {
+    if (tower.type == "9") {
+        towerDamageDisplay.textContent = `~${tower.damage}/${tower.fireRate}`;
+
+        upgrade1Button.textContent = "cannot upgrade";
+        upgrade2Button.textContent = "";
+    } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
+        const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
+        if (tower.type == "4") {
             towerDamageDisplay.textContent = `0dps`;
         }
 
         if (tower.level < 3) {
-            upgrade1Button.textContent = `upgrade (for ${hasSecondUpgrade ? 'dmg' : 'money'})`;
+            upgrade1Button.textContent = `upgrade ${hasSecondUpgrade ? '(for dmg)' : ''}`;
             upgrade2Button.textContent = hasSecondUpgrade ? `upgrade (for range)` : '';
         } else if (tower.level === 3) {
             // Mega upgrade options for level 3 towers
-            upgrade1Button.textContent = `final upgrade \n(for ${hasSecondUpgrade ? 'dmg' : 'money'})`;
+            upgrade1Button.textContent = `final upgrade ${hasSecondUpgrade ? '(for dmg)' : ''}`;
             upgrade2Button.textContent = hasSecondUpgrade ? `final upgrade (for range)` : '';
         }
     } else {
@@ -86,8 +122,8 @@ function showTowerStats(tower) {
         upgrade2Button.textContent = "";
     
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-            const hasSecondUpgrade = tower.type !== '4';
-            if (!hasSecondUpgrade) {
+            const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
+            if (!tower.type == "4") {
                 towerDamageDisplay.textContent = `0dps`;
             }
         }
@@ -271,11 +307,11 @@ class Tower {
         this.target = null;
 
         if (type == '1') {//jack
-            this.health = 13;
-            this.range = 50;
-            this.fireRate = 1;
-            this.damage = 3;
-            this.price = 2;
+            this.health = 10;
+            this.range = 25;
+            this.fireRate = 1.5;
+            this.damage = 2;
+            this.price = 1;
         } else if (type == '2') {//liam
             this.health = 15;
             this.range = 100;
@@ -296,22 +332,22 @@ class Tower {
             this.price = 20;
         } else if (type == '5') {//philip
             this.health = 15;
-            this.range = 100;
-            this.fireRate = 0.5;
-            this.damage = 4;
-            this.price = 3;
+            this.range = 1/0;
+            this.fireRate = 3;
+            this.damage = 10;
+            this.price = 5;
         } else if (type == '6') {//mitch
-            this.health = 10;
-            this.range = 500;
-            this.fireRate = 1.5;
-            this.damage = 4.5;
+            this.health = 20;
+            this.range = 225;
+            this.fireRate = 0.8;
+            this.damage = 3.5;
             this.price = 3;
         } else if (type == '7') {//nick
-            this.health = 5;
-            this.range = 0;
-            this.fireRate = 0;
-            this.damage = 4;
-            this.price = 20;
+            this.health = 12;
+            this.range = 150;
+            this.fireRate = 0.1;
+            this.damage = 0.3;
+            this.price = 3;
         } else if (type == '8') {//larse
             this.health = 5;
             this.range = 0;
@@ -319,11 +355,11 @@ class Tower {
             this.damage = 4;
             this.price = 20;
         } else if (type == '9') {//walker
-            this.health = 5;
-            this.range = 0;
-            this.fireRate = 0;
-            this.damage = 4;
-            this.price = 20;
+            this.health = 50;
+            this.range = 1/0;
+            this.fireRate = "5 waves";
+            this.damage = 1/0;
+            this.price = 80;
         }
 
         this.lastFired = 0;
@@ -363,28 +399,30 @@ class Tower {
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
 
-        if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
-            this.shoot();
-            this.lastFired = Date.now();
-        }
-
-        if (!this.target || this.target.health <= 0) {
-            const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
-            if (enemiesInRange.length > 0) {
-                this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
-                    return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
-                        ? currentEnemy
-                        : farthestEnemy;
-                });
-                console.log("New target acquired:", this.target); // Debug log
+        if (this.type != "9") {
+            if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+                this.shoot();
+                this.lastFired = Date.now();
             }
-        }
-
-
-        // Attack the target if it's time to fire
-        if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
-            this.shoot();
-            this.lastFired = Date.now();
+    
+            if (!this.target || this.target.health <= 0) {
+                const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
+                if (enemiesInRange.length > 0) {
+                    this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
+                        return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
+                            ? currentEnemy
+                            : farthestEnemy;
+                    });
+                    console.log("New target acquired:", this.target); // Debug log
+                }
+            }
+    
+    
+            // Attack the target if it's time to fire
+            if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+                this.shoot();
+                this.lastFired = Date.now();
+            }
         }
 
         this.draw();
@@ -872,10 +910,18 @@ function nextWave() {
     }
 
     towers.forEach(tower => {
-        const hasSecondUpgrade = tower.type !== '4';
-        if (!hasSecondUpgrade) {
+        const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
+        if (tower.type == "4") {
             currency += tower.damage;
             console.log("added money");
+        } else if (tower.type == "9") {
+            if (wave % 5 == 0) {
+                alert("WALKER SMASH!!!!!!!!");
+                enemies.forEach(enemy => {
+                    enemy.takeDamage(enemy.health);
+                });
+                console.log("walker smash");
+            }
         }
     });
 

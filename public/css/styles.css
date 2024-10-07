@@ -168,7 +168,7 @@ body {
     padding: 10px; /* Increase the padding */
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    width: 50px; /* Optionally, set a fixed width to make it larger */
+    width: 100px; /* Optionally, set a fixed width to make it larger */
     border: 2px solid #fff; /* Optional: make the border more prominent */
     border-radius: 5px; /* Optional: add border-radius for a smoother appearance */
 }

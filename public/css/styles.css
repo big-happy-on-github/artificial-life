@@ -172,6 +172,7 @@ body {
 
 .feedback-container {
     display: flex;
+    align-items: center;
     margin-left: 60%;
 }
 

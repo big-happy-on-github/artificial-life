@@ -460,7 +460,7 @@ class Tower {
     }
 }
 
-class enemy {
+class Enemy {
     constructor(type) {
         this.x = path[0].x; // Start at the first waypoint
         this.y = path[0].y;
@@ -608,11 +608,11 @@ class enemy {
                 if (this.nextType) {
                     const nextenemyType = enemyTypes.find(type => type.color === this.nextType);
                     if (nextenemyType) {
-                        const newenemy = new enemy(nextenemyType);
-                        newenemy.x = this.x; // Set the new enemy's position to the current enemy's position
+                        const newenemy = new Enemy(nextenemyType);
+                        newenemy.x = this.x; // Set the new Enemy's position to the current enemy's position
                         newenemy.y = this.y;
     
-                        // calculate the nearest path index for the new enemy, ensuring it's ahead on the path
+                        // calculate the nearest path index for the new Enemy, ensuring it's ahead on the path
                         let closestDistance = Infinity;
                         for (let i = this.currentpathIndex; i < path.length; i++) { // Start from the current path index
                             const distance = Math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
@@ -655,7 +655,7 @@ function spawnenemies() {
         setTimeout(() => {
             const updatedenemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
             const randomType = updatedenemyTypes[Math.floor(Math.random() * updatedenemyTypes.length)];
-            const enemy = new enemy(randomType);
+            const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
     }
@@ -663,7 +663,7 @@ function spawnenemies() {
     // Spawn boss if wave matches boss level
     bossenemyTypes.forEach(boss => {
         if (wave === boss.level) {
-            const bossenemy = new enemy(boss);
+            const bossenemy = new Enemy(boss);
             enemies.push(bossenemy);
         }
     });

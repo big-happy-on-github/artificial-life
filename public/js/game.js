@@ -67,7 +67,7 @@ const upgrade = {
 };
 
 // Function to show the tower stats pop-up
-function showTowerStats(tower) {
+function showTowerStats(tower, showButtons=true) {
     let towerType;
     if (tower.type == '1') {
         towerType = 'jack';
@@ -95,6 +95,8 @@ function showTowerStats(tower) {
     towerRangeDisplay.textContent = `${tower.range} px range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
     towerDescDisplay.textContent = tower.desc;
+    upgrade1Button.disabled = false;
+    upgrade2Button.disabled = false;
 
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
@@ -104,6 +106,8 @@ function showTowerStats(tower) {
 
         upgrade1Button.textContent = "cannot upgrade";
         upgrade2Button.textContent = "";
+        upgrade1Button.disabled = true;
+        upgrade2Button.disabled = true;
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
         if (tower.type == "4") {
@@ -129,6 +133,13 @@ function showTowerStats(tower) {
                 towerDamageDisplay.textContent = `0dps`;
             }
         }
+    }
+
+    if (!showButtons) {
+        upgrade1Button.textContent = "";
+        upgrade2Button.textContent = "";
+        upgrade1Button.disabled = true;
+        upgrade2Button.disabled = true;
     }
 
     // Show the pop-up
@@ -857,7 +868,11 @@ function checkMultipleSelections() {
 
 function showTempTower(selectedTower) {
     const tempTower = new Tower(-99999, -99999, selectedTower);
-    showTowerStats(tempTower);
+    if (showing.type != tempTower.type && selectedTowerType == showing.type) {
+        showTowerStats(selectedTowerType, true);
+    } else {
+        showTowerStats(tempTower);
+    }
 }
 
 document.getElementById('general-towers').addEventListener('change', (event) => {

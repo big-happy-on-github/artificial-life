@@ -118,7 +118,7 @@ function showTowerStats(tower, showButtons=true) {
         if (tower.level < 3) {
             upgrade1Button.textContent = `upgrade ${hasSecondUpgrade ? '(for dmg)' : ''}`;
             upgrade2Button.textContent = hasSecondUpgrade ? `upgrade (for range)` : '';
-        } else if (tower.level === 3) {
+        } else if (tower.level == 3) {
             // Mega upgrade options for level 3 towers
             upgrade1Button.textContent = `final upgrade ${hasSecondUpgrade ? '(for dmg)' : ''}`;
             upgrade2Button.textContent = hasSecondUpgrade ? `final upgrade (for range)` : '';
@@ -272,7 +272,7 @@ canvas.addEventListener('click', (event) => {
     towers.forEach(tower => {
         const distance = Math.sqrt((tower.x - x) ** 2 + (tower.y - y) ** 2);
         if (distance < 30) { // Assuming 30 is the size of the tower
-            if (showing === tower) {
+            if (showing == tower) {
                 hideTowerStats(); // Hide the stats if already showing
             } else {
                 showTowerStats(tower); // Show stats on click
@@ -634,7 +634,7 @@ class Enemy {
             } else {
                 // Transform into the next enemy type if available
                 if (this.nextType) {
-                    const nextEnemyType = enemyTypes.find(type => type.color === this.nextType);
+                    const nextEnemyType = enemyTypes.find(type => type.color == this.nextType);
                     if (nextEnemyType) {
                         const newEnemy = new Enemy(nextEnemyType);
                         newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
@@ -690,7 +690,7 @@ function spawnEnemies() {
     
     // Spawn boss if wave matches boss level
     bossEnemyTypes.forEach(boss => {
-        if (wave === boss.level) {
+        if (wave == boss.level) {
             const bossEnemy = new Enemy(boss);
             enemies.push(bossEnemy);
         }
@@ -716,10 +716,10 @@ class Projectile {
     }
 
     draw() {
-        if (this.specificType === 'explosive') {
+        if (this.specificType == 'explosive') {
             ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
         } else {
-            ctx.fillStyle = this.type === 'tower' ? 'yellow' : 'blue'; // Normal projectile colors
+            ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Normal projectile colors
         }
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
@@ -730,7 +730,7 @@ class Projectile {
         const explosionRadius = 50; // Define the radius of the explosion
     
         // Draw the explosion area as a red circle with low opacity
-        ctx.fillStyle = 'rgba(255, 0, 0, 0.3)'; // Red color with 30% opacity
+        ctx.fillStyle = 'rgba(255, 255, 0, 0.5)'; // Red color with 30% opacity
         ctx.beginPath();
         ctx.arc(this.x, this.y, explosionRadius, 0, Math.PI * 2);
         ctx.fill();
@@ -753,18 +753,18 @@ class Projectile {
 
         const buffer = 5; // Add a buffer for collision detection
 
-        if (this.type === 'tower') {
+        if (this.type == 'tower') {
             enemies.forEach(enemy => {
                 const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
-                    if (this.specificType === 'explosive') {
+                    if (this.specificType == 'explosive') {
                         this.explode(); // Trigger explosion on impact
                     }
                     this.destroy();
                 }
             });
-        } else if (this.type === 'enemy') {
+        } else if (this.type == 'enemy') {
             towers.forEach(tower => {
                 const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
@@ -776,7 +776,7 @@ class Projectile {
     }
 
     destroy() {
-        const array = this.type === 'tower' ? projectiles : enemyProjectiles;
+        const array = this.type == 'tower' ? projectiles : enemyProjectiles;
         const index = array.indexOf(this);
         if (index > -1) {
             array.splice(index, 1);
@@ -1003,7 +1003,7 @@ function nextWave() {
 
     // Check for boss in the next wave
     bossEnemyTypes.forEach(boss => {
-        if (wave === boss.level) {
+        if (wave == boss.level) {
             alert(`new color boss on wave ${wave}!`);
         }
     });

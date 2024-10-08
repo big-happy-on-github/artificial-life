@@ -112,6 +112,7 @@ function showTowerStats(tower, showButtons=true) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
         if (tower.type == "4") {
             towerDamageDisplay.textContent = `0 dps`;
+            tower.desc = `+$${tower.damage} after each wave`;
         }
 
         if (tower.level < 3) {
@@ -131,6 +132,7 @@ function showTowerStats(tower, showButtons=true) {
             const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
             if (!tower.type == "4") {
                 towerDamageDisplay.textContent = `0dps`;
+                tower.desc = `+$${tower.damage} after each wave`;
             }
         }
     }
@@ -346,7 +348,7 @@ class Tower {
             this.fireRate = 0;
             this.damage = 4;
             this.price = 20;
-            this.desc = "extra money after each wave";
+            this.desc = `+$${this.damage} after each wave`;
         } else if (type == '5') {//philip
             this.health = 15;
             this.range = 1/0;
@@ -354,21 +356,21 @@ class Tower {
             this.damage = 10;
             this.price = 5;
             this.desc = "sniper shots, high reload time";
-        } else if (type == '6') {//mitch
+        } else if (type == '7') {//mitch
             this.health = 20;
             this.range = 225;
             this.fireRate = 0.8;
             this.damage = 3.5;
             this.price = 3;
             this.desc = "generally good at everything";
-        } else if (type == '7') {//nick
+        } else if (type == '8') {//nick
             this.health = 12;
             this.range = 150;
-            this.fireRate = 0.1;
+            this.fireRate = 0.075;
             this.damage = 0.3;
             this.price = 3;
             this.desc = "super fast, minigun-like shots";
-        } else if (type == '8') {//lars
+        } else if (type == '6') {//lars
             this.health = 40;
             this.range = 0;
             this.fireRate = 0;

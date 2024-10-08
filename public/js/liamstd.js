@@ -765,11 +765,13 @@ function drawGrid() {
     }
 }
 
-// Check if a square is available for tower placement and outside the path
 function isSquareAvailable(x, y) {
     const gridX = Math.floor(x / gridSize);
     const gridY = Math.floor(y / gridSize);
-    return !occupiedSquares.has(`${gridX},${gridY}`);
+    const squareKey = `${gridX},${gridY}`;
+    const available = !occupiedSquares.has(squareKey);
+    console.log(`Square [${squareKey}] available: ${available}`);
+    return available;
 }
 
 function drawPath() {
@@ -803,7 +805,9 @@ canvas.addEventListener('click', (event) => {
         if (currency >= tempTower.price) {
             // Place the tower
             const tower = new Tower(gridX, gridY, selectedTowerType);
-            occupiedSquares.add(`${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`);
+            const squareKey = `${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`;
+            console.log(`Marking square [${squareKey}] as occupied`);
+            occupiedSquares.add(squareKey);
             towers.push(tower);
             currency -= tower.price;
             updateHUD();

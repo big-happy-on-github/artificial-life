@@ -861,8 +861,8 @@ function checkMultipleSelections(selected) {
 
     if (selectedCount > 1) {
         resetOtherDropdowns(); // Reset all dropdowns
-        selected.selected = true;
-        selectedTowerType = selected.value;
+        selected.target.selected = true;
+        selectedTowerType = selected.target.value;
     }
 }
 
@@ -877,25 +877,25 @@ function showTempTower(selectedTower) {
 
 document.getElementById('general-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(event.target);
+    checkMultipleSelections(event);
     showTempTower(selectedTowerType);
 });
 
 document.getElementById('close-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(event.target);
+    checkMultipleSelections(event);
     showTempTower(selectedTowerType);
 });
 
 document.getElementById('far-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(event.target);
+    checkMultipleSelections(event);
     showTempTower(selectedTowerType);
 });
 
 document.getElementById('special-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(event.target);
+    checkMultipleSelections(event);
     showTempTower(selectedTowerType);
 });
 

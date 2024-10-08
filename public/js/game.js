@@ -868,7 +868,7 @@ function checkMultipleSelections() {
 
 function showTempTower(selectedTower) {
     const tempTower = new Tower(-99999, -99999, selectedTower);
-    if (showing.type != tempTower.type && selectedTowerType == showing.type) {
+    if (selectedTower != tempTower.type) {
         showTowerStats(selectedTowerType, true);
     } else {
         showTowerStats(tempTower);

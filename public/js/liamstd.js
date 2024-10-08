@@ -727,6 +727,14 @@ class Projectile {
 
     explode() {
         const explosionRadius = 50; // Define the radius of the explosion
+    
+        // Draw the explosion area as a red circle with low opacity
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.3)'; // Red color with 30% opacity
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, explosionRadius, 0, Math.PI * 2);
+        ctx.fill();
+    
+        // Damage enemies within the explosion radius
         enemies.forEach(enemy => {
             const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
             if (distance < explosionRadius) {

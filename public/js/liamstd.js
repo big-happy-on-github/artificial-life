@@ -765,26 +765,11 @@ function drawGrid() {
     }
 }
 
-// Helper function to check if a point is near the path
-function isOnPath(x, y) {
-    const buffer = 20; // Adjust the buffer to your game's path width
-    for (let i = 0; i < path.length - 1; i++) {
-        const start = path[i];
-        const end = path[i + 1];
-        const distance = Math.abs((end.y - start.y) * x - (end.x - start.x) * y + end.x * start.y - end.y * start.x) /
-            Math.sqrt((end.y - start.y) ** 2 + (end.x - start.x) ** 2);
-        if (distance < buffer) {
-            return true;
-        }
-    }
-    return false;
-}
-
 // Check if a square is available for tower placement and outside the path
 function isSquareAvailable(x, y) {
     const gridX = Math.floor(x / gridSize);
     const gridY = Math.floor(y / gridSize);
-    return !occupiedSquares.has(`${gridX},${gridY}`) && !isOnPath(x, y);
+    return !occupiedSquares.has(`${gridX},${gridY}`);
 }
 
 function drawPath() {

@@ -867,7 +867,7 @@ function checkMultipleSelections(currentDropdown) {
 }
 
 function showTempTower(selectedTower) {
-    const tempTower = new Tower(-99999, -99999, selectedTower);
+    const tempTower = new Tower(-(1/0), -(1/0), selectedTower);
     if (selectedTower !== tempTower.type) {
         showTowerStats(selectedTower, false);
     } else {
@@ -878,8 +878,10 @@ function showTempTower(selectedTower) {
 // Event listener handler to avoid repetition
 function handleTowerSelection(event) {
     const selectedTowerType = event.target.value;
-    checkMultipleSelections(event.target);
-    showTempTower(selectedTowerType);
+    if (selectedTowertype != "0") {
+        checkMultipleSelections(event.target);
+        showTempTower(selectedTowerType);
+    }
 }
 
 // Add event listeners

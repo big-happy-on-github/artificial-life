@@ -871,7 +871,7 @@ function showTempTower(selectedTower) {
     if (selectedTower != tempTower.type) {
         showTowerStats(selectedTowerType, false);
     } else {
-        showTowerStats(tempTower);
+        showTowerStats(tempTower, false);
     }
 }
 

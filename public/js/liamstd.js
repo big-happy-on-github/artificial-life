@@ -727,7 +727,7 @@ class Projectile {
     }
 
     explode() {
-        const explosionRadius = 50; // Define the radius of the explosion
+        const explosionRadius = 100; // Define the radius of the explosion
     
         // Draw the explosion area as a red circle with low opacity
         ctx.fillStyle = 'rgba(255, 255, 0, 0.5)'; // Red color with 30% opacity

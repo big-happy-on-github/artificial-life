@@ -878,7 +878,7 @@ function showTempTower(selectedTower) {
 // Event listener handler to avoid repetition
 function handleTowerSelection(event) {
     const selectedTowerType = event.target.value;
-    if (selectedTowertype != "0") {
+    if (selectedTowerType != "0") {
         checkMultipleSelections(event.target);
         showTempTower(selectedTowerType);
     }

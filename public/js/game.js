@@ -841,14 +841,16 @@ function update(deltaTime) {
     }
 }
 
-function resetOtherDropdowns() {
+function resetOtherDropdowns(excludeId) {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
     dropdownIds.forEach(id => {
-        document.getElementById(id).selectedIndex = 0;
+        if (id !== excludeId) { // Exclude the currently changed dropdown
+            document.getElementById(id).selectedIndex = 0;
+        }
     });
 }
 
-function checkMultipleSelections(selected) {
+function checkMultipleSelections(currentDropdown) {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
     let selectedCount = 0;
 
@@ -860,44 +862,31 @@ function checkMultipleSelections(selected) {
     });
 
     if (selectedCount > 1) {
-        resetOtherDropdowns(); // Reset all dropdowns
-        selected.target.selected = true;
-        selectedTowerType = selected.target.value;
+        resetOtherDropdowns(currentDropdown.id); // Reset all other dropdowns except the current one
     }
 }
 
 function showTempTower(selectedTower) {
     const tempTower = new Tower(-99999, -99999, selectedTower);
-    if (selectedTower != tempTower.type) {
-        showTowerStats(selectedTowerType, false);
+    if (selectedTower !== tempTower.type) {
+        showTowerStats(selectedTower, false);
     } else {
         showTowerStats(tempTower, false);
     }
 }
 
-document.getElementById('general-towers').addEventListener('change', (event) => {
-    selectedTowerType = event.target.value;
-    checkMultipleSelections(event);
+// Event listener handler to avoid repetition
+function handleTowerSelection(event) {
+    const selectedTowerType = event.target.value;
+    checkMultipleSelections(event.target);
     showTempTower(selectedTowerType);
-});
+}
 
-document.getElementById('close-range-towers').addEventListener('change', (event) => {
-    selectedTowerType = event.target.value;
-    checkMultipleSelections(event);
-    showTempTower(selectedTowerType);
-});
-
-document.getElementById('far-range-towers').addEventListener('change', (event) => {
-    selectedTowerType = event.target.value;
-    checkMultipleSelections(event);
-    showTempTower(selectedTowerType);
-});
-
-document.getElementById('special-towers').addEventListener('change', (event) => {
-    selectedTowerType = event.target.value;
-    checkMultipleSelections(event);
-    showTempTower(selectedTowerType);
-});
+// Add event listeners
+document.getElementById('general-towers').addEventListener('change', handleTowerSelection);
+document.getElementById('close-range-towers').addEventListener('change', handleTowerSelection);
+document.getElementById('far-range-towers').addEventListener('change', handleTowerSelection);
+document.getElementById('special-towers').addEventListener('change', handleTowerSelection);
 
 // Handle start wave button click
 startWaveButton.addEventListener('click', () => {

@@ -371,12 +371,12 @@ class Tower {
             this.price = 3;
             this.desc = "super fast, minigun-like shots";
         } else if (type == '6') {//lars
-            this.health = 40;
-            this.range = 0;
-            this.fireRate = 0;
-            this.damage = 0;
-            this.price = 7;
-            this.desc = "a meat shield, cannot shoot";
+            this.health = 12;
+            this.range = 200;
+            this.fireRate = 1;
+            this.damage = 2.5;
+            this.price = 6;
+            this.desc = "shoots explosive bullets";
         } else if (type == '9') {//walker
             this.health = 50;
             this.range = 1/0;

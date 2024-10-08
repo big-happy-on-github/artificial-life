@@ -80,13 +80,13 @@ function showTowerStats(tower, showButtons=true) {
     } else if (tower.type == '5') {
         towerType = 'philip';
     } else if (tower.type == '6') {
-        towerType = 'larse';
+        towerType = 'lars';
     } else if (tower.type == '7') {
         towerType = 'mitch';
     } else if (tower.type == '8') {
         towerType = 'nick';
     } else if (tower.type == '9') {
-        towerType = 'waker';
+        towerType = 'walker';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -368,7 +368,7 @@ class Tower {
             this.damage = 0.3;
             this.price = 3;
             this.desc = "super fast, minigun-like shots";
-        } else if (type == '8') {//larse
+        } else if (type == '8') {//lars
             this.health = 40;
             this.range = 0;
             this.fireRate = 0;

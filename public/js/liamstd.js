@@ -384,6 +384,13 @@ class Tower {
             this.damage = 1/0;
             this.price = 80;
             this.desc = "every 5 waves, insta-kills everything";
+        } else if (type == '10') {//declan
+            this.health = 15;
+            this.range = 150;
+            this.fireRate = 1;
+            this.damage = 0;
+            this.price = 10;
+            this.desc = "freezes enemies nearby";
         }
 
         this.lastFired = 0;
@@ -427,32 +434,17 @@ class Tower {
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
 
-        if (this.type != "9") {
+        if (this.type == "10") { // Nick freezes enemies instead of shooting
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
-                this.shoot();
-                this.lastFired = Date.now();
-            }
-    
-            if (!this.target || this.target.health <= 0) {
                 const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
-                if (enemiesInRange.length > 0) {
-                    this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
-                        return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
-                            ? currentEnemy
-                            : farthestEnemy;
-                    });
-                    console.log("New target acquired:", this.target); // Debug log
-                }
-            }
-    
-    
-            // Attack the target if it's time to fire
-            if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
-                this.shoot();
+                enemiesInRange.forEach(enemy => {
+                    if (!enemy.isFrozen) {
+                        this.freezeEnemy(enemy);
+                    }
+                });
                 this.lastFired = Date.now();
             }
-        } else {
-            if (this.lastFired + wave % 5 == 0) {
+        } else if (this.type == "9" && this.lastFired + wave % 5 == 0) {
                 setTimeout(() => {
                     enemies.forEach(enemy => {
                         enemy.takeDamage(enemy.health);
@@ -460,10 +452,33 @@ class Tower {
                     console.log("walker smash");
                 }, 200);
                 this.lastFired = wave;
+        } else {
+            if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+                this.shoot();
+                this.lastFired = Date.now();
+            }
+        }
+
+        if (!this.target || this.target.health <= 0) {
+            const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
+            if (enemiesInRange.length > 0) {
+                this.target = enemiesInRange.reduce((farthestEnemy, currentEnemy) => {
+                    return currentEnemy.getPathProgress() > farthestEnemy.getPathProgress()
+                        ? currentEnemy
+                        : farthestEnemy;
+                });
+                console.log("New target acquired:", this.target); // Debug log
             }
         }
 
         this.draw();
+    }
+
+    freezeEnemy(enemy) {
+        enemy.isFrozen = true;
+        enemy.freezeEndTime = Date.now() + 1000; // Freeze for 1 second
+        enemy.speedBackup = enemy.speed; // Backup the original speed
+        enemy.speed = 0; // Stop the enemy
     }
 
     isInRange(enemy) {
@@ -559,6 +574,39 @@ class Enemy {
     }
 
     update() {
+        if (this.isFrozen && Date.now() > this.freezeEndTime) {
+            this.isFrozen = false;
+            this.speed = this.speedBackup; // Restore original speed
+        }
+
+        // If the enemy is frozen, draw blue overlay
+        if (this.isFrozen) {
+            ctx.fillStyle = 'rgba(0, 0, 255, 0.5)'; // Blue overlay with low opacity
+            ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
+        } else {
+            this.draw();
+        }
+
+        // Movement and path logic
+        if (!this.isFrozen && this.currentPathIndex < path.length) {
+            const target = path[this.currentPathIndex];
+            const dx = target.x - this.x;
+            const dy = target.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            const moveX = (dx / distance) * this.speed;
+            const moveY = (dy / distance) * this.speed;
+
+            if (distance < this.speed) {
+                this.x = target.x;
+                this.y = target.y;
+                this.currentPathIndex++;
+            } else {
+                this.x += moveX;
+                this.y += moveY;
+            }
+        }
+        
         if (this.currentPathIndex < path.length) {
             const target = path[this.currentPathIndex];
             const dx = target.x - this.x;

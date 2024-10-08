@@ -881,6 +881,8 @@ function handleTowerSelection(event) {
     if (selectedTowerType != "0") {
         checkMultipleSelections(event.target);
         showTempTower(selectedTowerType);
+    } else {
+        hideTowerStats();
     }
 }
 

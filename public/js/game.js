@@ -848,7 +848,7 @@ function resetOtherDropdowns() {
     });
 }
 
-function checkMultipleSelections(selectedType) {
+function checkMultipleSelections(selected) {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];
     let selectedCount = 0;
 
@@ -861,7 +861,8 @@ function checkMultipleSelections(selectedType) {
 
     if (selectedCount > 1) {
         resetOtherDropdowns(); // Reset all dropdowns
-        selectedTowerType = selectedType;
+        selected.selected = true;
+        selectedTowerType = selected.value;
     }
 }
 
@@ -876,25 +877,25 @@ function showTempTower(selectedTower) {
 
 document.getElementById('general-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(selectedTowerType);
+    checkMultipleSelections(event.target);
     showTempTower(selectedTowerType);
 });
 
 document.getElementById('close-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(selectedTowerType);
+    checkMultipleSelections(event.target);
     showTempTower(selectedTowerType);
 });
 
 document.getElementById('far-range-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(selectedTowerType);
+    checkMultipleSelections(event.target);
     showTempTower(selectedTowerType);
 });
 
 document.getElementById('special-towers').addEventListener('change', (event) => {
     selectedTowerType = event.target.value;
-    checkMultipleSelections(selectedTowerType);
+    checkMultipleSelections(event.target);
     showTempTower(selectedTowerType);
 });
 

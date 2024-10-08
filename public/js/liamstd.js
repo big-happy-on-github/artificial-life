@@ -452,13 +452,14 @@ class Tower {
                 this.lastFired = Date.now();
             }
         } else {
-            if (wave % 5 == 0) {
+            if (this.lastFired + wave % 5 == 0) {
                 setTimeout(() => {
                     enemies.forEach(enemy => {
                         enemy.takeDamage(enemy.health);
                     });
                     console.log("walker smash");
                 }, 200);
+                this.lastFired = wave;
             }
         }
 
@@ -844,6 +845,10 @@ canvas.addEventListener('click', (event) => {
             towers.push(tower);
             currency -= tower.price;
             updateHUD();
+            
+            if (tower.type == "9") {
+                tower.lastFired = wave;
+            }
         } else {
             console.log('Not enough currency to place the tower.');
         }
@@ -990,7 +995,7 @@ function nextWave() {
             currency += tower.damage;
             console.log("added money");
         } else if (tower.type == "9") {
-            if ((wave - 1) % 5 == 0) {
+            if (((tower.lastFired + wave) - 1) % 5 == 0) {
                 alert("last wave was a walker smash!");
             }
         }

@@ -416,7 +416,11 @@ class Tower {
         if (!this.target || this.target.health <= 0) return; // No target to shoot at
     
         const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+        if (this.type == "6") {
+            projectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'tower', 'explosive'));
+        } else {
+            projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+        }
         console.log("Fired at target:", this.target); // Debug log
     }
 
@@ -706,33 +710,52 @@ class Projectile {
         this.speed = 15;
         this.angle = angle;
         this.damage = damage;
-        this.type = type; // Type to distinguish between tower and enemy projectiles
+        this.type = type;
         this.specificType = specificType;
     }
 
     draw() {
-        ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Different color for enemy projectiles
+        if (this.specificType === 'explosive') {
+            ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
+        } else {
+            ctx.fillStyle = this.type === 'tower' ? 'yellow' : 'blue'; // Normal projectile colors
+        }
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
         ctx.fill();
+    }
+
+    explode() {
+        const explosionRadius = 50; // Define the radius of the explosion
+        enemies.forEach(enemy => {
+            const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+            if (distance < explosionRadius) {
+                // Apply half the damage to enemies within the explosion radius
+                enemy.takeDamage(this.damage / 2);
+                console.log("Explosion hit enemy:", enemy);
+            }
+        });
     }
 
     update() {
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
         this.draw();
-    
+
         const buffer = 5; // Add a buffer for collision detection
-    
-        if (this.type == 'tower') {
+
+        if (this.type === 'tower') {
             enemies.forEach(enemy => {
                 const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
+                    if (this.specificType === 'explosive') {
+                        this.explode(); // Trigger explosion on impact
+                    }
                     this.destroy();
                 }
             });
-        } else if (this.type == 'enemy') {
+        } else if (this.type === 'enemy') {
             towers.forEach(tower => {
                 const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
@@ -744,7 +767,7 @@ class Projectile {
     }
 
     destroy() {
-        const array = this.type == 'tower' ? projectiles : enemyProjectiles;
+        const array = this.type === 'tower' ? projectiles : enemyProjectiles;
         const index = array.indexOf(this);
         if (index > -1) {
             array.splice(index, 1);

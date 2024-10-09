@@ -63,7 +63,8 @@ const upgrade = {
         'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
         'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
         'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
-    }
+    },
+    '10': {}
 };
 
 // Function to show the tower stats pop-up
@@ -103,13 +104,15 @@ function showTowerStats(tower, showButtons=true) {
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
 
-    if (tower.type == "9") {
-        towerDamageDisplay.textContent = `~${tower.damage} dmg/${tower.fireRate}`;
-
+    if (!upgrade[tower.type]['lvl2']) {
         upgrade1Button.textContent = "cannot upgrade";
         upgrade2Button.textContent = "";
         upgrade1Button.disabled = true;
         upgrade2Button.disabled = true;
+    }
+
+    if (tower.type == "9") {
+        towerDamageDisplay.textContent = `~${tower.damage} dmg/${tower.fireRate}`;
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
         if (tower.type == "4") {
@@ -585,7 +588,7 @@ class Enemy {
 
         // If the enemy is frozen, draw blue overlay
         if (this.isFrozen) {
-            ctx.fillStyle = 'rgba(0, 0, 255, 0.5)'; // Blue overlay with low opacity
+            ctx.fillStyle = 'rgba(0, 0, 255, 1)'; // Blue overlay with low opacity
             ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
         } else {
             this.draw();

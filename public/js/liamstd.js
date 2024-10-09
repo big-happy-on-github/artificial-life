@@ -406,7 +406,7 @@ class Tower {
         } else if (type == '11') {//cole
             this.health = 1/0;
             this.range = 1/0;
-            this.fireRate = 0.01;
+            this.fireRate = 0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000001;
             this.damage = 1/0;
             this.price = 1/0;
             this.desc = "can only be placed by hacking";

@@ -1044,7 +1044,7 @@ function nextWave() {
     }
 
     towers.forEach(tower => {
-        const hasSecondUpgrade = upgrade[tower.type][`lvl${tower.level + 1}`]['2'];
+        const hasSecondUpgrade = upgrade[tower.type][`lvl${tower.level + 1}`]['2'] !== undefined;
         let smashWave;
         if (tower.type == "4") {
             currency += tower.damage;

@@ -108,11 +108,11 @@ main p {
 }
 
 main button {
-    padding: 10px 20px;
-    background-color: #009688;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #fff;
+    background-color: #444;
     color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s;

@@ -443,7 +443,7 @@ class Tower {
     }
 
     shoot() {
-        if (!this.target || this.target.health <= 0) return; // No target to shoot at
+        if (!this.target || this.target.health <= 0) return; // Ensure there's a target
     
         const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         if (this.type == "6" || this.type == "11") {
@@ -1151,20 +1151,21 @@ async function getLeaderboard() {
 window.getLeaderboard = getLeaderboard; // Expose getData to the global scope
 window.addDataToLeaderboard = addDataToLeaderboard;
 
-function nextWave() {
+async function nextWave() {
     wave++;
     
-    const response = fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    const ipInfo = response.json();
+    const ipInfo = await response.json();
     
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         console.log(ipInfo); // Logs the IP information
         let isIn = false;
-        getLeaderboard().forEach(score => {
-            if (score.ip.ip == ipInfo.ip) {
+        const leaderboard = await getLeaderboard();
+        leaderboard.forEach(score => {
+            if (score.ip.ip === ipInfo.ip) { 
                 localStorage.setItem("topScore", JSON.stringify(score.wave));
                 removeDataFromLeaderboard(ipInfo);
                 isIn = true;
@@ -1249,7 +1250,7 @@ function gameLoop(timestamp) {
     requestAnimationFrame(gameLoop);
 }
 
-if (!localStorage.getItem("topScore")) {
+if (typeof localStorage !== 'undefined' && !localStorage.getItem("topScore")) {
     localStorage.setItem("topScore", JSON.stringify(1));
 }
 

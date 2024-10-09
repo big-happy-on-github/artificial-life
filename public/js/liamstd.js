@@ -114,7 +114,8 @@ function showTowerStats(tower, showButtons=true) {
     if (tower.type == "9") {
         towerDamageDisplay.textContent = `~${tower.damage} dmg/${tower.fireRate}`;
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-        const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
+        const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
+        const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
         if (tower.type == "4") {
             towerDamageDisplay.textContent = `0 dps`;
             tower.desc = `+$${tower.damage} after each wave`;
@@ -134,7 +135,8 @@ function showTowerStats(tower, showButtons=true) {
         upgrade2Button.textContent = "";
     
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
-            const hasSecondUpgrade = towerUpgrades[nextLevelKey]['2'];
+            const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
+            const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
             if (!tower.type == "4") {
                 towerDamageDisplay.textContent = `0dps`;
                 tower.desc = `+$${tower.damage} after each wave`;
@@ -1044,7 +1046,8 @@ function nextWave() {
     }
 
     towers.forEach(tower => {
-        const hasSecondUpgrade = upgrade[tower.type][`lvl${tower.level + 1}`]['2'] !== undefined;
+        const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
+        const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
         let smashWave;
         if (tower.type == "4") {
             currency += tower.damage;

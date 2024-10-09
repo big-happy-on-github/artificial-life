@@ -1068,38 +1068,25 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Function to add data to Supabase
 async function addDataToLeaderboard(setWave=false) {
     try {
-            // Fetch IP information
-            const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const ipInfo = await response.json();
-            console.log(ipInfo); // Logs the IP information
-            
-            // Add data to Supabase
-            if (setWave != false) {
-                const { data, error } = await supabase
-                    .from('LiamsTD leaderboard') // Assuming 'feedback' is the name of your table
-                    .insert([
-                        { ip: ipInfo, wave: setWave }
-                    ]);
-                
-                if (error) {
-                    throw error;
-                }
-            } else {
-                const { data, error } = await supabase
-                    .from('LiamsTD leaderboard') // Assuming 'feedback' is the name of your table
-                    .insert([
-                        { ip: ipInfo, wave: wave }
-                    ]);
-                
-                if (error) {
-                    throw error;
-                }
-            }
+        // Fetch IP information
+        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const ipInfo = await response.json();
+        console.log(ipInfo); // Logs the IP information
+        
+        if (setWave !== false) {
+            const { data, error } = await supabase
+                .from('LiamsTD leaderboard')
+                .insert([{ ip: ipInfo.ip, wave: setWave }]);
+        } else {
+            const { data, error } = await supabase
+                .from('LiamsTD leaderboard')
+                .insert([{ ip: ipInfo.ip, wave: wave }]);
+        }
     } catch (error) {
-            console.error('Error:', error);
+        console.error('Error:', error);
     }
 }
 

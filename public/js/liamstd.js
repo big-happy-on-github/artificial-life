@@ -1093,13 +1093,12 @@ async function addDataToLeaderboard(setWave=false) {
 async function removeDataFromLeaderboard(ipInfo) {
     try {
         // Extract the IP address from ipInfo object
-        const { ip } = ipInfo.ip;
 
         // Remove data from Supabase based on the extracted IP address
         const { data, error } = await supabase
             .from('LiamsTD leaderboard') // Assuming this is the name of your table
             .delete()
-            .eq('ip', encodeURIComponent(ip)); // Use the IP address, not the whole object
+            .eq('ip', encodeURIComponent(ipInfo.ip)); // Use the IP address, not the whole object
 
         if (error) {
             throw error;
@@ -1147,9 +1146,7 @@ async function nextWave() {
     const leaderboard = await getLeaderboard();
     
     for (const score of leaderboard) {
-        const cleanIpInfo = ipInfo.ip.trim();
-        const cleanScoreIp = score.ip.ip.trim();
-        if (cleanScoreIp === cleanIpInfo) {
+        if (score === encodeURIComponent(ipInfo.ip)) {
             localStorage.setItem("topScore", JSON.stringify(score.wave));
             await removeDataFromLeaderboard(ipInfo);
             isIn = true;

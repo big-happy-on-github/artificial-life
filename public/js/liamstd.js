@@ -64,7 +64,8 @@ const upgrade = {
         'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
         'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
     },
-    '10': {}
+    '10': {},
+    '11': {}
 };
 
 // Function to show the tower stats pop-up
@@ -90,6 +91,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'walker';
     } else if (tower.type == '10') {
         towerType = 'declan';
+    } else if (tower.type == '11') {
+        towerType = 'cole';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -400,6 +403,13 @@ class Tower {
             this.damage = 0;
             this.price = 7;
             this.desc = "freezes enemies nearby";
+        } else if (type == '11') {//cole
+            this.health = 1/0;
+            this.range = 1/0;
+            this.fireRate = 0.01;
+            this.damage = 1/0;
+            this.price = 1/0;
+            this.desc = "can only be placed by hacking";
         }
 
         this.lastFired = 0;
@@ -426,6 +436,8 @@ class Tower {
             ctx.fillStyle = 'brown';
         } else if (this.type == '10') {
             ctx.fillStyle = '#fcba03';
+        } else if (this.type == '11') {
+            ctx.fillStyle = '#fff';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }

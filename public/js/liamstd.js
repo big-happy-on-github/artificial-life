@@ -193,17 +193,19 @@ upgrade1Button.addEventListener('click', (event) => {
             if (currency >= upgradeInfo.cost) {
                 currency -= upgradeInfo.cost;
                 console.log("Upgraded");
-
+            
                 // Perform the upgrade
                 showing.level++;
                 showing.health += upgradeInfo.health;
                 showing.range += upgradeInfo.range;
                 showing.damage += upgradeInfo.damage;
                 showing.fireRate += upgradeInfo.fireRate;
-
+            
+                // Reset lastFired to prevent delays
+                showing.lastFired = Date.now();
+            
                 // Update the tower stats pop-up
                 showTowerStats(showing);
-
                 updateHUD();
                 upgradePressed = false; // Reset the confirmation flag
             } else {

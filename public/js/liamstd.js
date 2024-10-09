@@ -446,7 +446,7 @@ class Tower {
         if (!this.target || this.target.health <= 0) return; // No target to shoot at
     
         const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-        if (this.type == "6") {
+        if (this.type == "6" || this.type == "11") {
             projectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'tower', 'explosive'));
         } else {
             projectiles.push(new Projectile(this.x, this.y, angle, this.damage));

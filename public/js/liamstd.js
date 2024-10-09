@@ -1079,11 +1079,11 @@ async function addDataToLeaderboard(setWave=false) {
         if (setWave !== false) {
             const { data, error } = await supabase
                 .from('LiamsTD leaderboard')
-                .insert([{ ip: ipInfo.ip, wave: setWave }]);
+                .insert([{ ip: encodeURIComponent(ipInfo.ip), wave: setWave }]);
         } else {
             const { data, error } = await supabase
                 .from('LiamsTD leaderboard')
-                .insert([{ ip: ipInfo.ip, wave: wave }]);
+                .insert([{ ip: encodeURIComponent(ipInfo.ip), wave: wave }]);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -1093,13 +1093,13 @@ async function addDataToLeaderboard(setWave=false) {
 async function removeDataFromLeaderboard(ipInfo) {
     try {
         // Extract the IP address from ipInfo object
-        const { ip } = ipInfo;
+        const { ip } = ipInfo.ip;
 
         // Remove data from Supabase based on the extracted IP address
         const { data, error } = await supabase
             .from('LiamsTD leaderboard') // Assuming this is the name of your table
             .delete()
-            .eq('ip', ip); // Use the IP address, not the whole object
+            .eq('ip', encodeURIComponent(ip)); // Use the IP address, not the whole object
 
         if (error) {
             throw error;

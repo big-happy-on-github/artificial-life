@@ -1107,13 +1107,13 @@ async function addDataToLeaderboard(setWave=false) {
     }
 }
 
-async function removeDataFromLeaderboard(ip) {
+async function removeDataFromLeaderboard(ipInfo) {
     try {
         // Remove data from Supabase based on the provided IP
         const { data, error } = await supabase
             .from('LiamsTD leaderboard') // Assuming this is the name of your table
             .delete() // The delete method removes rows
-            .eq('ip', ip); // Use the unique identifier or condition to filter the rows
+            .eq(ipInfo, ip); // Use the unique identifier or condition to filter the rows
 
         if (error) {
             throw error;

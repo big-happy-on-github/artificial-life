@@ -1157,7 +1157,9 @@ async function nextWave() {
     const leaderboard = await getLeaderboard();
     
     for (const score of leaderboard) {
-        if (score.ip.ip === ipInfo.ip) {
+        const cleanIpInfo = ipInfo.ip.trim();
+        const cleanScoreIp = score.ip.ip.trim();
+        if (cleanScoreIp === cleanIpInfo) {
             localStorage.setItem("topScore", JSON.stringify(score.wave));
             await removeDataFromLeaderboard(ipInfo);
             isIn = true;

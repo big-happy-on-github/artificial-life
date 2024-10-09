@@ -1165,7 +1165,7 @@ async function nextWave() {
         await addDataToLeaderboard();
     }
 
-    if (wave > JSON.parse(localStorage.getItem("topScore")) {
+    if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", wave);
     }
     

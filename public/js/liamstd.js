@@ -508,8 +508,16 @@ class Tower {
         const index = towers.indexOf(this);
         if (index > -1) {
             towers.splice(index, 1);
+    
+            // Free the square previously occupied by this tower
+            const gridX = Math.floor(this.x / gridSize);
+            const gridY = Math.floor(this.y / gridSize);
+            const squareKey = `${gridX},${gridY}`;
+            occupiedSquares.delete(squareKey); // Mark the square as available
+            console.log(`Square [${squareKey}] is now available.`);
         }
     }
+
 }
 
 class Enemy {

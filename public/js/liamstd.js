@@ -451,7 +451,6 @@ class Tower {
         } else {
             projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
         }
-        console.log("Fired at target:", this.target); // Debug log
     }
 
     update(deltaTime) {
@@ -490,7 +489,6 @@ class Tower {
                         ? currentEnemy
                         : farthestEnemy;
                 });
-                console.log("New target acquired:", this.target); // Debug log
             }
         }
 
@@ -1100,8 +1098,6 @@ async function addDataToLeaderboard(setWave=false) {
                     throw error;
                 }
             }
-            
-            console.log('Data inserted:', data);
     } catch (error) {
             console.error('Error:', error);
     }
@@ -1118,8 +1114,6 @@ async function removeDataFromLeaderboard(ipInfo) {
         if (error) {
             throw error;
         }
-
-        console.log('Data deleted:', data);
     } catch (error) {
         console.error('Error:', error);
     }

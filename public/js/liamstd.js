@@ -1147,29 +1147,28 @@ window.addDataToLeaderboard = addDataToLeaderboard;
 
 async function nextWave() {
     wave++;
-    
     const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
     const ipInfo = await response.json();
     
-    if (wave > JSON.parse(localStorage.getItem("topScore"))) {
-        console.log(ipInfo); // Logs the IP information
-        let isIn = false;
-        const leaderboard = await getLeaderboard();
-        leaderboard.forEach(score => {
-            if (score.ip.ip === ipInfo.ip) { 
-                localStorage.setItem("topScore", JSON.stringify(score.wave));
-                removeDataFromLeaderboard(ipInfo);
-                isIn = true;
-            }
-        });
-        if (!isIn) {
-            addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
-        } else {
-            addDataToLeaderboard();
+    let isIn = false;
+    const leaderboard = await getLeaderboard();
+    
+    for (const score of leaderboard) {
+        if (score.ip.ip === ipInfo.ip) {
+            localStorage.setItem("topScore", JSON.stringify(score.wave));
+            await removeDataFromLeaderboard(ipInfo);
+            isIn = true;
+            break;
         }
+    }
+    
+    if (!isIn) {
+        await addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
+    } else {
+        await addDataToLeaderboard();
     }
     
     towers.forEach(tower => {

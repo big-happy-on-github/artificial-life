@@ -1146,9 +1146,14 @@ async function nextWave() {
     const leaderboard = await getLeaderboard();
     
     for (const score of leaderboard) {
-        if (score === encodeURIComponent(ipInfo.ip)) {
+        // Compare the IP from the score object to the encoded IP string
+        if (score.ip === encodeURIComponent(ipInfo.ip)) {
+            // Store the top score in local storage
             localStorage.setItem("topScore", JSON.stringify(score.wave));
+            
+            // Remove the data from the leaderboard
             await removeDataFromLeaderboard(ipInfo);
+            
             isIn = true;
             break;
         }
@@ -1158,6 +1163,10 @@ async function nextWave() {
         await addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
     } else {
         await addDataToLeaderboard();
+    }
+
+    if (wave > JSON.parse(localStorage.getItem("topScore")) {
+        localStorage.setItem("topScore", wave);
     }
     
     towers.forEach(tower => {

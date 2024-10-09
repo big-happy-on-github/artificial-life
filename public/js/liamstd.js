@@ -1059,12 +1059,104 @@ function updateHUD() {
         showTowerStats(showing);
     }
 }
+// Import the Supabase client
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// Supabase configuration
+const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with your Supabase project URL
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgxNjE2MzIsImV4cCI6MjA0MzczNzYzMn0.ot3Wtv5RL8bBYOu0YRRZZotPJXBQ5a6c9kSFSmihgCI'; // Replace with your Supabase API key
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Function to add data to Supabase
+async function addDataToLeaderboard() {
+    try {
+            // Fetch IP information
+            const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const ipInfo = await response.json();
+            console.log(ipInfo); // Logs the IP information
+            
+            // Add data to Supabase
+            const { data, error } = await supabase
+                .from('LiamsTD leaderboard') // Assuming 'feedback' is the name of your table
+                .insert([
+                    { ip: ipInfo, wave: wave }
+                ]);
+            
+            if (error) {
+                throw error;
+            }
+            
+            console.log('Data inserted:', data);
+    } catch (error) {
+            console.error('Error:', error);
+    }
+}
+
+async function removeDataFromLeaderboard(ip) {
+    try {
+        // Remove data from Supabase based on the provided IP
+        const { data, error } = await supabase
+            .from('LiamsTD leaderboard') // Assuming this is the name of your table
+            .delete() // The delete method removes rows
+            .eq('ip', ip); // Use the unique identifier or condition to filter the rows
+
+        if (error) {
+            throw error;
+        }
+
+        console.log('Data deleted:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Function to get data from Supabase
+async function getLeaderboard() {
+    try {
+        const { data, error } = await supabase
+            .from('LiamsTD leaderboard')
+            .select('*');
+        
+        if (error) {
+            throw error;
+        }
+
+        let scoreList = [];
+        data.forEach((score) => {
+            console.log(score);
+            scoreList.push(score);
+        });
+        return scoreList;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+// Example usage
+window.getLeaderboard = getLeaderboard; // Expose getData to the global scope
+window.addDataToLeaderboard = addLeaderboard;
 
 function nextWave() {
     wave++;
     
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", JSON.stringify(wave));
+        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const ipInfo = await response.json();
+        console.log(ipInfo); // Logs the IP information
+        getLeaderboard().forEach(score => {
+            if (score.ip.ip == ipInfo.ip) {
+                localStorage.setItem("topScore", JSON.stringify(score.wave));
+                removeDataFromLeaderboard(ipInfo);
+            }
+        });
+        addDataToLeaderboard();
     }
 
     towers.forEach(tower => {

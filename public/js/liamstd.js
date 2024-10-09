@@ -55,9 +55,9 @@ const upgrade = {
     },
     '7': {},
     '8': {
-        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
-        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
-        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
+        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: 0, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: 0, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: 0, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: 0, cost: 30 } }
     },
     '9': {
         'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: -0.15, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },

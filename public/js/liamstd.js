@@ -1154,11 +1154,11 @@ window.addDataToLeaderboard = addLeaderboard;
 function nextWave() {
     wave++;
     
-    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+    const response = fetch('https://ipinfo.io/json?token=ca3a9249251d12');
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    const ipInfo = await response.json();
+    const ipInfo = response.json();
     
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         console.log(ipInfo); // Logs the IP information

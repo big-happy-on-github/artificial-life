@@ -1149,7 +1149,7 @@ async function getLeaderboard() {
 
 // Example usage
 window.getLeaderboard = getLeaderboard; // Expose getData to the global scope
-window.addDataToLeaderboard = addLeaderboard;
+window.addDataToLeaderboard = addDataToLeaderboard;
 
 function nextWave() {
     wave++;

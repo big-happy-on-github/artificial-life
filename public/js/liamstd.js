@@ -1068,7 +1068,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Function to add data to Supabase
-async function addDataToLeaderboard() {
+async function addDataToLeaderboard(setWave=false) {
     try {
             // Fetch IP information
             const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
@@ -1079,14 +1079,26 @@ async function addDataToLeaderboard() {
             console.log(ipInfo); // Logs the IP information
             
             // Add data to Supabase
-            const { data, error } = await supabase
-                .from('LiamsTD leaderboard') // Assuming 'feedback' is the name of your table
-                .insert([
-                    { ip: ipInfo, wave: wave }
-                ]);
-            
-            if (error) {
-                throw error;
+            if (setWave != false) {
+                const { data, error } = await supabase
+                    .from('LiamsTD leaderboard') // Assuming 'feedback' is the name of your table
+                    .insert([
+                        { ip: ipInfo, wave: setWave }
+                    ]);
+                
+                if (error) {
+                    throw error;
+                }
+            } else {
+                const { data, error } = await supabase
+                    .from('LiamsTD leaderboard') // Assuming 'feedback' is the name of your table
+                    .insert([
+                        { ip: ipInfo, wave: wave }
+                    ]);
+                
+                if (error) {
+                    throw error;
+                }
             }
             
             console.log('Data inserted:', data);
@@ -1142,23 +1154,29 @@ window.addDataToLeaderboard = addLeaderboard;
 function nextWave() {
     wave++;
     
+    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const ipInfo = await response.json();
+    
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
-        localStorage.setItem("topScore", JSON.stringify(wave));
-        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const ipInfo = await response.json();
         console.log(ipInfo); // Logs the IP information
+        let isIn = false;
         getLeaderboard().forEach(score => {
             if (score.ip.ip == ipInfo.ip) {
                 localStorage.setItem("topScore", JSON.stringify(score.wave));
                 removeDataFromLeaderboard(ipInfo);
+                isIn = true;
             }
         });
-        addDataToLeaderboard();
+        if (!isIn) {
+            addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
+        } else {
+            addDataToLeaderboard();
+        }
     }
-
+    
     towers.forEach(tower => {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;

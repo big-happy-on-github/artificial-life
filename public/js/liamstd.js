@@ -87,6 +87,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'nick';
     } else if (tower.type == '9') {
         towerType = 'walker';
+    } else if (tower.type == '10') {
+        towerType = 'declan';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -389,7 +391,7 @@ class Tower {
             this.range = 150;
             this.fireRate = 1;
             this.damage = 0;
-            this.price = 10;
+            this.price = 7;
             this.desc = "freezes enemies nearby";
         }
 
@@ -415,6 +417,8 @@ class Tower {
             ctx.fillStyle = 'cyan';
         } else if (this.type == '9') {
             ctx.fillStyle = 'brown';
+        } else if (this.type == '10') {
+            ctx.fillStyle = '#fcba03';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }

@@ -33,6 +33,12 @@ header h1 {
     font-size: 24px;
 }
 
+/* Style for the <a> tag around the <h1> */
+header a {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Inherit text color from the parent */
+}
+
 header input {
     padding: 5px;
     border: 1px solid #fff;

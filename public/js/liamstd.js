@@ -1067,25 +1067,26 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Function to add data to Supabase
-async function addDataToLeaderboard(setWave=false) {
+async function addDataToLeaderboard(setWave = false) {
     try {
         // Fetch IP information
         const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const ipInfo = await response.json();
+        const ipInfo = await response.json(); // Only call this once
         console.log(ipInfo); // Logs the IP information
         
+        const ipData = encodeURIComponent(JSON.stringify(ipInfo.ip)); // Use only the IP field
+
         if (setWave !== false) {
             const { data, error } = await supabase
                 .from('LiamsTD leaderboard')
-                .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo)), wave: setWave }]);
+                .insert([{ ip: ipData, wave: setWave }]);
         } else {
-            const ipInfo = await response.json();
             const { data, error } = await supabase
               .from('LiamsTD leaderboard')
-              .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo.ip)), wave: wave }]);
+              .insert([{ ip: ipData, wave: wave }]); // Reuse the ipData
         }
     } catch (error) {
         console.error('Error:', error);

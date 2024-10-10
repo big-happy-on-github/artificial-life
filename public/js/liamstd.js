@@ -1088,14 +1088,15 @@ function updateHUD() {
     if (showing) {
         showTowerStats(showing);
     }
-    fetchLeaderboard();
+    getLeaderboard();
 }
 // Import the Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgxNjE2MzIsImV4cCI6MjA0MzczNzYzMn0.ot3Wtv5RL8bBYOu0YRRZZotPJXBQ5a6c9kSFSmihgCI';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+// Supabase configuration
+const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with your Supabase project URL
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgxNjE2MzIsImV4cCI6MjA0MzczNzYzMn0.ot3Wtv5RL8bBYOu0YRRZZotPJXBQ5a6c9kSFSmihgCI'; // Replace with your Supabase API key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function addDataToLeaderboard(setWave = false) {
     try {
@@ -1169,32 +1170,78 @@ async function removeDataFromLeaderboard(ipInfo) {
     }
 }
 
-async function fetchLeaderboard() {
-    const { data, error } = await supabase
-        .from('leaderboard')
-        .select('*')
-        .order('score', { ascending: false })
-        .limit(10); // Limit to top 10 players
+// Function to get data from Supabase
+async function getLeaderboard() {
+    try {
+        const { data, error } = await supabase
+            .from('LiamsTD leaderboard')
+            .select('*');
+        
+        if (error) {
+            throw error;
+        }
 
-    if (error) {
-        console.error('Error fetching leaderboard:', error);
-    } else {
-        const leaderboardElement = document.getElementById('leaderboard');
-        leaderboardElement.innerHTML = ''; // Clear current leaderboard
-
-        data.forEach((entry) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${entry.player_name}: ${entry.score}`;
-            leaderboardElement.appendChild(listItem);
+        let scoreList = [];
+        data.forEach((score) => {
+            scoreList.push(score);
         });
+
+        
+        let officialScores = [];
+        scoreList.forEach(score => {
+            const waveNum = score.wave;
+            
+            if (officialScores.length > 0) {
+                let inserted = false;
+        
+                // Insert the score into the correct position in descending order
+                for (let i = 0; i < officialScores.length; i++) {
+                    if (waveNum > officialScores[i].wave) { // Higher waveNum means higher score
+                        officialScores.splice(i, 0, score); // Insert at the correct position
+                        inserted = true;
+                        break;
+                    }
+                }
+        
+                // If the score is the lowest, push it to the end of the list
+                if (!inserted) {
+                    officialScores.push(score);
+                }
+            } else {
+                officialScores.push(score); // Add the first score
+            }
+        });
+
+        let scoreIndex = 0; // Start at 0
+
+        while (leaderboard.firstChild) { 
+            leaderboard.removeChild(leaderboard.firstChild); 
+        }
+        officialScores.forEach(score => {
+            if (scoreIndex < 12) {  // Limit to the top 12 scores
+                const li = document.createElement('li');
+        
+                // If the IP is encoded, decode it before appending
+                const decodedIP = decodeURIComponent(score.ip);
+                
+                // Append the wave and IP properly
+                li.textContent = `wave ${score.wave} by ip ${decodedIP}`;
+                
+                // Append the new <li> element to the leaderboard
+                leaderboard.appendChild(li);
+                
+                scoreIndex++;
+            }
+        });
+
+        return scoreList;
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 }
 
-// Call the function to populate the leaderboard
-fetchLeaderboard();
-
 // Example usage
-window.fetchLeaderboard = fetchLeaderboard; // Expose getData to the global scope
+window.getLeaderboard = getLeaderboard; // Expose getData to the global scope
 window.addDataToLeaderboard = addDataToLeaderboard;
 
 // Cache the IP once to prevent multiple fetches
@@ -1215,7 +1262,7 @@ async function nextWave() {
     console.log(ipInfo); // Inspect the IP
 
     // Try to find if the IP is already in the leaderboard
-    const leaderboard = await fetchLeaderboard();
+    const leaderboard = await getLeaderboard();
     
     let isIn = leaderboard.some(score => score.ip == encodeURIComponent(ipInfo.ip));
 

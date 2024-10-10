@@ -1082,9 +1082,10 @@ async function addDataToLeaderboard(setWave=false) {
                 .from('LiamsTD leaderboard')
                 .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo)), wave: setWave }]);
         } else {
+            const ipInfo = await response.json();
             const { data, error } = await supabase
-                .from('LiamsTD leaderboard')
-                .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo.ip)), wave: wave }]);
+              .from('LiamsTD leaderboard')
+              .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo.ip)), wave: wave }]);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -1155,8 +1156,7 @@ async function getLeaderboard() {
         officialScores.forEach(score => {
             if (scoreIndex <= 11) {
                 const li = document.createElement('li');
-                const parsedIP = JSON.parse(score.ip);
-                li.textContent = `wave ${score.wave} by ${parsedIP.ip}`;
+                li.textContent = `wave ${score.wave} by ${score.ip}`;
                 leaderboard.addChild(li);
                 scoreIndex++;
             } else {
@@ -1186,7 +1186,7 @@ async function nextWave() {
     
     for (const score of leaderboard) {
         // Compare the IP from the score object to the encoded IP string
-        if (JSON.parse(score.ip) === encodeURIComponent(ipInfo)) {
+        if (score.ip === encodeURIComponent(ipInfo.ip)) {
             // Store the top score in local storage
             localStorage.setItem("topScore", JSON.stringify(score.wave));
             

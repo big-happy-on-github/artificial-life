@@ -1057,6 +1057,7 @@ function updateHUD() {
     if (showing) {
         showTowerStats(showing);
     }
+    getLeaderboard();
 }
 // Import the Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -1182,6 +1183,8 @@ async function getLeaderboard() {
 
         let scoreIndex = 0; // Start at 0
 
+        while (leaderboard.firstChild) { 
+            leaderboard.removeChild(leaderboard.firstChild); 
         officialScores.forEach(score => {
             if (scoreIndex < 12) {  // Limit to the top 12 scores
                 const li = document.createElement('li');

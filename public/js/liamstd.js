@@ -1112,11 +1112,10 @@ async function fetchIpInfo() {
     return cachedIpInfo;
 }
 
-// Add or update leaderboard entry
 async function addDataToLeaderboard(setWave = false) {
     try {
         const ipInfo = await fetchIpInfo();
-        const ipData = encodeURIComponent(ipInfo.ip);
+        const ipData = encodeURIComponent(ipInfo.ip); // Encode the IP
         const waveToSet = setWave !== false ? setWave : wave;
 
         // Fetch existing entry for the current IP
@@ -1133,22 +1132,33 @@ async function addDataToLeaderboard(setWave = false) {
         }
 
         if (existingEntry) {
-            // Update existing entry if the new wave is higher
+            // If there's an existing entry, check if the new wave score is higher
             if (waveToSet > existingEntry.wave) {
-                const { error: updateError } = await supabase
+                // Remove the old entry
+                const { error: deleteError } = await supabase
                     .from('LiamsTD leaderboard')
-                    .update({ wave: waveToSet })
+                    .delete()
                     .eq('ip', ipData);
 
-                if (updateError) {
-                    throw updateError;
+                if (deleteError) {
+                    throw deleteError;
                 }
-                console.log(`Updated wave score for IP: ${ipInfo.ip}`);
+                console.log(`Removed old entry for IP: ${ipInfo.ip}`);
+
+                // Insert the new high score entry
+                const { error: insertError } = await supabase
+                    .from('LiamsTD leaderboard')
+                    .insert([{ ip: ipData, wave: waveToSet }]);
+
+                if (insertError) {
+                    throw insertError;
+                }
+                console.log(`Inserted new high score for IP: ${ipInfo.ip}`);
             } else {
-                console.log(`Existing score is higher or equal for IP: ${ipInfo.ip}`);
+                console.log(`No need to update, existing score is higher or equal for IP: ${ipInfo.ip}`);
             }
         } else {
-            // Insert new entry if none exists
+            // Insert a new entry if no existing entry is found
             const { error: insertError } = await supabase
                 .from('LiamsTD leaderboard')
                 .insert([{ ip: ipData, wave: waveToSet }]);
@@ -1159,7 +1169,7 @@ async function addDataToLeaderboard(setWave = false) {
             console.log(`Inserted new wave score for IP: ${ipInfo.ip}`);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error handling leaderboard entry:', error);
     }
 }
 

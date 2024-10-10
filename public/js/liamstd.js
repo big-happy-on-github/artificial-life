@@ -7,7 +7,7 @@ const livesDisplay = document.getElementById('lives') || { textContent: '' };
 const towerSelection = document.getElementById('tower-selection') || null;
 const startWaveButton = document.getElementById('start-wave-button') || null;
 const autoStartCheckbox = document.getElementById('auto-start') || null;
-const leaderboardContainer = document.getElementById("leaderboard-container");
+const leaderboard = document.getElementById("leaderboard");
 
 // Tower stats pop-up
 const towerStatsPopup = document.getElementById('tower-stats-popup') || null;

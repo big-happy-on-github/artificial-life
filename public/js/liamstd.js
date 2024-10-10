@@ -1123,7 +1123,7 @@ async function getLeaderboard() {
         let scoreList = [];
         data.forEach((score) => {
             console.log(score);
-            scoreList.push(JSON.parse(score));
+            scoreList.push(score);
         });
         
         let officialScores = [];
@@ -1153,7 +1153,7 @@ async function getLeaderboard() {
 
         officialScores.forEach(score => {
             const li = document.createElement('li');
-            li.textContent = `wave ${score.wave} by ${score.ip.ip}`;
+            li.textContent = `wave ${score.wave} by ${JSON.parse(score.ip).ip}`;
             leaderboard.addChild(li);
         });
         

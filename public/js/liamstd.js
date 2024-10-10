@@ -7,6 +7,7 @@ const livesDisplay = document.getElementById('lives') || { textContent: '' };
 const towerSelection = document.getElementById('tower-selection') || null;
 const startWaveButton = document.getElementById('start-wave-button') || null;
 const autoStartCheckbox = document.getElementById('auto-start') || null;
+const leaderboardContainer = document.getElementById("leaderboard-container");
 
 // Tower stats pop-up
 const towerStatsPopup = document.getElementById('tower-stats-popup') || null;
@@ -1124,6 +1125,38 @@ async function getLeaderboard() {
             console.log(score);
             scoreList.push(JSON.parse(score));
         });
+        
+        let officialScores = [];
+        scoreList.forEach(score => {
+            const waveNum = score.wave;
+            
+            if (officialScores.length > 0) {
+                let inserted = false;
+        
+                // Insert the score into the correct position in descending order
+                for (let i = 0; i < officialScores.length; i++) {
+                    if (waveNum > officialScores[i].wave) { // Higher waveNum means higher score
+                        officialScores.splice(i, 0, score); // Insert at the correct position
+                        inserted = true;
+                        break;
+                    }
+                }
+        
+                // If the score is the lowest, push it to the end of the list
+                if (!inserted) {
+                    officialScores.push(score);
+                }
+            } else {
+                officialScores.push(score); // Add the first score
+            }
+        });
+
+        officialScores.forEach(score => {
+            const li = document.createElement('li');
+            li.textContent = `wave ${score.wave} by ${score.ip.ip}`;
+            leaderboard.addChild(li);
+        });
+        
         return scoreList;
     } catch (error) {
         console.error('Error fetching data:', error);

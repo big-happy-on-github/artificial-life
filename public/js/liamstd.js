@@ -1192,7 +1192,7 @@ async function endGame() {
 
     // Prompt the user to enter a unique name
     while (!name || leaderboardNames.includes(name)) {
-        name = prompt(leaderboardNames.includes(name)
+        name = prompt(leaderboardNames.includes(name.trim())
             ? "name taken. Gimme a different one:"
             : "enter a name for the leaderboard:");
     }

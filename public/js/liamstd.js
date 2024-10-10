@@ -1079,11 +1079,11 @@ async function addDataToLeaderboard(setWave=false) {
         if (setWave !== false) {
             const { data, error } = await supabase
                 .from('LiamsTD leaderboard')
-                .insert([{ ip: encodeURIComponent(ipInfo.ip), wave: setWave }]);
+                .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo)), wave: setWave }]);
         } else {
             const { data, error } = await supabase
                 .from('LiamsTD leaderboard')
-                .insert([{ ip: encodeURIComponent(ipInfo.ip), wave: wave }]);
+                .insert([{ ip: encodeURIComponent(JSON.stringify(ipInfo.ip)), wave: wave }]);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -1098,7 +1098,7 @@ async function removeDataFromLeaderboard(ipInfo) {
         const { data, error } = await supabase
             .from('LiamsTD leaderboard') // Assuming this is the name of your table
             .delete()
-            .eq('ip', encodeURIComponent(ipInfo.ip)); // Use the IP address, not the whole object
+            .eq('ip', encodeURIComponent(JSON.stringify(ipInfo))); // Use the IP address, not the whole object
 
         if (error) {
             throw error;
@@ -1122,7 +1122,7 @@ async function getLeaderboard() {
         let scoreList = [];
         data.forEach((score) => {
             console.log(score);
-            scoreList.push(score);
+            scoreList.push(JSON.parse(score));
         });
         return scoreList;
     } catch (error) {
@@ -1147,7 +1147,7 @@ async function nextWave() {
     
     for (const score of leaderboard) {
         // Compare the IP from the score object to the encoded IP string
-        if (score.ip === encodeURIComponent(ipInfo.ip)) {
+        if (JSON.parse(score.ip) === encodeURIComponent(ipInfo)) {
             // Store the top score in local storage
             localStorage.setItem("topScore", JSON.stringify(score.wave));
             

@@ -1231,7 +1231,7 @@ async function nextWave() {
     // Try to find if the IP is already in the leaderboard
     const leaderboard = await getLeaderboard();
     
-    let isIn = leaderboard.some(score => score.ip === encodeURIComponent(ipInfo.ip));
+    let isIn = leaderboard.some(score => score.ip == encodeURIComponent(ipInfo.ip));
 
     // If IP is not in the leaderboard, add it
     if (!isIn) {

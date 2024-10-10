@@ -1068,20 +1068,54 @@ const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with 
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgxNjE2MzIsImV4cCI6MjA0MzczNzYzMn0.ot3Wtv5RL8bBYOu0YRRZZotPJXBQ5a6c9kSFSmihgCI'; // Replace with your Supabase API key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Function to add data to Supabase
 async function addDataToLeaderboard(setWave = false) {
     try {
-        fetchIpInfo();
-        const ipData = encodeURIComponent(JSON.stringify(cachedIpInfo.ip)); // Use only the IP field
+        // Fetch IP information (only once)
+        const ipInfo = await fetchIpInfo();
+        const ipData = encodeURIComponent(ipInfo.ip); // Use only the IP field
 
-        if (setWave !== false) {
-            const { data, error } = await supabase
-                .from('LiamsTD leaderboard')
-                .insert([{ ip: ipData, wave: setWave }]);
+        // Check if this IP already exists in the leaderboard
+        const { data: existingEntry, error: fetchError } = await supabase
+            .from('LiamsTD leaderboard')
+            .select('*')
+            .eq('ip', ipData)
+            .single(); // Only fetch a single record
+
+        if (fetchError && fetchError.code !== 'PGRST116') {
+            // Handle error if it's not about an empty result (code 'PGRST116' means no match found)
+            console.error('Error fetching existing leaderboard data:', fetchError);
+            return;
+        }
+
+        // If the IP already exists, update the score if the new wave is higher
+        if (existingEntry) {
+            const newWave = setWave !== false ? setWave : wave;
+            if (newWave > existingEntry.wave) {
+                const { error: updateError } = await supabase
+                    .from('LiamsTD leaderboard')
+                    .update({ wave: newWave })
+                    .eq('ip', ipData);
+
+                if (updateError) {
+                    throw updateError;
+                }
+
+                console.log(`Updated wave score for IP: ${ipInfo.ip}`);
+            } else {
+                console.log(`Existing score is higher or equal for IP: ${ipInfo.ip}`);
+            }
         } else {
-            const { data, error } = await supabase
-              .from('LiamsTD leaderboard')
-              .insert([{ ip: ipData, wave: wave }]); // Reuse the ipData
+            // If IP doesn't exist, insert a new record
+            const newWave = setWave !== false ? setWave : wave;
+            const { error: insertError } = await supabase
+                .from('LiamsTD leaderboard')
+                .insert([{ ip: ipData, wave: newWave }]);
+
+            if (insertError) {
+                throw insertError;
+            }
+
+            console.log(`Inserted new wave score for IP: ${ipInfo.ip}`);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -1194,52 +1228,44 @@ async function nextWave() {
 
     console.log(ipInfo); // Inspect the IP
 
-    let isIn = false;
+    // Try to find if the IP is already in the leaderboard
     const leaderboard = await getLeaderboard();
     
-    for (const score of leaderboard) {
-        // Compare IPs accurately, ensure both are properly encoded/decoded
-        if (score.ip === encodeURIComponent(ipInfo.ip)) {
-            // Store the top score in localStorage
-            localStorage.setItem("topScore", JSON.stringify(score.wave));
+    let isIn = leaderboard.some(score => score.ip === encodeURIComponent(ipInfo.ip));
 
-            // Remove old score from leaderboard
-            await removeDataFromLeaderboard(ipInfo);
-            isIn = true;
-            break;
-        }
-    }
-    
-    // Add a new entry if no matching IP was found, otherwise update it
+    // If IP is not in the leaderboard, add it
     if (!isIn) {
         await addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
     } else {
         await addDataToLeaderboard();
     }
 
-    // Update top score in local storage if necessary
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", wave);
     }
 
+    // Other game logic
     towers.forEach(tower => {
         if (tower.type == "4") {
             currency += tower.damage;
-        } else if (tower.type == "9" && (tower.lastFired + wave) % 5 == 0) {
-            alert("last wave was a walker smash!");
+            console.log("added money");
+        } else if (tower.type == "9") {
+            if (((tower.lastFired + wave) - 1) % 5 == 0) {
+                alert("last wave was a walker smash!");
+            }
         }
     });
 
-    // Check for boss and special enemies
+    // Check for boss in the next wave
     bossEnemyTypes.forEach(boss => {
         if (wave == boss.level) {
-            alert(`New boss at wave ${wave}!`);
+            alert(`new color boss on wave ${wave}!`);
         }
     });
 
     enemyTypes.forEach(enemy => {
         if (enemy.special && enemy.level == wave) {
-            alert(`Special enemy with ${enemy.special.toLowerCase()} at wave ${wave}!`);
+            alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
         }
     });
 }

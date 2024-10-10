@@ -66,7 +66,8 @@ const upgrade = {
         'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
     },
     '10': {},
-    '11': {}
+    '11': {},
+    '12': {}
 };
 
 // Function to show the tower stats pop-up
@@ -94,6 +95,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'declan';
     } else if (tower.type == '11') {
         towerType = 'cole';
+    } else if (tower.type == '12') {
+        towerType = 'luca';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -120,9 +123,11 @@ function showTowerStats(tower, showButtons=true) {
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-        if (tower.type == "4") {
+        if (tower.type == "4" or tower.type == "12") {
             towerDamageDisplay.textContent = `0 dps`;
-            tower.desc = `+$${tower.damage} after each wave`;
+            if (tower.type == "4") {
+                tower.desc = `+$${tower.damage} after each wave`;
+            }
         }
 
         if (tower.level < 3) {
@@ -141,9 +146,11 @@ function showTowerStats(tower, showButtons=true) {
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
             const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-            if (!tower.type == "4") {
-                towerDamageDisplay.textContent = `0dps`;
-                tower.desc = `+$${tower.damage} after each wave`;
+            if (tower.type == "4" or tower.type == "12") {
+                towerDamageDisplay.textContent = `0 dps`;
+                if (tower.type == "4") {
+                    tower.desc = `+$${tower.damage} after each wave`;
+                }
             }
         }
     }
@@ -399,7 +406,7 @@ class Tower {
             this.desc = "every 5 waves, insta-kills everything";
         } else if (type == '10') {//declan
             this.health = 15;
-            this.range = 150;
+            this.range = 100;
             this.fireRate = 1;
             this.damage = 0;
             this.price = 7;
@@ -411,6 +418,13 @@ class Tower {
             this.damage = 1/0;
             this.price = 1/0;
             this.desc = "can only be placed by hacking";
+        } else if (type == '12') {//luca
+            this.health = 20;
+            this.range = 150;
+            this.fireRate = 0;
+            this.damage = 2;
+            this.price = 7;
+            this.desc = "adds damage to nearby towers";
         }
 
         this.lastFired = 0;
@@ -439,6 +453,8 @@ class Tower {
             ctx.fillStyle = '#fcba03';
         } else if (this.type == '11') {
             ctx.fillStyle = '#fff';
+        } else if (this.type == '12') {
+            ctx.fillStyle = '#48f542';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -457,12 +473,22 @@ class Tower {
     update(deltaTime) {
         if (this.health <= 0) return; // Skip update if the tower is destroyed
 
-        if (this.type == "10") { // Nick freezes enemies instead of shooting
+        if (this.type == "10") { // declan freezes enemies instead of shooting
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
                 const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy));
                 enemiesInRange.forEach(enemy => {
                     if (!enemy.isFrozen) {
                         this.freezeEnemy(enemy);
+                    }
+                });
+                this.lastFired = Date.now();
+            }
+        } else if (this.type == "12") { // declan freezes enemies instead of shooting
+            if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
+                const towersInRange = towers.filter(tower => this.isInRange(tower));
+                towersInRange.forEach(tower => {
+                    if (!tower.isMaxBuff || tower.isMaxBuff > tower.damage+this.damage) {
+                        this.buff(tower);
                     }
                 });
                 this.lastFired = Date.now();
@@ -501,6 +527,11 @@ class Tower {
         enemy.freezeEndTime = Date.now() + 1000; // Freeze for 1 second
         enemy.speedBackup = enemy.speed; // Backup the original speed
         enemy.speed = 0; // Stop the enemy
+    }
+
+    buff(tower) {
+        tower.damage += this.damage;
+        this.isMaxBuff = tower.damage;
     }
 
     isInRange(enemy) {

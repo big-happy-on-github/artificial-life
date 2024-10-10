@@ -1122,9 +1122,9 @@ async function getLeaderboard() {
 
         let scoreList = [];
         data.forEach((score) => {
-            console.log(score);
             scoreList.push(score);
         });
+
         
         let officialScores = [];
         scoreList.forEach(score => {
@@ -1177,10 +1177,9 @@ window.addDataToLeaderboard = addDataToLeaderboard;
 async function nextWave() {
     wave++;
     const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
     const ipInfo = await response.json();
+    console.log(ipInfo); // Inspect the data
+
     
     let isIn = false;
     const leaderboard = await getLeaderboard();

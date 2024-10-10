@@ -1151,10 +1151,16 @@ async function getLeaderboard() {
             }
         });
 
+        let scoreIndex = -1;
         officialScores.forEach(score => {
-            const li = document.createElement('li');
-            li.textContent = `wave ${score.wave} by ${JSON.parse(score.ip).ip}`;
-            leaderboard.addChild(li);
+            if (scoreIndex <= 11) {
+                const li = document.createElement('li');
+                li.textContent = `wave ${score.wave} by ${JSON.parse(score.ip).ip}`;
+                leaderboard.addChild(li);
+                scoreIndex++;
+            else {
+                break;
+            }
         });
         
         return scoreList;

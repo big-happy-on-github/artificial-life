@@ -22,10 +22,23 @@
     <main>
         <div>
             <img src="img/liamstd.png" width="400" height="375">
-            <p>LiamsTD</p>
+            <p id="liamstdP">LiamsTD</p>
             <button onclick="window.location.href='/projects/liamstd'">play</button>
         </div>
     </main>
-    <script type="module" src="/js/liamland.js"></script>
+    <script type="module" src="/js/liamland.js">
+        // Check if there is a row with project_name 'liamstd'
+        const { data, error: selectError } = await supabase
+            .from('visits')
+            .select('*')
+            .eq('project_name', 'liamstd');
+        
+        // Handle any select errors
+        if (selectError) {
+            throw selectError;
+        }
+        
+        document.getElementById("liamstdP").textContent = `LiamsTD (${data[0].num_visits} visits)`;
+    </script>
 </body>
 </html>

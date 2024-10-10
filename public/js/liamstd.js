@@ -1296,6 +1296,7 @@ if (data.length === 0) {
 
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "liamstd"`);
 }
+
 // Initialize the game
 updateHUD();
 gameLoop();

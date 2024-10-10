@@ -1185,7 +1185,7 @@ async function submitScore(name, wave) {
 }
 
 async function endGame() {
-    alert(`Game over! You died on wave ${wave}.`);
+    alert(`game over! You died on wave ${wave}.`);
 
     let name = '';
     let leaderboardNames = await getLeaderboardNames();
@@ -1237,7 +1237,7 @@ async function getLeaderboard() {
         // Display the top 12 entries
         data.slice(0, 12).forEach((entry, index) => {
             const li = document.createElement('li');
-            li.textContent = `${index + 1}. Wave: ${entry.wave} by ${entry.name}`;
+            li.textContent = `#${index + 1}, wave ${entry.wave} by ${entry.name}`;
             leaderboard.appendChild(li);
         });
     } catch (error) {

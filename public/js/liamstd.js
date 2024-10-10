@@ -1210,20 +1210,6 @@ const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with 
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g'; // Replace with your Supabase API key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Game state and other logic
-
-// Function to update the HUD (currency, wave, lives, etc.)
-function updateHUD() {
-    currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
-    livesDisplay.textContent = `${lives} lives`;
-
-    if (showing) {
-        showTowerStats(showing);
-    }
-    getLeaderboard();
-}
-
 // Get leaderboard data and update the DOM
 async function getLeaderboard() {
     try {

@@ -1185,6 +1185,7 @@ async function getLeaderboard() {
 
         while (leaderboard.firstChild) { 
             leaderboard.removeChild(leaderboard.firstChild); 
+        }
         officialScores.forEach(score => {
             if (scoreIndex < 12) {  // Limit to the top 12 scores
                 const li = document.createElement('li');

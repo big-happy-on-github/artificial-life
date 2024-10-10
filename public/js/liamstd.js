@@ -483,15 +483,15 @@ class Tower {
                 });
                 this.lastFired = Date.now();
             }
-        } else if (this.type == "12") { // declan freezes enemies instead of shooting
+        } else if (this.type == "12") { // Luca - Buff nearby towers
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
-                const towersInRange = towers.filter(tower => this.isInRange(tower));
+                const towersInRange = towers.filter(tower => this.isInRange(tower)); // Find towers in range
                 towersInRange.forEach(tower => {
-                    if (!tower.isMaxBuff || tower.isMaxBuff > tower.damage+this.damage) {
-                        this.buff(tower);
+                    if (!tower.isMaxBuff || tower.isMaxBuff < (tower.damage + this.damage)) {
+                        this.buff(tower); // Apply buff if not maxed
                     }
                 });
-                this.lastFired = Date.now();
+                this.lastFired = Date.now(); // Set last fired to avoid over-buffing
             }
         } else if (this.type == "9" && this.lastFired + wave % 5 == 0) {
                 setTimeout(() => {

@@ -1159,7 +1159,7 @@ async function getLeaderboard() {
                 leaderboard.addChild(li);
                 scoreIndex++;
             } else {
-                break;
+                return;
             }
         });
         

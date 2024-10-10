@@ -1158,7 +1158,7 @@ async function getLeaderboard() {
                 li.textContent = `wave ${score.wave} by ${JSON.parse(score.ip).ip}`;
                 leaderboard.addChild(li);
                 scoreIndex++;
-            else {
+            } else {
                 break;
             }
         });

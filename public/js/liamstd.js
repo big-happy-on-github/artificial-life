@@ -1157,7 +1157,7 @@ async function getLeaderboard() {
             if (scoreIndex <= 11) {
                 const li = document.createElement('li');
                 li.textContent = `wave ${score.wave} by ${score.ip}`;
-                leaderboard.addChild(li);
+                leaderboard.appendChild(li);
                 scoreIndex++;
             } else {
                 return;

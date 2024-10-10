@@ -1153,18 +1153,25 @@ async function getLeaderboard() {
             }
         });
 
-        let scoreIndex = -1;
+        let scoreIndex = 0; // Start at 0
+
         officialScores.forEach(score => {
-            if (scoreIndex <= 11) {
+            if (scoreIndex < 12) {  // Limit to the top 12 scores
                 const li = document.createElement('li');
-                li.textContent = `wave ${score.wave} by ${score.ip}`;
+        
+                // If the IP is encoded, decode it before appending
+                const decodedIP = decodeURIComponent(score.ip);
+                
+                // Append the wave and IP properly
+                li.textContent = `wave ${score.wave} by ip ${decodedIP}`;
+                
+                // Append the new <li> element to the leaderboard
                 leaderboard.appendChild(li);
+                
                 scoreIndex++;
-            } else {
-                return;
             }
         });
-        
+
         return scoreList;
     } catch (error) {
         console.error('Error fetching data:', error);

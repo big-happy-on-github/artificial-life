@@ -990,6 +990,8 @@ function update(deltaTime) {
         spawnEnemies();
         startWaveButton.disabled = true;
     }
+    updateHUD();
+    updateLeaderboard();
 }
 
 function resetOtherDropdowns(excludeId) {
@@ -1090,61 +1092,70 @@ function updateHUD() {
     }
     getLeaderboard();
 }
-// Import the Supabase client
+
+// Initialize Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Supabase configuration
 const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with your Supabase project URL
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgxNjE2MzIsImV4cCI6MjA0MzczNzYzMn0.ot3Wtv5RL8bBYOu0YRRZZotPJXBQ5a6c9kSFSmihgCI'; // Replace with your Supabase API key
+const supabaseKey = 'your-supabase-key'; // Replace with your Supabase API key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Cache the IP once to prevent multiple fetches
+let cachedIpInfo = null;
+
+// Fetch IP information
+async function fetchIpInfo() {
+    if (!cachedIpInfo) {
+        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+        cachedIpInfo = await response.json();
+    }
+    return cachedIpInfo;
+}
+
+// Add or update leaderboard entry
 async function addDataToLeaderboard(setWave = false) {
     try {
-        // Fetch IP information (only once)
         const ipInfo = await fetchIpInfo();
-        const ipData = encodeURIComponent(ipInfo.ip); // Use only the IP field
+        const ipData = encodeURIComponent(ipInfo.ip);
+        const waveToSet = setWave !== false ? setWave : wave;
 
-        // Check if this IP already exists in the leaderboard
+        // Fetch existing entry for the current IP
         const { data: existingEntry, error: fetchError } = await supabase
             .from('LiamsTD leaderboard')
             .select('*')
             .eq('ip', ipData)
-            .single(); // Only fetch a single record
+            .single(); // Fetch a single record
 
         if (fetchError && fetchError.code !== 'PGRST116') {
-            // Handle error if it's not about an empty result (code 'PGRST116' means no match found)
+            // Handle any fetch errors, except when there's no existing entry (code PGRST116)
             console.error('Error fetching existing leaderboard data:', fetchError);
             return;
         }
 
-        // If the IP already exists, update the score if the new wave is higher
         if (existingEntry) {
-            const newWave = setWave !== false ? setWave : wave;
-            if (newWave > existingEntry.wave) {
+            // Update existing entry if the new wave is higher
+            if (waveToSet > existingEntry.wave) {
                 const { error: updateError } = await supabase
                     .from('LiamsTD leaderboard')
-                    .update({ wave: newWave })
+                    .update({ wave: waveToSet })
                     .eq('ip', ipData);
 
                 if (updateError) {
                     throw updateError;
                 }
-
                 console.log(`Updated wave score for IP: ${ipInfo.ip}`);
             } else {
                 console.log(`Existing score is higher or equal for IP: ${ipInfo.ip}`);
             }
         } else {
-            // If IP doesn't exist, insert a new record
-            const newWave = setWave !== false ? setWave : wave;
+            // Insert new entry if none exists
             const { error: insertError } = await supabase
                 .from('LiamsTD leaderboard')
-                .insert([{ ip: ipData, wave: newWave }]);
+                .insert([{ ip: ipData, wave: waveToSet }]);
 
             if (insertError) {
                 throw insertError;
             }
-
             console.log(`Inserted new wave score for IP: ${ipInfo.ip}`);
         }
     } catch (error) {
@@ -1152,107 +1163,39 @@ async function addDataToLeaderboard(setWave = false) {
     }
 }
 
-async function removeDataFromLeaderboard(ipInfo) {
-    try {
-        // Extract the IP address from ipInfo object
-
-        // Remove data from Supabase based on the extracted IP address
-        const { data, error } = await supabase
-            .from('LiamsTD leaderboard') // Assuming this is the name of your table
-            .delete()
-            .eq('ip', encodeURIComponent(JSON.stringify(ipInfo))); // Use the IP address, not the whole object
-
-        if (error) {
-            throw error;
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-// Function to get data from Supabase
+// Get leaderboard data and update the DOM
 async function getLeaderboard() {
     try {
         const { data, error } = await supabase
             .from('LiamsTD leaderboard')
-            .select('*');
-        
+            .select('*')
+            .order('wave', { ascending: false }); // Sort by wave descending
+
         if (error) {
             throw error;
         }
 
-        let scoreList = [];
-        data.forEach((score) => {
-            scoreList.push(score);
-        });
-
-        
-        let officialScores = [];
-        scoreList.forEach(score => {
-            const waveNum = score.wave;
-            
-            if (officialScores.length > 0) {
-                let inserted = false;
-        
-                // Insert the score into the correct position in descending order
-                for (let i = 0; i < officialScores.length; i++) {
-                    if (waveNum > officialScores[i].wave) { // Higher waveNum means higher score
-                        officialScores.splice(i, 0, score); // Insert at the correct position
-                        inserted = true;
-                        break;
-                    }
-                }
-        
-                // If the score is the lowest, push it to the end of the list
-                if (!inserted) {
-                    officialScores.push(score);
-                }
-            } else {
-                officialScores.push(score); // Add the first score
-            }
-        });
-
-        let scoreIndex = 0; // Start at 0
-
-        while (leaderboard.firstChild) { 
-            leaderboard.removeChild(leaderboard.firstChild); 
+        // Clear the current leaderboard display
+        while (leaderboard.firstChild) {
+            leaderboard.removeChild(leaderboard.firstChild);
         }
-        officialScores.forEach(score => {
-            if (scoreIndex < 12) {  // Limit to the top 12 scores
-                const li = document.createElement('li');
-        
-                // If the IP is encoded, decode it before appending
-                const decodedIP = decodeURIComponent(score.ip);
-                
-                // Append the wave and IP properly
-                li.textContent = `wave ${score.wave} by ip ${decodedIP}`;
-                
-                // Append the new <li> element to the leaderboard
-                leaderboard.appendChild(li);
-                
-                scoreIndex++;
-            }
-        });
 
-        return scoreList;
+        // Display the top 12 entries
+        data.slice(0, 12).forEach((entry, index) => {
+            const li = document.createElement('li');
+            const decodedIP = decodeURIComponent(entry.ip);
+            li.textContent = `${index + 1}. Wave: ${entry.wave} by IP: ${decodedIP}`;
+            leaderboard.appendChild(li);
+        });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching leaderboard data:', error);
     }
 }
 
-// Example usage
-window.getLeaderboard = getLeaderboard; // Expose getData to the global scope
-window.addDataToLeaderboard = addDataToLeaderboard;
-
-// Cache the IP once to prevent multiple fetches
-let cachedIpInfo = null;
-
-async function fetchIpInfo() {
-    if (!cachedIpInfo) {
-        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-        cachedIpInfo = await response.json();
-    }
-    return cachedIpInfo;
+// Call this function after each wave or game over
+async function updateLeaderboard() {
+    await addDataToLeaderboard();
+    await getLeaderboard();
 }
 
 async function nextWave() {

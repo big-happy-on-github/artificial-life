@@ -1071,15 +1071,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Function to add data to Supabase
 async function addDataToLeaderboard(setWave = false) {
     try {
-        // Fetch IP information
-        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const ipInfo = await response.json(); // Only call this once
-        console.log(ipInfo); // Logs the IP information
-        
-        const ipData = encodeURIComponent(JSON.stringify(ipInfo.ip)); // Use only the IP field
+        fetchIpInfo();
+        const ipData = encodeURIComponent(JSON.stringify(cachedIpInfo.ip)); // Use only the IP field
 
         if (setWave !== false) {
             const { data, error } = await supabase
@@ -1184,64 +1177,69 @@ async function getLeaderboard() {
 window.getLeaderboard = getLeaderboard; // Expose getData to the global scope
 window.addDataToLeaderboard = addDataToLeaderboard;
 
+// Cache the IP once to prevent multiple fetches
+let cachedIpInfo = null;
+
+async function fetchIpInfo() {
+    if (!cachedIpInfo) {
+        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+        cachedIpInfo = await response.json();
+    }
+    return cachedIpInfo;
+}
+
 async function nextWave() {
     wave++;
-    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-    const ipInfo = await response.json();
-    console.log(ipInfo); // Inspect the data
+    const ipInfo = await fetchIpInfo(); // Fetch the IP once
 
-    
+    console.log(ipInfo); // Inspect the IP
+
     let isIn = false;
     const leaderboard = await getLeaderboard();
     
     for (const score of leaderboard) {
-        // Compare the IP from the score object to the encoded IP string
+        // Compare IPs accurately, ensure both are properly encoded/decoded
         if (score.ip === encodeURIComponent(ipInfo.ip)) {
-            // Store the top score in local storage
+            // Store the top score in localStorage
             localStorage.setItem("topScore", JSON.stringify(score.wave));
-            
-            // Remove the data from the leaderboard
+
+            // Remove old score from leaderboard
             await removeDataFromLeaderboard(ipInfo);
-            
             isIn = true;
             break;
         }
     }
     
+    // Add a new entry if no matching IP was found, otherwise update it
     if (!isIn) {
         await addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
     } else {
         await addDataToLeaderboard();
     }
 
+    // Update top score in local storage if necessary
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", wave);
     }
-    
+
     towers.forEach(tower => {
-        const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
-        const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-        let smashWave;
         if (tower.type == "4") {
             currency += tower.damage;
-            console.log("added money");
-        } else if (tower.type == "9") {
-            if (((tower.lastFired + wave) - 1) % 5 == 0) {
-                alert("last wave was a walker smash!");
-            }
+        } else if (tower.type == "9" && (tower.lastFired + wave) % 5 == 0) {
+            alert("last wave was a walker smash!");
         }
     });
 
-    // Check for boss in the next wave
+    // Check for boss and special enemies
     bossEnemyTypes.forEach(boss => {
         if (wave == boss.level) {
-            alert(`new color boss on wave ${wave}!`);
+            alert(`New boss at wave ${wave}!`);
         }
     });
 
     enemyTypes.forEach(enemy => {
         if (enemy.special && enemy.level == wave) {
-            alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
+            alert(`Special enemy with ${enemy.special.toLowerCase()} at wave ${wave}!`);
         }
     });
 }

@@ -123,7 +123,7 @@ function showTowerStats(tower, showButtons=true) {
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-        if (tower.type == "4" or tower.type == "12") {
+        if (tower.type == "4" || tower.type == "12") {
             towerDamageDisplay.textContent = `0 dps`;
             if (tower.type == "4") {
                 tower.desc = `+$${tower.damage} after each wave`;
@@ -146,7 +146,7 @@ function showTowerStats(tower, showButtons=true) {
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
             const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-            if (tower.type == "4" or tower.type == "12") {
+            if (tower.type == "4" || tower.type == "12") {
                 towerDamageDisplay.textContent = `0 dps`;
                 if (tower.type == "4") {
                     tower.desc = `+$${tower.damage} after each wave`;

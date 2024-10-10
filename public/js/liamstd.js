@@ -990,8 +990,6 @@ function update(deltaTime) {
         spawnEnemies();
         startWaveButton.disabled = true;
     }
-    updateHUD();
-    updateLeaderboard();
 }
 
 function resetOtherDropdowns(excludeId) {
@@ -1100,131 +1098,8 @@ const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with 
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g'; // Replace with your Supabase API key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Cache the IP once to prevent multiple fetches
-let cachedIpInfo = null;
-
-// Fetch IP information
-async function fetchIpInfo() {
-    if (!cachedIpInfo) {
-        const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-        cachedIpInfo = await response.json();
-    }
-    return cachedIpInfo;
-}
-
-async function addDataToLeaderboard(setWave = false) {
-    try {
-        const ipInfo = await fetchIpInfo();
-        const ipData = encodeURIComponent(ipInfo.ip); // Encode the IP
-        const waveToSet = setWave !== false ? setWave : wave;
-
-        // Fetch existing entry for the current IP
-        const { data: existingEntry, error: fetchError } = await supabase
-            .from('LiamsTD leaderboard')
-            .select('*')
-            .eq('ip', ipData)
-            .single(); // Fetch a single record
-
-        if (fetchError && fetchError.code !== 'PGRST116') {
-            // Handle any fetch errors, except when there's no existing entry (code PGRST116)
-            console.error('Error fetching existing leaderboard data:', fetchError);
-            return;
-        }
-
-        if (existingEntry) {
-            // If there's an existing entry, check if the new wave score is higher
-            if (waveToSet > existingEntry.wave) {
-                // Remove the old entry
-                const { error: deleteError } = await supabase
-                    .from('LiamsTD leaderboard')
-                    .delete()
-                    .eq('ip', ipData);
-
-                if (deleteError) {
-                    throw deleteError;
-                }
-                console.log(`Removed old entry for IP: ${ipInfo.ip}`);
-
-                // Insert the new high score entry
-                const { error: insertError } = await supabase
-                    .from('LiamsTD leaderboard')
-                    .insert([{ ip: ipData, wave: waveToSet }]);
-
-                if (insertError) {
-                    throw insertError;
-                }
-                console.log(`Inserted new high score for IP: ${ipInfo.ip}`);
-            } else {
-                console.log(`No need to update, existing score is higher or equal for IP: ${ipInfo.ip}`);
-            }
-        } else {
-            // Insert a new entry if no existing entry is found
-            const { error: insertError } = await supabase
-                .from('LiamsTD leaderboard')
-                .insert([{ ip: ipData, wave: waveToSet }]);
-
-            if (insertError) {
-                throw insertError;
-            }
-            console.log(`Inserted new wave score for IP: ${ipInfo.ip}`);
-        }
-    } catch (error) {
-        console.error('Error handling leaderboard entry:', error);
-    }
-}
-
-// Get leaderboard data and update the DOM
-async function getLeaderboard() {
-    try {
-        const { data, error } = await supabase
-            .from('LiamsTD leaderboard')
-            .select('*')
-            .order('wave', { ascending: false }); // Sort by wave descending
-
-        if (error) {
-            throw error;
-        }
-
-        // Clear the current leaderboard display
-        while (leaderboard.firstChild) {
-            leaderboard.removeChild(leaderboard.firstChild);
-        }
-
-        // Display the top 12 entries
-        data.slice(0, 12).forEach((entry, index) => {
-            const li = document.createElement('li');
-            const decodedIP = decodeURIComponent(entry.ip);
-            li.textContent = `${index + 1}. Wave: ${entry.wave} by IP: ${decodedIP}`;
-            leaderboard.appendChild(li);
-        });
-    } catch (error) {
-        console.error('Error fetching leaderboard data:', error);
-    }
-}
-
-// Call this function after each wave or game over
-async function updateLeaderboard() {
-    await addDataToLeaderboard();
-    await getLeaderboard();
-}
-
 async function nextWave() {
     wave++;
-    const ipInfo = await fetchIpInfo(); // Fetch the IP once
-
-    console.log(ipInfo); // Inspect the IP
-
-    // Try to find if the IP is already in the leaderboard
-    const leaderboard = await getLeaderboard();
-    
-    let isIn = leaderboard.some(score => score.ip == encodeURIComponent(ipInfo.ip));
-
-    // If IP is not in the leaderboard, add it
-    if (!isIn) {
-        await addDataToLeaderboard(JSON.parse(localStorage.getItem("topScore")));
-    } else {
-        await addDataToLeaderboard();
-    }
 
     if (wave > JSON.parse(localStorage.getItem("topScore"))) {
         localStorage.setItem("topScore", wave);
@@ -1272,10 +1147,55 @@ function help() {
     console.log("skipToWave, giveMoney");
 }
 
-// Reset the game
-function endGame() {
-    alert(`game over! died on wave ${wave}`);
+// Fetch leaderboard and check for duplicate names
+async function getLeaderboardNames() {
+    try {
+        const { data, error } = await supabase
+            .from('LiamsTD leaderboard')
+            .select('name')
+            .order('wave', { ascending: false });
+
+        if (error) throw error;
+
+        return data.map(entry => entry.name);
+    } catch (error) {
+        console.error('Error fetching leaderboard names:', error);
+        return [];
+    }
+}
+
+async function submitScore(name, wave) {
+    try {
+        const { error } = await supabase
+            .from('LiamsTD leaderboard')
+            .insert([{ name: name, wave: wave }]);
+
+        if (error) throw error;
+        console.log('Score successfully submitted!');
+    } catch (error) {
+        console.error('Error submitting score:', error);
+    }
+}
+
+async function endGame() {
+    alert(`Game over! You died on wave ${wave}.`);
+
+    let name = '';
+    let leaderboardNames = await getLeaderboardNames();
+
+    // Prompt the user to enter a unique name
+    while (!name || leaderboardNames.includes(name)) {
+        name = prompt(leaderboardNames.includes(name)
+            ? "name taken. Gimme a different one:"
+            : "enter a name for the leaderboard:");
+    }
+
+    // Submit the score to the leaderboard
+    await submitScore(name, wave);
+
     alert("play again?");
+    
+    // Reset the game state
     currency = 10;
     wave = 1;
     lives = 9;
@@ -1288,6 +1208,55 @@ function endGame() {
     autoStartCheckbox.checked = false;
     updateHUD();
     window.location.reload();
+}
+
+// Initialize Supabase client
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with your Supabase project URL
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g'; // Replace with your Supabase API key
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Game state and other logic
+
+// Function to update the HUD (currency, wave, lives, etc.)
+function updateHUD() {
+    currencyDisplay.textContent = `$${currency}`;
+    waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
+    livesDisplay.textContent = `${lives} lives`;
+
+    if (showing) {
+        showTowerStats(showing);
+    }
+    getLeaderboard();
+}
+
+// Get leaderboard data and update the DOM
+async function getLeaderboard() {
+    try {
+        const { data, error } = await supabase
+            .from('LiamsTD leaderboard')
+            .select('*')
+            .order('wave', { ascending: false }); // Sort by wave descending
+
+        if (error) {
+            throw error;
+        }
+
+        // Clear the current leaderboard display
+        while (leaderboard.firstChild) {
+            leaderboard.removeChild(leaderboard.firstChild);
+        }
+
+        // Display the top 12 entries
+        data.slice(0, 12).forEach((entry, index) => {
+            const li = document.createElement('li');
+            li.textContent = `${index + 1}. Wave: ${entry.wave} by ${entry.name}`;
+            leaderboard.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+    }
 }
 
 let lastTime = 0;

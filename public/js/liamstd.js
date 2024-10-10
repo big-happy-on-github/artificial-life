@@ -1155,7 +1155,8 @@ async function getLeaderboard() {
         officialScores.forEach(score => {
             if (scoreIndex <= 11) {
                 const li = document.createElement('li');
-                li.textContent = `wave ${score.wave} by ${JSON.parse(score.ip).ip}`;
+                const parsedIP = JSON.parse(score.ip);
+                li.textContent = `wave ${score.wave} by ${parsedIP.ip}`;
                 leaderboard.addChild(li);
                 scoreIndex++;
             } else {

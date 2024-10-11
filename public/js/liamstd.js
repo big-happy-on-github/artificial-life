@@ -506,14 +506,17 @@ class Tower {
                 });
                 this.lastFired = Date.now(); // Set last fired to avoid over-buffing
             }
-        } else if (this.type == "9" && this.lastFired + wave % 5 == 0) {
+        } else if (this.type == "9") { // Walker smash
+            // Check if the current wave is a multiple of 5 and the tower hasn't smashed this wave
+            if (wave % 5 === 0 && this.lastFired !== wave) {
                 setTimeout(() => {
                     enemies.forEach(enemy => {
-                        enemy.takeDamage(enemy.health);
+                        enemy.takeDamage(enemy.health); // Instantly kill all enemies
                     });
-                    console.log("walker smash");
-                }, 200);
-                this.lastFired = wave;
+                    console.log("Walker smash");
+                }, 50); // Small delay for effect
+                this.lastFired = wave; // Update the last fired wave
+            }
         } else {
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
                 this.shoot();

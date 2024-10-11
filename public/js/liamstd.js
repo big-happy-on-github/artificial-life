@@ -1406,8 +1406,6 @@ if (data.length === 0) {
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "liamstd"`);
 }
 
-// Example usage:
-const info = getBrowserAndDevice();
 console.log(`Browser: ${info.browser}`);
 console.log(`Device Brand: ${info.deviceBrand}`);
 

@@ -468,25 +468,15 @@ class Tower {
         if (!this.target || this.target.health <= 0) return; // Ensure there's a target
 
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
-            let angle;
-            if (this.type == "3" || this.type == "5" || this.type == "11") {
-                const projectileSpeed = 15; // Assuming this is the speed of your projectile
-                const distanceToTarget = Math.sqrt((this.target.x - this.x) ** 2 + (this.target.y - this.y) ** 2);
-                const timeToHit = distanceToTarget / projectileSpeed; // Time it will take for the projectile to reach the enemy
-                
-                // Predict the future position of the enemy based on their speed and direction
-                const futureX = this.target.x + this.target.speed * Math.cos(this.target.angle) * timeToHit;
-                const futureY = this.target.y + this.target.speed * Math.sin(this.target.angle) * timeToHit;
-        
-                // Adjust the angle to shoot at the predicted future position
-                angle = Math.atan2(futureY - this.y, futureX - this.x);
-                console.log(angle)
-            } else {
-                angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            }
-            
-            if (this.type == "6" || this.type == "11") {
-                projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
+            let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5") {
+                if (this.type == "6" || this.type == "11" && this.type != "3" && this.type != "5") {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
+                } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5") {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
+                } else {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive, fast"));
+                }
             } else {
                 projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
             }
@@ -845,6 +835,9 @@ class Projectile {
         this.x = x;
         this.y = y;
         this.speed = 15;
+        if ('fast' in specificType) {
+            this.speed = 30;
+        }
         this.angle = angle;
         this.damage = damage;
         this.type = type;
@@ -852,7 +845,7 @@ class Projectile {
     }
 
     draw() {
-        if (this.specificType == 'explosive') {
+        if ('explosive' in this.specificType) {
             ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
         } else {
             ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Normal projectile colors

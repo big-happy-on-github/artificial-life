@@ -484,7 +484,7 @@ class Tower {
                 angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
             }
             
-            if (tower.type == "6" || tower.type == "11") {
+            if (this.type == "6" || this.type == "11") {
                 projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
             } else {
                 projectiles.push(new Projectile(this.x, this.y, angle, this.damage));

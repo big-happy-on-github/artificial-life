@@ -851,9 +851,9 @@ const enemyTypes = [
 ];
 
 const bossEnemyTypes = [
-    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 3, damage: 2.5, level: 10, nextType: 'purple' },
-    { speed: 8, health: 75, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 20, nextType: null },
-    { speed: 6, health: 100, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 30, nextType: null },
+    { speed: 0.3, health: 500, color: 'pink', canShoot: true, range: 1000, fireRate: 3, damage: 2.5, level: 10, nextType: 'purple' },
+    { speed: 8, health: 275, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 20, nextType: null },
+    { speed: 6, health: 300, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 30, nextType: null },
 ];
 
 function spawnEnemies() {

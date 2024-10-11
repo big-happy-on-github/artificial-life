@@ -1411,23 +1411,37 @@ const keysPressed = {};
 
 document.addEventListener('keydown', function(event) {
     keysPressed[event.key] = true;
+
+    // Check for the key combination inside keydown
+    if ((keysPressed["Control"] || keysPressed["Meta"]) && keysPressed["l"] && keysPressed["b"]) {
+        alert("ooh, so I see you know the command...");
+        if (prompt("...but do you know the password?") === "HURRICANEMILTON") {
+            alert("ahh, ok");
+            const command = prompt("what would you like to do?");
+            
+            if (command.toLowerCase() === "givemoney") {
+                const amount = parseInt(prompt("how much?"), 10);
+                if (!isNaN(amount)) {
+                    currency += amount;
+                } else {
+                    alert("Invalid amount.");
+                }
+            } else if (command.toLowerCase() === "skiptowave") {
+                const waveNumber = parseInt(prompt("which wave?"));
+                if (!isNaN(waveNumber)) {
+                    wave = waveNumber;
+                } else {
+                    alert("Invalid wave number.");
+                }
+            }
+
+            updateHUD();
+        }
+    }
 });
 
 document.addEventListener('keyup', function(event) {
     delete keysPressed[event.key];
-    if (keysPressed["Control"] && keysPressed["l"] && keysPressed["b"]) {
-        alert("ooh, so I see you now the command...");
-        if (prompt("...but do you know the password?") == "HURRICANEMILTON") {
-            alert("ahh, ok");
-            const command = prompt("what would you like to do?");
-            if (command.toLowerCase() == "givemoney") {
-                currency += parseInt(prompt("how much?"));
-            } else if (command.toLowerCase() == "skiptowave") {
-                wave = command;
-            }
-            updateHUD();
-        }
-    }
 });
 
 // Initialize the game

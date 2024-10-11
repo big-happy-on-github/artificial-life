@@ -123,7 +123,7 @@ function showTowerStats(tower, showButtons=true) {
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-        if (tower.type == "4" || tower.type == "12") {
+        if (!this.canShoot) {
             towerDamageDisplay.textContent = `0 dps`;
             if (tower.type == "4") {
                 tower.desc = `+$${tower.damage} after each wave`;
@@ -146,7 +146,7 @@ function showTowerStats(tower, showButtons=true) {
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
             const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-            if (tower.type == "4" || tower.type == "12") {
+            if (!this.canShoot) {
                 towerDamageDisplay.textContent = `0 dps`;
                 if (tower.type == "4") {
                     tower.desc = `+$${tower.damage} after each wave`;
@@ -340,6 +340,7 @@ class Tower {
         this.type = type;
         this.level = 1;
         this.target = null;
+        this.canShoot = true;
 
         if (type == '1') {//jack
             this.health = 10;
@@ -369,6 +370,7 @@ class Tower {
             this.damage = 4;
             this.price = 20;
             this.desc = `+$${this.damage} after each wave`;
+            this.canShoot = false;
         } else if (type == '5') {//philip
             this.health = 15;
             this.range = 1/0;
@@ -404,6 +406,7 @@ class Tower {
             this.damage = 1/0;
             this.price = 80;
             this.desc = "every 5 waves, insta-kills everything";
+            this.canShoot = false;
         } else if (type == '10') {//declan
             this.health = 15;
             this.range = 100;
@@ -411,6 +414,7 @@ class Tower {
             this.damage = 0;
             this.price = 7;
             this.desc = "freezes enemies nearby";
+            this.canShoot = false;
         } else if (type == '11') {//cole
             this.health = 1/0;
             this.range = 1/0;
@@ -425,6 +429,7 @@ class Tower {
             this.damage = 2;
             this.price = 7;
             this.desc = "adds damage to nearby towers";
+            this.canShoot = false;
         }
 
         this.lastFired = 0;

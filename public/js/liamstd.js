@@ -517,10 +517,11 @@ class Tower {
                 }
             } else {
                 if (this.type == "14") {
-                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y+1, this.x), this.damage));
-                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y-1, this.x), this.damage));
-                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y, this.x+1), this.damage));
-                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y, this.x-1), this.damage));
+                    // North (up), South (down), East (right), West (left)
+                    projectiles.push(new Projectile(this.x, this.y, Math.PI / 2, this.damage));   // North
+                    projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
+                    projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
+                    projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
                 } else {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }

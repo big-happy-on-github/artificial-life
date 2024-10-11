@@ -23,7 +23,6 @@ const upgrade2Button = document.getElementById('upgrade2-button') || null;
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
 
-// Define the upgrades for each tower type and level
 const upgrade = {
     '1': {
         'lvl2': { '1': { health: 5, range: 0, damage: 1, fireRate: -0.1, cost: 5 }, '2': { health: 0, range: 30, damage: 0, fireRate: 0, cost: 3 } },

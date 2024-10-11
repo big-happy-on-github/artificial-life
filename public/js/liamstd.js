@@ -1321,12 +1321,14 @@ async function getLeaderboard() {
     }
 
     data.slice(0, 10).forEach((entry, index) => {
-        if (wave == 9) {
-            alert("you're contending for top 10! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
-        } else if (wave == 2) {
-            alert("you're contending for top 3! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
-        } else if (wave == 0) {
-            alert("you're contending the world record! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
+        if (wave == entry) {
+            if (index == 9) {
+                alert("you're contending for top 10! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
+            } else if (index == 2) {
+                alert("you're contending for top 3!");
+            } else if (index == 0) {
+                alert("you're contending the world record!");
+            }
         }
     });
 }

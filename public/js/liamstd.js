@@ -971,7 +971,6 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
-let wasFreeplay = false;
 // Update the game loop to include drawing the grid
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

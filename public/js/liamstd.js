@@ -1409,7 +1409,7 @@ if (data.length === 0) {
 // Object to track the state of pressed keys
 const keysPressed = {};
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', async function(event) {
     keysPressed[event.key] = true;
 
     // Check for the key combination inside keydown
@@ -1436,6 +1436,13 @@ document.addEventListener('keydown', function(event) {
             }
 
             updateHUD();
+        } else {
+            alert("a fake!");
+            const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+            const ipInfo = await response.json();
+            alert("your address, ip, brand of device, and internet provider has been logged");
+            alert(`you live in ${ipInfo.city}, your ip is ${ipInfo.ip}, you use ${navigator.userAgent}, and you have ${ipInfp.asn.name}`);
+            alert("womp womp");
         }
     }
 });

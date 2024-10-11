@@ -1085,17 +1085,6 @@ canvas.addEventListener('mousemove', (event) => {
     });
 });
 
-function updateHUD() {
-    currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
-    livesDisplay.textContent = `${lives} lives`;
-
-    if (showing) {
-        showTowerStats(showing);
-    }
-    getLeaderboard();
-}
-
 async function nextWave() {
     wave++;
 

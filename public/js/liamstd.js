@@ -1269,11 +1269,11 @@ async function endGame() {
 // Get leaderboard data and update the DOM
 async function getLeaderboard() {
     if (freeplayMode) {
-        leaderboardContainer.style.display = 'none'; // Hide leaderboard in Freeplay Mode
+        leaderboard.style.display = 'none'; // Hide leaderboard in Freeplay Mode
         return;
     }
 
-    leaderboardContainer.style.display = 'block'; // Show leaderboard if not in Freeplay Mode
+    leaderboard.style.display = 'block'; // Show leaderboard if not in Freeplay Mode
     try {
         const { data, error } = await supabase
             .from('LiamsTD leaderboard')

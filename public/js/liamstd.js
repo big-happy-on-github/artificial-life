@@ -475,7 +475,7 @@ class Tower {
                 } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5") {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
                 } else {
-                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive, fast"));
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));
                 }
             } else {
                 projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
@@ -835,7 +835,7 @@ class Projectile {
         this.x = x;
         this.y = y;
         this.speed = 15;
-        if ('fast' in specificType) {
+        if (this.specificType && this.specificType.split(',').includes('fast')) {
             this.speed = 30;
         }
         this.angle = angle;
@@ -845,7 +845,7 @@ class Projectile {
     }
 
     draw() {
-        if ('explosive' in this.specificType) {
+        if (this.specificType && this.specificType.split(',').includes('explosive')) {
             ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
         } else {
             ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Normal projectile colors

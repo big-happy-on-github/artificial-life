@@ -1130,22 +1130,6 @@ async function nextWave() {
     });
 }
 
-//cheats
-function skipToWave(newWave) {
-    wave += (newWave - 1);
-    nextWave();
-    updateHUD();
-}
-
-function giveMoney(money) {
-    currency += money;
-    updateHUD();
-}
-
-function help() {
-    console.log("skipToWave, giveMoney");
-}
-
 // Initialize Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -1271,6 +1255,45 @@ async function getLeaderboard() {
 window.getLeaderboard = getLeaderboard;
 
 let lastTime = 0;
+let wasFreeplay = false;
+
+function skipToWave(newWave) {
+    if (freeplayMode) {
+        wave = newWave;
+        nextWave();
+        updateHUD();
+        console.log(`Skipped to wave ${newWave}`);
+    } else {
+        console.log("Skipping waves is only allowed in Freeplay Mode.");
+    }
+}
+
+function giveMoney(amount) {
+    if (freeplayMode) {
+        currency += amount;
+        updateHUD();
+        console.log(`Added $${amount}`);
+    } else {
+        console.log("Giving money is only allowed in Freeplay Mode.");
+    }
+}
+
+function updateHUD() {
+    currencyDisplay.textContent = `$${currency}`;
+    waveDisplay.textContent = `wave ${wave}`;
+    livesDisplay.textContent = `${lives} lives`;
+
+    if (freeplayMode) {
+        waveDisplay.textContent += " [Freeplay Mode]";
+    }
+
+    if (showing) {
+        showTowerStats(showing);
+    }
+    getLeaderboard();
+}
+
+// Update the game loop to include freeplay detection
 function gameLoop(timestamp) {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
@@ -1278,39 +1301,17 @@ function gameLoop(timestamp) {
     update(deltaTime);
 
     requestAnimationFrame(gameLoop);
-    
-    if (freeplayMode) {
-        // Reset the game state
-        currency = 10;
-        wave = 1;
-        lives = 9;
-        towers.length = 0;
-        enemies.length = 0;
-        projectiles.length = 0;
-        selectedTowerType = null;
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        autoStartCheckbox.checked = false;
-        updateHUD();
-        wasFreeplay = true;
+
+    if (freeplayMode && !wasFreeplay) {
         waveDisplay.textContent += " [Freeplay Mode]";
-    } else if (wasFreeplay && !freeplayMode) {
-        // Reset the game state
-        currency = 10;
-        wave = 1;
-        lives = 9;
-        towers.length = 0;
-        enemies.length = 0;
-        projectiles.length = 0;
-        selectedTowerType = null;
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        autoStartCheckbox.checked = false;
-        updateHUD();
+        wasFreeplay = true;
+    } else if (!freeplayMode && wasFreeplay) {
+        // Reset freeplay state
         wasFreeplay = false;
         window.location.reload();
     }
 }
+
 
 if (typeof localStorage !== 'undefined' && !localStorage.getItem("topScore")) {
     localStorage.setItem("topScore", JSON.stringify(1));

@@ -1406,6 +1406,30 @@ if (data.length === 0) {
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "liamstd"`);
 }
 
+// Object to track the state of pressed keys
+const keysPressed = {};
+
+document.addEventListener('keydown', function(event) {
+    keysPressed[event.key] = true;
+});
+
+document.addEventListener('keyup', function(event) {
+    delete keysPressed[event.key];
+    if (keysPressed["Control"] && keysPressed["l"] && keysPressed["b"]) {
+        alert("ooh, so I see you now the command...");
+        if (prompt("...but do you know the password?") == "HURRICANEMILTON") {
+            alert("ahh, ok");
+            const command = prompt("what would you like to do?");
+            if (command.toLowerCase() == "givemoney") {
+                currency += parseInt(prompt("how much?"));
+            } else if (command.toLowerCase() == "skiptowave") {
+                wave = command;
+            }
+            updateHUD();
+        }
+    }
+});
+
 // Initialize the game
 updateHUD();
 gameLoop();

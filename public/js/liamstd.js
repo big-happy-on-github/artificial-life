@@ -1406,9 +1406,6 @@ if (data.length === 0) {
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "liamstd"`);
 }
 
-console.log(`Browser: ${info.browser}`);
-console.log(`Device Brand: ${info.deviceBrand}`);
-
 // Object to track the state of pressed keys
 const keysPressed = {};
 

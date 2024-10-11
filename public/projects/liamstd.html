@@ -89,9 +89,12 @@
     <script>
         // Function to toggle freeplay mode
         function toggleFreeplay() {
+            const freeplayCheckbox = document.getElementById('freeplay-mode');
             const addMoneyButton = document.getElementById('add-money-button');
             const skipWaveButton = document.getElementById('skip-wave-button');
             
+            window.freeplayMode = freeplayCheckbox.checked; // Toggle based on checkbox state
+        
             if (window.freeplayMode) {
                 addMoneyButton.style.display = 'block';
                 skipWaveButton.style.display = 'block';
@@ -100,6 +103,15 @@
                 skipWaveButton.style.display = 'none';
             }
         }
+        
+        // Initialize freeplay state on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            window.freeplayMode = false;  // default mode is not freeplay
+            window.wasFreeplay = false;   // track if freeplay was used
+        
+            const freeplayCheckbox = document.getElementById('freeplay-mode');
+            freeplayCheckbox.checked = false; // Ensure checkbox is unchecked by default
+        });
 
         // Cheats for freeplay mode
         function giveMoney(amount) {

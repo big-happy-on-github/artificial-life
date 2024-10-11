@@ -1268,15 +1268,6 @@ function gameLoop(timestamp) {
     update(deltaTime);
 
     requestAnimationFrame(gameLoop);
-
-    if (freeplayMode && !wasFreeplay) {
-        waveDisplay.textContent += " [Freeplay Mode]";
-        wasFreeplay = true;
-    } else if (!freeplayMode && wasFreeplay) {
-        // Reset freeplay state
-        wasFreeplay = false;
-        window.location.reload();
-    }
 }
 
 

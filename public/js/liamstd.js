@@ -1217,11 +1217,19 @@ async function endGame() {
     if (!freeplayMode) {
         let name = '';
         let leaderboardNames = await getLeaderboardNames();
-    
-        name = prompt(leaderboardNames.includes(name.trim())
-                ? "name taken. Gimme a different one:"
-                : "enter a name for the leaderboard:");
 
+        while (true) {
+            name = prompt(leaderboardNames.includes(name.trim())
+                    ? "name taken. Gimme a different one:"
+                    : "enter a name for the leaderboard:");
+
+            if (name.length > 10) {
+                alert("name must be under 10 letters");
+            } else {
+                break
+            }
+        }
+        
         if (name) {
             // Submit the score to the leaderboard
             await submitScore(name, wave);
@@ -1269,7 +1277,7 @@ async function getLeaderboard() {
         }
 
         // Display the top 12 entries
-        data.slice(0, 12).forEach((entry, index) => {
+        data.slice(0, 3).forEach((entry, index) => {
             const li = document.createElement('li');
             li.textContent = `#${index + 1}, wave ${entry.wave} by ${entry.name}`;
             leaderboard.appendChild(li);
@@ -1277,6 +1285,16 @@ async function getLeaderboard() {
     } catch (error) {
         console.error('Error fetching leaderboard data:', error);
     }
+
+    data.slice(0, 10).forEach((entry, index) => {
+        if (wave == 9) {
+            alert("you're contending for top 10! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
+        } else if (wave == 2) {
+            alert("you're contending for top 3! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
+        } else if (wave == 0) {
+            alert("you're contending the world record! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
+        }
+    });
 }
 
 window.getLeaderboard = getLeaderboard;

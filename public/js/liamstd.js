@@ -8,6 +8,7 @@ const towerSelection = document.getElementById('tower-selection') || null;
 const startWaveButton = document.getElementById('start-wave-button') || null;
 const autoStartCheckbox = document.getElementById('auto-start') || null;
 const leaderboard = document.getElementById("leaderboard");
+const freeplayMode = document.getElementById('freeplay-mode').checked;
 
 // Tower stats pop-up
 const towerStatsPopup = document.getElementById('tower-stats-popup') || null;
@@ -970,6 +971,7 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
+let wasFreeplay = false;
 // Update the game loop to include drawing the grid
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -993,6 +995,36 @@ function update(deltaTime) {
         waveInProgress = true;
         spawnEnemies();
         startWaveButton.disabled = true;
+    }
+
+    if (freeplayMode) {
+        // Reset the game state
+        currency = 10;
+        wave = 1;
+        lives = 9;
+        towers.length = 0;
+        enemies.length = 0;
+        projectiles.length = 0;
+        selectedTowerType = null;
+        waveInProgress = false;
+        startWaveButton.disabled = false;
+        autoStartCheckbox.checked = false;
+        updateHUD();
+        wasFreeplay = true;
+    } else if (wasFreeplay && !freeplayMode) {
+        // Reset the game state
+        currency = 10;
+        wave = 1;
+        lives = 9;
+        towers.length = 0;
+        enemies.length = 0;
+        projectiles.length = 0;
+        selectedTowerType = null;
+        waveInProgress = false;
+        startWaveButton.disabled = false;
+        autoStartCheckbox.checked = false;
+        updateHUD();
+        window.location.reload();
     }
 }
 
@@ -1089,6 +1121,11 @@ function updateHUD() {
     waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
     livesDisplay.textContent = `${lives} lives`;
 
+    const freeplayMode = document.getElementById('freeplay-mode').checked;
+    if (freeplayMode) {
+        waveDisplay.textContent += " [Freeplay Mode]";
+    }
+
     if (showing) {
         showTowerStats(showing);
     }
@@ -1169,13 +1206,19 @@ async function getLeaderboardNames() {
 }
 
 async function submitScore(name, wave) {
-    // Fetch IP information
+    if (freeplayMode) {
+        console.log("Freeplay mode is enabled. No leaderboard submission.");
+        return;
+    }
+
+    // Existing leaderboard submission code
     const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
     const ipInfo = await response.json();
-    console.log(ipInfo); // Logs the IP information
+    console.log(ipInfo);
+
     try {
         const { error } = await supabase
             .from('LiamsTD leaderboard')
@@ -1191,18 +1234,20 @@ async function submitScore(name, wave) {
 async function endGame() {
     alert(`game over! You died on wave ${wave}.`);
 
-    let name = '';
-    let leaderboardNames = await getLeaderboardNames();
-
-    // Prompt the user to enter a unique name
-    while (!name || leaderboardNames.includes(name)) {
-        name = prompt(leaderboardNames.includes(name.trim())
-            ? "name taken. Gimme a different one:"
-            : "enter a name for the leaderboard:");
+    if (!freeplayMode) {
+        let name = '';
+        let leaderboardNames = await getLeaderboardNames();
+    
+        // Prompt the user to enter a unique name
+        while (!name || leaderboardNames.includes(name)) {
+            name = prompt(leaderboardNames.includes(name.trim())
+                ? "name taken. Gimme a different one:"
+                : "enter a name for the leaderboard:");
+        }
+    
+        // Submit the score to the leaderboard
+        await submitScore(name, wave);
     }
-
-    // Submit the score to the leaderboard
-    await submitScore(name, wave);
 
     alert("play again?");
     
@@ -1223,6 +1268,12 @@ async function endGame() {
 
 // Get leaderboard data and update the DOM
 async function getLeaderboard() {
+    if (freeplayMode) {
+        leaderboardContainer.style.display = 'none'; // Hide leaderboard in Freeplay Mode
+        return;
+    }
+
+    leaderboardContainer.style.display = 'block'; // Show leaderboard if not in Freeplay Mode
     try {
         const { data, error } = await supabase
             .from('LiamsTD leaderboard')

@@ -72,7 +72,8 @@ const upgrade = {
         'lvl2': { '1': { health: 5, range: 0, damage: 0, fireRate: 0, cost: 3 } },
         'lvl3': { '1': { health: 7, range: 0, damage: 0, fireRate: 0, cost: 5 } },
         'lvl4': { '1': { health: 13, range: 0, damage: 0, fireRate: 0, cost: 8 } }
-    }
+    }, 
+    '14': {}
 };
 
 // Function to show the tower stats pop-up
@@ -104,6 +105,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'luca';
     } else if (tower.type == '13') {
         towerType = 'ciaran';
+    } else if (tower.type == '14') {
+        towerType = 'david';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -445,7 +448,7 @@ class Tower {
             this.price = 12;
             this.desc = "adds damage to nearby towers";
             this.canShoot = false;
-        } else if (type == '13') {//luca
+        } else if (type == '13') {//ciaran
             this.health = 35;
             this.range = 0;
             this.fireRate = 0;
@@ -453,6 +456,14 @@ class Tower {
             this.price = 5;
             this.desc = "meat shield, cannot shoot";
             this.canShoot = false;
+        }  else if (type == '14') {//david
+            this.health = 20;
+            this.range = 1/0;
+            this.fireRate = 0.1;
+            this.damage = 0.4;
+            this.price = 4;
+            this.desc = "shoots constantly in 4 directions";
+            this.canShoot = true;
         }
 
         this.lastFired = 0;
@@ -485,6 +496,8 @@ class Tower {
             ctx.fillStyle = '#48f542';
         } else if (this.type == '13') {
             ctx.fillStyle = '#f542d1';
+        } else if (this.type == '14') {
+            ctx.fillStyle = '#874b26';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -503,7 +516,14 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));
                 }
             } else {
-                projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                if (this.type == "14") {
+                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y+1, this.x), this.damage));
+                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y-1, this.x), this.damage));
+                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y, this.x+1), this.damage));
+                    projectiles.push(new Projectile(this.x, this.y, Math.atan2(this.y, this.x-1), this.damage));
+                } else {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                }
             }
         }
     }

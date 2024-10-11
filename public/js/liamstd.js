@@ -67,7 +67,12 @@ const upgrade = {
     },
     '10': {},
     '11': {},
-    '12': {}
+    '12': {},
+    '13': {
+        'lvl2': { '1': { health: 5, range: 0, damage: 0, fireRate: 0, cost: 3 } },
+        'lvl3': { '1': { health: 7, range: 0, damage: 0, fireRate: 0, cost: 5 } },
+        'lvl4': { '1': { health: 13, range: 0, damage: 0, fireRate: 0, cost: 8 } }
+    }
 };
 
 // Function to show the tower stats pop-up
@@ -97,6 +102,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'cole';
     } else if (tower.type == '12') {
         towerType = 'luca';
+    } else if (tower.type == '13') {
+        towerType = 'ciaran';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -430,6 +437,14 @@ class Tower {
             this.price = 12;
             this.desc = "adds damage to nearby towers";
             this.canShoot = false;
+        } else if (type == '13') {//luca
+            this.health = 35;
+            this.range = 0;
+            this.fireRate = 0;
+            this.damage = 0;
+            this.price = 5;
+            this.desc = "meat shield, cannot shoot";
+            this.canShoot = false;
         }
 
         this.lastFired = 0;
@@ -460,6 +475,8 @@ class Tower {
             ctx.fillStyle = '#fff';
         } else if (this.type == '12') {
             ctx.fillStyle = '#48f542';
+        } else if (this.type == '13') {
+            ctx.fillStyle = '#f542d1';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }

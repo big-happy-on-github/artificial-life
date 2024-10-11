@@ -473,7 +473,7 @@ class Tower {
         // Adjust the angle to shoot at the predicted future position
         const angle = Math.atan2(futureY - this.y, futureX - this.x);
 
-        if (this.type == "6" || this.type == "11") {
+        if (this.type == "3" || || this.type == "5" || this.type == "11") {
             projectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'tower', 'explosive'));
         } else {
             projectiles.push(new Projectile(this.x, this.y, angle, this.damage));

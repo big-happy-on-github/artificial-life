@@ -996,37 +996,6 @@ function update(deltaTime) {
         spawnEnemies();
         startWaveButton.disabled = true;
     }
-
-    if (freeplayMode) {
-        // Reset the game state
-        currency = 10;
-        wave = 1;
-        lives = 9;
-        towers.length = 0;
-        enemies.length = 0;
-        projectiles.length = 0;
-        selectedTowerType = null;
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        autoStartCheckbox.checked = false;
-        updateHUD();
-        wasFreeplay = true;
-    } else if (wasFreeplay && !freeplayMode) {
-        // Reset the game state
-        currency = 10;
-        wave = 1;
-        lives = 9;
-        towers.length = 0;
-        enemies.length = 0;
-        projectiles.length = 0;
-        selectedTowerType = null;
-        waveInProgress = false;
-        startWaveButton.disabled = false;
-        autoStartCheckbox.checked = false;
-        updateHUD();
-        wasFreeplay = false;
-        window.location.reload();
-    }
 }
 
 function resetOtherDropdowns(excludeId) {
@@ -1121,10 +1090,6 @@ function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
     livesDisplay.textContent = `${lives} lives`;
-
-    if (freeplayMode) {
-        waveDisplay.textContent += " [Freeplay Mode]";
-    }
 
     if (showing) {
         showTowerStats(showing);
@@ -1313,6 +1278,38 @@ function gameLoop(timestamp) {
     update(deltaTime);
 
     requestAnimationFrame(gameLoop);
+    
+    if (freeplayMode) {
+        // Reset the game state
+        currency = 10;
+        wave = 1;
+        lives = 9;
+        towers.length = 0;
+        enemies.length = 0;
+        projectiles.length = 0;
+        selectedTowerType = null;
+        waveInProgress = false;
+        startWaveButton.disabled = false;
+        autoStartCheckbox.checked = false;
+        updateHUD();
+        wasFreeplay = true;
+        waveDisplay.textContent += " [Freeplay Mode]";
+    } else if (wasFreeplay && !freeplayMode) {
+        // Reset the game state
+        currency = 10;
+        wave = 1;
+        lives = 9;
+        towers.length = 0;
+        enemies.length = 0;
+        projectiles.length = 0;
+        selectedTowerType = null;
+        waveInProgress = false;
+        startWaveButton.disabled = false;
+        autoStartCheckbox.checked = false;
+        updateHUD();
+        wasFreeplay = false;
+        window.location.reload();
+    }
 }
 
 if (typeof localStorage !== 'undefined' && !localStorage.getItem("topScore")) {

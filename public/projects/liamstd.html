@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -60,10 +60,10 @@
             </div>
             <div id="freeplay-div">
                 <label for="freeplay-mode">freeplay</label>
-                <input type="checkbox" id="freeplay-mode">
+                <input type="checkbox" id="freeplay-mode" onclick="toggleFreeplay()">
                 <!-- Freeplay Cheat Buttons -->
-                <button onclick="giveMoney(prompt('how much money do you want to add?'))" id="add-money-button" style="display: none;">+money</button>
-                <button onclick="skipToWave('what wave do you want to skip to?')" id="skip-wave-button" style="display: none;">+wave</button>
+                <button onclick="giveMoney(prompt('How much money do you want to add?'))" id="add-money-button" style="display: none;">+money</button>
+                <button onclick="skipToWave(prompt('What wave do you want to skip to?'))" id="skip-wave-button" style="display: none;">+wave</button>
             </div>
             <button id="start-wave-button">start</button>
         </div>
@@ -76,7 +76,7 @@
             <p id="tower-damage"></p>
             <p id="tower-desc"></p>
             <button id="upgrade1-button">upgrade1</button>
-            <button id="upgrade2-button">upgrade1</button>
+            <button id="upgrade2-button">upgrade2</button>
         </div>
     </div>
     <div id="leaderboard-container">
@@ -85,13 +85,45 @@
         </ol>
     </div>
     <script type="module" src="/js/liamland.js"></script>
-    <script type="module" src="/js/liamstd.js">
-        if (freeplayMode) {
-            document.getElementById('add-money-button').style.display = 'block';
-            document.getElementById('skip-wave-button').style.display = 'block';
-        } else {
-            document.getElementById('add-money-button').style.display = 'none';
-            document.getElementById('skip-wave-button').style.display = 'none';
+    <script type="module" src="/js/liamstd.js"></script>
+    <script>
+        // Function to toggle freeplay mode
+        function toggleFreeplay() {
+            const freeplayMode = document.getElementById('freeplay-mode').checked;
+            const addMoneyButton = document.getElementById('add-money-button');
+            const skipWaveButton = document.getElementById('skip-wave-button');
+            
+            if (freeplayMode) {
+                addMoneyButton.style.display = 'block';
+                skipWaveButton.style.display = 'block';
+            } else {
+                addMoneyButton.style.display = 'none';
+                skipWaveButton.style.display = 'none';
+            }
+        }
+
+        // Cheats for freeplay mode
+        function giveMoney(amount) {
+            const freeplayMode = document.getElementById('freeplay-mode').checked;
+            if (freeplayMode && amount) {
+                currency += parseInt(amount, 10) || 0;
+                updateHUD();
+                console.log(`Added $${amount}`);
+            } else {
+                console.log('Give money is only allowed in Freeplay Mode.');
+            }
+        }
+
+        function skipToWave(newWave) {
+            const freeplayMode = document.getElementById('freeplay-mode').checked;
+            if (freeplayMode && newWave) {
+                wave = parseInt(newWave, 10);
+                nextWave();
+                updateHUD();
+                console.log(`Skipped to wave ${newWave}`);
+            } else {
+                console.log('Skipping waves is only allowed in Freeplay Mode.');
+            }
         }
     </script>
 </body>

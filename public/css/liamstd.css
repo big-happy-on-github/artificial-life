@@ -59,7 +59,7 @@ body {
     margin-bottom: 5px;
     padding: 5px;
     background-color: #fff;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgba(204, 204, 204, 0.5);
     color: rgb(0, 0, 0);
 }
 

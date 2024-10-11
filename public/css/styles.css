@@ -43,11 +43,16 @@ header a {
     color: inherit; /* Inherit text color from the parent */
 }
 
-header #menu {
-    display: flex;
+header #menu a {
+    text-decoration: none;
+    margin: 0 10px; /* Add horizontal spacing between links */
+    display: flex; /* Ensure it's a flexbox if needed */
     align-items: center;
-    gap: 7px;
-    margin-left: 25%;
+}
+
+header #menu a p {
+    margin: 0; /* Reset any default margins on the paragraph */
+    padding: 5px 0; /* Optional: Add vertical padding */
 }
 
 header input {
@@ -84,13 +89,13 @@ body {
     margin-left: 55%;
 }
 
-/* Main Section */
 main {
     margin: 40px 0;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+    gap: 20px; /* This adds a gap between divs */
 }
 
 main div {
@@ -100,7 +105,6 @@ main div {
     padding: 20px;
     text-align: center;
     transition: transform 0.3s;
-    gap: 20px;
 }
 
 main div:hover {

@@ -1245,27 +1245,6 @@ window.getLeaderboard = getLeaderboard;
 let lastTime = 0;
 let wasFreeplay = false;
 
-function skipToWave(newWave) {
-    if (freeplayMode) {
-        wave = newWave;
-        nextWave();
-        updateHUD();
-        console.log(`Skipped to wave ${newWave}`);
-    } else {
-        console.log("Skipping waves is only allowed in Freeplay Mode.");
-    }
-}
-
-function giveMoney(amount) {
-    if (freeplayMode) {
-        currency += amount;
-        updateHUD();
-        console.log(`Added $${amount}`);
-    } else {
-        console.log("Giving money is only allowed in Freeplay Mode.");
-    }
-}
-
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
     waveDisplay.textContent = `wave ${wave}`;

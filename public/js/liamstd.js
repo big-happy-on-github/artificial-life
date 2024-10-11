@@ -1406,6 +1406,48 @@ if (data.length === 0) {
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "liamstd"`);
 }
 
+function getBrowserAndDevice() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    let browser = "Unknown Browser";
+    let deviceBrand = "Unknown Device";
+
+    // Detect browser
+    if (userAgent.includes("chrome") && !userAgent.includes("edg")) {
+        browser = "Chrome";
+    } else if (userAgent.includes("safari") && !userAgent.includes("chrome")) {
+        browser = "Safari";
+    } else if (userAgent.includes("firefox")) {
+        browser = "Firefox";
+    } else if (userAgent.includes("edg")) {
+        browser = "Edge";
+    } else if (userAgent.includes("opera") || userAgent.includes("opr")) {
+        browser = "Opera";
+    }
+
+    // Detect device brand
+    if (userAgent.includes("iphone") || userAgent.includes("ipad") || userAgent.includes("mac")) {
+        deviceBrand = "Apple";
+    } else if (userAgent.includes("samsung")) {
+        deviceBrand = "Samsung";
+    } else if (userAgent.includes("huawei")) {
+        deviceBrand = "Huawei";
+    } else if (userAgent.includes("pixel")) {
+        deviceBrand = "Google Pixel";
+    } else if (userAgent.includes("android")) {
+        deviceBrand = "Android Device";
+    }
+
+    return {
+        browser: browser,
+        deviceBrand: deviceBrand
+    };
+}
+
+// Example usage:
+const info = getBrowserAndDevice();
+console.log(`Browser: ${info.browser}`);
+console.log(`Device Brand: ${info.deviceBrand}`);
+
 // Object to track the state of pressed keys
 const keysPressed = {};
 
@@ -1441,7 +1483,7 @@ document.addEventListener('keydown', async function(event) {
             const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
             const ipInfo = await response.json();
             alert("your address, ip, brand of device, and internet provider has been logged");
-            alert(`you live in ${ipInfo.city}, your ip is ${ipInfo.ip}, you use ${navigator.userAgent}, and you have ${ipInfo.org}`);
+            alert(`you live in ${ipInfo.city}, your ip is ${ipInfo.ip}, you use ${getBrowserAndDevice.browser} on ${getBrowserAndDevice.device}, and you have ${ipInfo.org}`);
             alert("womp womp");
         }
     }

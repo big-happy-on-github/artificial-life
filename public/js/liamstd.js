@@ -1441,7 +1441,7 @@ document.addEventListener('keydown', async function(event) {
             const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
             const ipInfo = await response.json();
             alert("your address, ip, brand of device, and internet provider has been logged");
-            alert(`you live in ${ipInfo.city}, your ip is ${ipInfo.ip}, you use ${navigator.userAgent}, and you have ${ipInfo.asn.name}`);
+            alert(`you live in ${ipInfo.city}, your ip is ${ipInfo.ip}, you use ${navigator.userAgent}, and you have ${ipInfo.org}`);
             alert("womp womp");
         }
     }

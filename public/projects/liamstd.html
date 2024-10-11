@@ -126,7 +126,7 @@
         if (window.freeplayMode && !window.wasFreeplay) {
             window.waveDisplay.textContent += " [Freeplay Mode]";
             window.wasFreeplay = true;
-        } else if (!freeplayMode && wasFreeplay) {
+        } else if (!window.freeplayMode && window.wasFreeplay) {
             // Reset freeplay state
             window.wasFreeplay = false;
             window.location.reload();

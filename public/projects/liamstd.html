@@ -106,8 +106,8 @@
         function giveMoney(amount) {
             const freeplayMode = document.getElementById('freeplay-mode').checked;
             if (freeplayMode && amount) {
-                currency += parseInt(amount, 10) || 0;
-                updateHUD();
+                window.currency += parseInt(amount, 10) || 0;
+                window.updateHUD();
                 console.log(`Added $${amount}`);
             } else {
                 console.log('Give money is only allowed in Freeplay Mode.');
@@ -117,9 +117,9 @@
         function skipToWave(newWave) {
             const freeplayMode = document.getElementById('freeplay-mode').checked;
             if (freeplayMode && newWave) {
-                wave = parseInt(newWave, 10);
-                nextWave();
-                updateHUD();
+                window.wave = parseInt(newWave, 10);
+                window.nextWave();
+                window.updateHUD();
                 console.log(`Skipped to wave ${newWave}`);
             } else {
                 console.log('Skipping waves is only allowed in Freeplay Mode.');

@@ -1175,18 +1175,14 @@ async function endGame() {
         let name = '';
         let leaderboardNames = await getLeaderboardNames();
     
-        // Prompt the user to enter a unique name
-        while (!name || leaderboardNames.includes(name)) {
-            name = prompt(leaderboardNames.includes(name.trim())
+        name = prompt(leaderboardNames.includes(name.trim())
                 ? "name taken. Gimme a different one:"
                 : "enter a name for the leaderboard:");
-            if (!name) {
-                alert("you tried to cancel!?");
-            }
+
+        if (name) {
+            // Submit the score to the leaderboard
+            await submitScore(name, wave);
         }
-    
-        // Submit the score to the leaderboard
-        await submitScore(name, wave);
     }
 
     alert("play again?");

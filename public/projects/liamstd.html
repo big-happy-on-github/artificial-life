@@ -89,11 +89,10 @@
     <script>
         // Function to toggle freeplay mode
         function toggleFreeplay() {
-            const freeplayMode = document.getElementById('freeplay-mode').checked;
             const addMoneyButton = document.getElementById('add-money-button');
             const skipWaveButton = document.getElementById('skip-wave-button');
             
-            if (freeplayMode) {
+            if (window.freeplayMode) {
                 addMoneyButton.style.display = 'block';
                 skipWaveButton.style.display = 'block';
             } else {
@@ -104,8 +103,7 @@
 
         // Cheats for freeplay mode
         function giveMoney(amount) {
-            const freeplayMode = document.getElementById('freeplay-mode').checked;
-            if (freeplayMode && amount) {
+            if (window.freeplayMode && amount) {
                 window.currency += parseInt(amount, 10) || 0;
                 window.updateHUD();
                 console.log(`Added $${amount}`);
@@ -115,8 +113,7 @@
         }
 
         function skipToWave(newWave) {
-            const freeplayMode = document.getElementById('freeplay-mode').checked;
-            if (freeplayMode && newWave) {
+            if (window.freeplayMode && newWave) {
                 window.wave = parseInt(newWave, 10);
                 window.nextWave();
                 window.updateHUD();
@@ -124,6 +121,15 @@
             } else {
                 console.log('Skipping waves is only allowed in Freeplay Mode.');
             }
+        }
+
+        if (window.freeplayMode && !window.wasFreeplay) {
+            window.waveDisplay.textContent += " [Freeplay Mode]";
+            window.wasFreeplay = true;
+        } else if (!freeplayMode && wasFreeplay) {
+            // Reset freeplay state
+            window.wasFreeplay = false;
+            window.location.reload();
         }
     </script>
 </body>

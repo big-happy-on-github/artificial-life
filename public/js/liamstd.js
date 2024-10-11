@@ -480,6 +480,7 @@ class Tower {
         
                 // Adjust the angle to shoot at the predicted future position
                 angle = Math.atan2(futureY - this.y, futureX - this.x);
+                console.log(angle)
             } else {
                 angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
             }

@@ -43,6 +43,13 @@ header a {
     color: inherit; /* Inherit text color from the parent */
 }
 
+header #menu {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: 25%;
+}
+
 header input {
     padding: 5px;
     border: 1px solid #fff;
@@ -93,6 +100,7 @@ main div {
     padding: 20px;
     text-align: center;
     transition: transform 0.3s;
+    gap: 20px;
 }
 
 main div:hover {

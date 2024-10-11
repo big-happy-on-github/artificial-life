@@ -381,7 +381,7 @@ class Tower {
         } else if (type == '7') {//mitch
             this.health = 20;
             this.range = 225;
-            this.fireRate = 0.8;
+            this.fireRate = 0.5;
             this.damage = 3.5;
             this.price = 3;
             this.desc = "generally good at everything";
@@ -390,7 +390,7 @@ class Tower {
             this.range = 150;
             this.fireRate = 0.075;
             this.damage = 0.3;
-            this.price = 3;
+            this.price = 10;
             this.desc = "super fast, minigun-like shots";
         } else if (type == '6') {//lars
             this.health = 12;
@@ -404,7 +404,7 @@ class Tower {
             this.range = 1/0;
             this.fireRate = "5 waves";
             this.damage = 1/0;
-            this.price = 80;
+            this.price = 50;
             this.desc = "every 5 waves, insta-kills everything";
             this.canShoot = false;
         } else if (type == '10') {//declan
@@ -427,7 +427,7 @@ class Tower {
             this.range = 150;
             this.fireRate = 0;
             this.damage = 2;
-            this.price = 7;
+            this.price = 12;
             this.desc = "adds damage to nearby towers";
             this.canShoot = false;
         }
@@ -836,7 +836,7 @@ class Projectile {
         this.y = y;
         this.speed = 15;
         if (this.specificType && this.specificType.split(',').includes('fast')) {
-            this.speed = 90;
+            this.speed = 180;
         }
         this.angle = angle;
         this.damage = damage;

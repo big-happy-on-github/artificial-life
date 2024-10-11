@@ -856,7 +856,10 @@ const bossEnemyTypes = [
 ];
 
 function spawnEnemies() {
-    const enemyCount = min(35, (5 + wave));
+    let enemyCount = 5 + wave;
+    if (enemyCount > 35) {
+        enemyCount = 35;
+    }
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
             const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);

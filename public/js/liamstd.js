@@ -1413,7 +1413,7 @@ document.addEventListener('keydown', function(event) {
     keysPressed[event.key] = true;
 
     // Check for the key combination inside keydown
-    if ((keysPressed["Control"] || keysPressed["Meta"]) && keysPressed["l"] && keysPressed["b"]) {
+    if (keysPressed["Control"] && keysPressed["l"] && keysPressed["b"]) {
         alert("ooh, so I see you know the command...");
         if (prompt("...but do you know the password?") === "HURRICANEMILTON") {
             alert("ahh, ok");

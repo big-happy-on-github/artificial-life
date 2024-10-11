@@ -1243,6 +1243,9 @@ async function endGame() {
             name = prompt(leaderboardNames.includes(name.trim())
                 ? "name taken. Gimme a different one:"
                 : "enter a name for the leaderboard:");
+            if (!name) {
+                alert("you tried to cancel!?");
+            }
         }
     
         // Submit the score to the leaderboard

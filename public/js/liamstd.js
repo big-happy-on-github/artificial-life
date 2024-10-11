@@ -1024,6 +1024,7 @@ function update(deltaTime) {
         startWaveButton.disabled = false;
         autoStartCheckbox.checked = false;
         updateHUD();
+        wasFreeplay = false;
         window.location.reload();
     }
 }
@@ -1121,7 +1122,6 @@ function updateHUD() {
     waveDisplay.textContent = `wave ${wave} (pr: ${JSON.parse(localStorage.getItem("topScore"))})`;
     livesDisplay.textContent = `${lives} lives`;
 
-    const freeplayMode = document.getElementById('freeplay-mode').checked;
     if (freeplayMode) {
         waveDisplay.textContent += " [Freeplay Mode]";
     }

@@ -130,7 +130,7 @@ function showTowerStats(tower, showButtons=true) {
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-        if (!tower.canShoot) {
+        if (tower.canShoot == false) {
             towerDamageDisplay.textContent = `0 dps`;
             if (tower.type == "4") {
                 tower.desc = `+$${tower.damage} after each wave`;
@@ -153,7 +153,7 @@ function showTowerStats(tower, showButtons=true) {
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
             const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-            if (!tower.canShoot) {
+            if (tower.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
                 if (tower.type == "4") {
                     tower.desc = `+$${tower.damage} after each wave`;
@@ -200,9 +200,13 @@ upgrade1Button.addEventListener('click', (event) => {
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
             towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
+            if (showing.canShoot == false) {
+                towerDamageDisplay.textContent = `0 dps`;
+            } else {
+                const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+                const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+                towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
+            }
 
             upgrade1Button.textContent = `Pay $${upgradeInfo.cost}`;
             upgrade2Button.textContent = ""; // Hide other upgrade button
@@ -254,9 +258,13 @@ upgrade2Button.addEventListener('click', (event) => {
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
             towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
 
-            const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
-            const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
-            towerDamageDisplay.textContent = `${currentDPS} dmg/s ➔ ${newDPS} dmg/s`;
+            if (showing.canShoot == false) {
+                towerDamageDisplay.textContent = `0 dps`;
+            } else {
+                const currentDPS = (showing.damage * Math.round((1 / showing.fireRate) * 100) / 100).toFixed(2);
+                const newDPS = ((showing.damage + upgradeInfo.damage) * Math.round((1 / (showing.fireRate + upgradeInfo.fireRate)) * 100) / 100).toFixed(2);
+                towerDamageDisplay.textContent = `${currentDPS}dps ➔ ${newDPS}`;
+            }
 
             upgrade2Button.textContent = `Pay $${upgradeInfo.cost}`;
             upgrade1Button.textContent = ""; // Hide other upgrade button

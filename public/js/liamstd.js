@@ -461,22 +461,29 @@ class Tower {
 
    shoot() {
         if (!this.target || this.target.health <= 0) return; // Ensure there's a target
-        
-        const projectileSpeed = 15; // Assuming this is the speed of your projectile
-        const distanceToTarget = Math.sqrt((this.target.x - this.x) ** 2 + (this.target.y - this.y) ** 2);
-        const timeToHit = distanceToTarget / projectileSpeed; // Time it will take for the projectile to reach the enemy
-        
-        // Predict the future position of the enemy based on their speed and direction
-        const futureX = this.target.x + this.target.speed * Math.cos(this.target.angle) * timeToHit;
-        const futureY = this.target.y + this.target.speed * Math.sin(this.target.angle) * timeToHit;
 
-        // Adjust the angle to shoot at the predicted future position
-        const angle = Math.atan2(futureY - this.y, futureX - this.x);
-
-        if (this.type == "3" || this.type == "5" || this.type == "11") {
-            projectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'tower', 'explosive'));
-        } else {
-            projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+        if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
+            let angle;
+            if (this.type == "3" || this.type == "5" || this.type == "11") {
+                const projectileSpeed = 15; // Assuming this is the speed of your projectile
+                const distanceToTarget = Math.sqrt((this.target.x - this.x) ** 2 + (this.target.y - this.y) ** 2);
+                const timeToHit = distanceToTarget / projectileSpeed; // Time it will take for the projectile to reach the enemy
+                
+                // Predict the future position of the enemy based on their speed and direction
+                const futureX = this.target.x + this.target.speed * Math.cos(this.target.angle) * timeToHit;
+                const futureY = this.target.y + this.target.speed * Math.sin(this.target.angle) * timeToHit;
+        
+                // Adjust the angle to shoot at the predicted future position
+                angle = Math.atan2(futureY - this.y, futureX - this.x);
+            } else {
+                angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            }
+            
+            if (tower.type == "6" || tower.type == "11") {
+                projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
+            } else {
+                projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+            }
         }
     }
 

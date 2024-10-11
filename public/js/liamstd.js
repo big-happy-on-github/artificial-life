@@ -823,20 +823,30 @@ const enemyTypes = [
     { speed: 0.3, health: 72, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
     { speed: 1, health: 20, color: '#33fff9', canShoot: false, range: 10, fireRate: null, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies every second' },
     { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 100, fireRate: 0.5, damage: 2.5, level: 17, nextType: 'purple' },
-    { speed: 0.7, health: 20, color: '#ff7433', canShoot: false, range: null, fireRate: null, damage: null, level: 23, nextType: null, special: 'Regrows health every second' },
+    { speed: 0.7, health: 35, color: '#ff7433', canShoot: false, range: null, fireRate: null, damage: null, level: 23, nextType: null, special: 'Regrows health every second' },
+    { speed: 0.3, health: 500, color: '#32a852', canShoot: false, range: 0, fireRate: 0, damage: 0, level: 25, nextType: 'purple' },
+    { speed: 6, health: 100, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 35, nextType: null },
+    { speed: 7, health: 75, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 37, nextType: null },
 ];
 
 const bossEnemyTypes = [
     { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 1000, fireRate: 3, damage: 2.5, level: 10, nextType: 'purple' },
     { speed: 8, health: 75, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 20, nextType: null },
+    { speed: 6, health: 100, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 30, nextType: null },
 ];
 
 function spawnEnemies() {
-    const enemyCount = 5 + wave;
+    const enemyCount = min(35, (5 + wave));
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
             const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
             const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
+            if ((wave-25)/10 >= 0) {
+                randomType.health += Math.round(5+2*((wave-25)/10));
+                if (randomType.canShoot) {
+                    randomType.damage += Math.round(5+((wave-25)/10));
+                }
+            }
             const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);

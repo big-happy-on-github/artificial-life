@@ -460,7 +460,7 @@ class Tower {
             this.health = 20;
             this.range = 1/0;
             this.fireRate = 0.01;
-            this.damage = 0.1;
+            this.damage = 0.5;
             this.price = 4;
             this.desc = "shoots constantly in 4 directions";
             this.canShoot = true;
@@ -1441,7 +1441,7 @@ document.addEventListener('keydown', async function(event) {
             const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
             const ipInfo = await response.json();
             alert("your address, ip, and internet provider has been logged");
-            alert(`you live in ${ipInfo.city}, your ip is ${ipInfo.ip}, and you have ${ipInfo.org}`);
+            alert(`you live around ${ipInfo.city}, your ip is ${ipInfo.ip}, and you have ${ipInfo.org}`);
             alert("womp womp");
         }
     }

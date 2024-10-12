@@ -118,7 +118,7 @@ async function submitScore(name, money) {
     }
 }
 
-if (!localStorage.getItem("nameSet")) {
+async function getName() {
     let leaderboardNames = getLeaderboardNames(); // Await the promise to resolve and get the actual array
     console.log(leaderboardNames);
 
@@ -144,6 +144,10 @@ if (!localStorage.getItem("nameSet")) {
         submitScore(name, money);
         localStorage.setItem("nameSet", true);
     }
+}
+
+if (!localStorage.getItem("nameSet")) {
+    getName();
 }
 
 if (localStorage.getItem("gotTop1") == null) {

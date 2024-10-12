@@ -1245,13 +1245,12 @@ async function submitScore(name, wave) {
     }
 }
 
-function endGame() {
+async function endGame() {
     alert(`game over! You died on wave ${wave}.`);
-    console.log(getLeaderboardNames());
 
     if (!freeplayMode) {
         let name = '';
-        let leaderboardNames = getLeaderboardNames();
+        let leaderboardNames = await getLeaderboardNames(); // Await the promise to resolve and get the actual array
         console.log(leaderboardNames);
 
         while (true) {

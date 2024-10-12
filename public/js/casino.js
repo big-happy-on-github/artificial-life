@@ -244,3 +244,4 @@ async function getLeaderboard() {
 }
 
 window.getLeaderboard = getLeaderboard;
+updateDisplay();

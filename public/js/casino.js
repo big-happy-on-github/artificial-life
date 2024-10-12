@@ -119,7 +119,7 @@ async function submitScore(name, money) {
 }
 
 async function getName() {
-    let leaderboardNames = getLeaderboardNames(); // Await the promise to resolve and get the actual array
+    let leaderboardNames = await getLeaderboardNames(); // Await the promise to resolve and get the actual array
     console.log(leaderboardNames);
 
     let nameEmpty = false;
@@ -141,7 +141,7 @@ async function getName() {
     }
     
     if (leaderboardNames && name && !nameEmpty) {
-        submitScore(name, money);
+        await submitScore(name, money);
         localStorage.setItem("nameSet", true);
     }
 }

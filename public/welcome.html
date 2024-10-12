@@ -57,9 +57,6 @@
         }
         
         document.getElementById("liamstdP").textContent = `LiamsTD (${data[0].num_visits} visits)`;
-
-        // Object to track the state of pressed keys
-        let isAlert;
         const keysPressed = {};
         
         async function checkAlertInSupabase() {
@@ -78,10 +75,11 @@
                 
                 return data ? data.info : null; // Return the alert info if found
             } catch (err) {
-                console.error('Error in fetching alert info:', err);
                 return null;
             }
         }
+
+        let isAlert = checkAlertInSupabase();
         
         document.addEventListener('keydown', async function(event) {
             keysPressed[event.key] = true;

@@ -822,7 +822,7 @@ class Enemy {
         const index = enemies.indexOf(this);
         this.health = 0;
         if (this.color == "#fff" || this.color == "#1F51FF") {
-            enemyProjectiles.push(new Projectile(this.x, this.y, Math.atan2(this.x, this.y), this.damage, "enemy", "explosive");
+            enemyProjectiles.push(new Projectile(this.x, this.y, Math.atan2(this.x, this.y), this.damage, "enemy", "explosive"));
         }
         if (index > -1) {
             enemies.splice(index, 1);

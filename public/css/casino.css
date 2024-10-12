@@ -9,7 +9,7 @@ body {
 #game-container {
     margin: 50px auto;
     padding: 20px;
-    background: #2b2b2b;
+    background: rgba(43, 43, 43, 0.5);
     border-radius: 10px;
     width: 80%;
     max-width: 400px;

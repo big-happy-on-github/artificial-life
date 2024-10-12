@@ -61,13 +61,16 @@
         
         async function checkAlertInSupabase() {
             try {
-                // Query Supabase for the 'admin' table where name is 'alert'
                 const { data, error } = await supabase
                     .from('admin')
                     .select('info')
                     .eq('name', 'alert')
                     .limit(1)
-                    .single(); // Get a single row
+                    .single({
+                        headers: {
+                            "Accept": "application/json",
+                        },
+                    });
         
                 if (error) {
                     return null;

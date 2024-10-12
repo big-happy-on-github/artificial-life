@@ -695,7 +695,11 @@ class Enemy {
     shoot(tower) {
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
             const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
-            enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+            if (this.color == "#FFD700") {
+                enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy', 'explosive')); // Create enemy projectile
+            else {
+                enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
+            }
             this.lastFired = Date.now();
         }
     }
@@ -771,6 +775,13 @@ class Enemy {
                     this.lastFired = Date.now();
                     console.log(`'#33fff9' healed ${nearestEnemy} to ${nearestEnemy.health}`);
                 }
+            } else if (this.color == '#000') {
+                const nearestEnemy = enemies.find(enemy => this.isInRange(enemy));
+                if (nearestEnemy && Date.now() - this.lastFired > 1000) {
+                    nearestEnemy.health += 5;
+                    this.lastFired = Date.now();
+                    console.log(`'#000' healed ${nearestEnemy} to ${nearestEnemy.health}`);
+                }
             } else if (this.color == '#ff7433') {
                 const max_health = this.health;
                 if (Date.now() - this.lastFired > 1000 && max_health >= this.health + 1) {
@@ -799,6 +810,9 @@ class Enemy {
     die(crossed) {
         const index = enemies.indexOf(this);
         this.health = 0;
+        if (this.color == "#fff" || this.color == "#1F51FF") {
+            enemyProjectiles.push(new Projectile(this.x, this.y, Math.atan2(this.x, this.y), this.damage, "enemy", "explosive");
+        }
         if (index > -1) {
             enemies.splice(index, 1);
             if (crossed) {
@@ -848,12 +862,19 @@ const enemyTypes = [
     { speed: 0.3, health: 500, color: '#32a852', canShoot: false, range: 0, fireRate: 0, damage: 0, level: 25, nextType: 'purple' },
     { speed: 6, health: 100, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 35, nextType: null },
     { speed: 7, health: 75, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 37, nextType: null },
+    { speed: 2, health: 200, color: '#fff', canShoot: false, range: null, fireRate: null, damage: 10, level: 40, nextType: null, special: 'Explodes on death' },
+    { speed: 1.5, health: 250, color: '#808080', canShoot: true, range: 100, fireRate: 1, damage: 5, level: 45, nextType: null },
+    { speed: 1.2, health: 300, color: '#000', canShoot: false, range: 100, fireRate: null, damage: null, level: 50, nextType: null, special: 'Heals nearby enemies by 5 every second' },
+    { speed: 0.8, health: 600, color: '#FFD700', canShoot: true, range: 150, fireRate: 0.5, damage: 5, level: 55, nextType: null, special: 'Shoots explosive bullets' },
 ];
 
 const bossEnemyTypes = [
     { speed: 0.3, health: 500, color: 'pink', canShoot: true, range: 1000, fireRate: 3, damage: 2.5, level: 10, nextType: 'purple' },
     { speed: 8, health: 275, color: '#beff33', canShoot: false, range: null, fireRate: null, damage: null, level: 20, nextType: null },
     { speed: 6, health: 300, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 30, nextType: null },
+    { speed: 0.5, health: 2500, color: '#DC143C', canShoot: false, range: null, fireRate: null, damage: null, level: 40, nextType: '#fff' },
+    { speed: 1, health: 5000, color: '#39FF14', canShoot: false, range: null, fireRate: null, damage: null, level: 50, nextType: null },
+    { speed: 2, health: 200, color: '#1F51FF', canShoot: false, range: null, fireRate: null, damage: 50, level: 60, nextType: null, special: 'Explodes on death' } //do
 ];
 
 function spawnEnemies() {
@@ -925,16 +946,27 @@ class Projectile {
         ctx.beginPath();
         ctx.arc(this.x, this.y, explosionRadius, 0, Math.PI * 2);
         ctx.fill();
-    
-        // Damage enemies within the explosion radius
-        enemies.forEach(enemy => {
-            const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
-            if (distance < explosionRadius) {
-                // Apply half the damage to enemies within the explosion radius
-                enemy.takeDamage(this.damage / 2);
-                console.log("Explosion hit enemy:", enemy);
-            }
-        });
+
+        if (this.type == "tower") {
+            // Damage enemies within the explosion radius
+            enemies.forEach(enemy => {
+                const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+                if (distance < explosionRadius) {
+                    // Apply half the damage to enemies within the explosion radius
+                    enemy.takeDamage(this.damage);
+                    console.log("Explosion hit enemy:", enemy);
+                }
+            });
+        } else {
+            towers.forEach(tower => {
+                const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
+                if (distance < explosionRadius) {
+                    // Apply half the damage to enemies within the explosion radius
+                    tower.takeDamage(this.damage);
+                    console.log("Explosion hit tower:", tower);
+                }
+            });
+        }
     }
 
     update() {

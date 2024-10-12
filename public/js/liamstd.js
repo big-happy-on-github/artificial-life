@@ -1249,7 +1249,6 @@ async function endGame() {
     alert(`game over! You died on wave ${wave}.`);
 
     if (!freeplayMode) {
-        let name = '';
         let leaderboardNames = await getLeaderboardNames(); // Await the promise to resolve and get the actual array
         console.log(leaderboardNames);
 
@@ -1258,18 +1257,19 @@ async function endGame() {
                 name = prompt(leaderboardNames.includes(name.trim())
                         ? "name taken. Gimme a different one:"
                         : "enter a name for the leaderboard:");
-    
-                if (name && name.length && name.length > 10) {
-                    alert("name must be under 10 letters");
-                } else if (name && name.length && name.length <= 1) {
-                    alert("name cannot be empty");
-                } else {
-                    break;
+                if (name) {
+                    if (name && name.length && name.length > 10) {
+                        alert("name must be under 10 letters");
+                    } else if (name && name.length && name.length <= 1) {
+                        alert("name cannot be empty");
+                    } else {
+                        break;
+                    }
                 }
             }
         }
         
-        if (leaderboardNames && name && name != '') {
+        if (leaderboardNames && name) {
             submitScore(name, wave);
         }
     }

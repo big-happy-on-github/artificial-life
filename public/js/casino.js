@@ -106,22 +106,25 @@ async function submitScore(name, money) {
         throw new Error('Network response was not ok');
     }
     const ipInfo = await response.json();
-    console.log(ipInfo);
+    console.log('IP info:', ipInfo);
 
     try {
         const { data, error } = await supabase
             .from('Casino leaderboard')
             .insert([{ name: name, money: money, ip: ipInfo }]);
-    
+
         if (error) {
-            console.error("Supabase Insert Error:", error);
+            console.error('Supabase Insert Error:', error);
         } else {
-            console.log("Supabase Insert Success:", data);
+            console.log('Supabase Insert Success:', data);
         }
+
+        // Check if the nameSet logic is executed
+        localStorage.setItem("nameSet", JSON.stringify(true));
+        console.log("nameSet stored:", localStorage.getItem("nameSet"));
     } catch (error) {
-        console.error("Error submitting score:", error);
+        console.error('Error submitting score:', error);
     }
-    updateDisplay();
 }
 
 async function getName() {
@@ -140,7 +143,7 @@ async function getName() {
                 alert("name must be under 10 letters");
             } else if (name && leaderboardNames.includes(name.trim())) {
                 alert("name already taken");
-            } else if (!nameEmpty && name) {
+            } else if (!nameEmpty) {
                 break;
             }
         }
@@ -149,9 +152,6 @@ async function getName() {
     if (leaderboardNames && name && !nameEmpty) {
         console.log("Submitting score with name:", name, "and money:", money);
         await submitScore(name, money);
-        console.log("Score submitted!");
-        localStorage.setItem("nameSet", JSON.stringify(true));
-        console.log("nameSet stored:", localStorage.getItem("nameSet"));  // Add this line
     }
 }
 

@@ -1337,7 +1337,6 @@ async function endGame() {
     window.location.reload();
 }
 
-// Get leaderboard data and update the DOM
 async function getLeaderboard() {
     if (freeplayMode) {
         leaderboard.style.display = 'none'; // Hide leaderboard in Freeplay Mode
@@ -1366,21 +1365,22 @@ async function getLeaderboard() {
             li.textContent = `#${index + 1}, wave ${entry.wave} by ${entry.name}`;
             leaderboard.appendChild(li);
         });
+
+        // Check if the player is contending for top spots
+        data.slice(0, 10).forEach((entry, index) => {
+            if (wave >= entry.wave) {
+                if (index === 9) {
+                    alert("You're contending for the top 10! (note: scores are only saved when you die, closing out of the window will permanently delete your score)");
+                } else if (index === 2) {
+                    alert("You're contending for the top 3!");
+                } else if (index === 0) {
+                    alert("You're contending for the world record!");
+                }
+            }
+        });
     } catch (error) {
         console.error('Error fetching leaderboard data:', error);
     }
-
-    data.slice(0, 10).forEach((entry, index) => {
-        if (wave == entry) {
-            if (index == 9) {
-                alert("you're contending for top 10! (note: scores are only saved when you die, closing out of the window will permanently delete you're score)");
-            } else if (index == 2) {
-                alert("you're contending for top 3!");
-            } else if (index == 0) {
-                alert("you're contending the world record!");
-            }
-        }
-    });
 }
 
 window.getLeaderboard = getLeaderboard;

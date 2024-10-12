@@ -42,6 +42,7 @@ placeBetBtn.addEventListener('click', () => {
 
 function updateDisplay() {
     moneyDisplay.textContent = `$${money}`;
+    getLeaderboard();
 }
 
 const { data, error: selectError } = await supabase
@@ -116,6 +117,7 @@ async function submitScore(name, money) {
     } catch (error) {
         console.error('Error submitting score:', error);
     }
+    getLeaderboard();
 }
 
 async function getName() {

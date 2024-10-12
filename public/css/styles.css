@@ -58,7 +58,7 @@ header #menu a p {
 
 header #menu a p:hover {
     cursor: point;
-    color: "grey";
+    color: "#808080";
 }
 
 header input {

@@ -1252,23 +1252,25 @@ async function endGame() {
         let leaderboardNames = await getLeaderboardNames(); // Await the promise to resolve and get the actual array
         console.log(leaderboardNames);
 
+        let nameEmpty = false;
         while (true) {
             if (leaderboardNames) {
                 let name = prompt("enter a name for the leaderboard");
                 if (name && name.length && name.length <= 1) {
                     alert("name cannot be empty");
+                    nameEmpty = true;
                 }
                 if (name && name.length && name.length > 10) {
                     alert("name must be under 10 letters");
                 } else if (name && leaderboardNames.includes(name.trim())) {
                     alert("name already taken");
-                } else if (!name || !name.length) {
+                } else if (nameEmpty) {
                     break;
                 }
             }
         }
         
-        if (leaderboardNames && name) {
+        if (leaderboardNames && name && !nameEmpty) {
             submitScore(name, wave);
         }
     }

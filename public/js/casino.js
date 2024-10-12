@@ -146,6 +146,7 @@ async function getName() {
     if (leaderboardNames && name && !nameEmpty) {
         await submitScore(name, money);
         localStorage.setItem("nameSet", JSON.stringify(true));
+        console.log("nameSet stored:", localStorage.getItem("nameSet"));  // Add this line
     }
 }
 

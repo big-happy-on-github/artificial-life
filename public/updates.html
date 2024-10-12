@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIAMLAND</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9556203064620862"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-9556203064620862">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        main div:hover {
+            transform: translateY(0px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/welcome"><h1>LIAMLAND</h1></a>
+        <div id="menu">
+            <a href="/updates"><p>updates</p></a>
+            <a href="/about"><p>about me</p></a>
+            <a href="/faq"><p>FAQ</p></a>
+        </div>
+        <div class="feedback-container">
+            <label for="feedbackInput">got feedback?: </label>
+            <input id="feedbackInput">
+            <button onclick="addData(document.getElementById('feedbackInput').value)">send</button>
+        </div>
+    </header>
+    <main>
+        <h1>recent updates</h1>
+        <div>
+          <h2>10/12/2024 - first update</h2>
+          <p>This is the first update to be showcased in the update page. In the last few days, I have added 2 new towers to LiamsTD. Ciaran, a meat shield, and david, who constantly shoots in 4 directions. I also made bullets from far range towers shoot faster to reduce the chance of missing when shooting, although it can still happen. Overall, I kind of just fixed bugs and everything, pretty chill. I did add a admin command menu though. Bet you can't get to it ;).</p>
+        </div>
+    </main>
+    <script type="module" src="/js/liamland.js"></script>
+</body>
+</html>

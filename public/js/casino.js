@@ -41,7 +41,68 @@ placeBetBtn.addEventListener('click', () => {
 
 function updateDisplay() {
     moneyDisplay.textContent = `$${money}`;
-    getLeaderboard();
+    updatePlayerScore();  // Update the player's score in the leaderboard
+    getLeaderboard();     // Refresh the leaderboard display
+}
+
+async function updatePlayerScore() {
+    // Assuming the player's name is stored in localStorage
+    const name = localStorage.getItem("playerName");
+
+    if (!name) {
+        console.error("Player name not found in localStorage.");
+        return;
+    }
+
+    try {
+        const { error } = await supabase
+            .from('Casino leaderboard')
+            .update({ money: money })
+            .eq('name', name);
+
+        if (error) {
+            console.error('Error updating player score:', error);
+        } else {
+            console.log(`Player score updated: ${name}, $${money}`);
+        }
+    } catch (error) {
+        console.error('Error updating player score:', error);
+    }
+}
+
+// Updated getName function to store the player name in localStorage
+async function getName() {
+    let leaderboardNames = await getLeaderboardNames();
+    console.log("Fetched leaderboard names:", leaderboardNames);
+
+    let name = '';
+
+    while (true) {
+        name = prompt("Enter a name for the leaderboard");
+
+        if (!name || name.length < 1) {
+            alert("Name cannot be empty");
+            console.log("Name was empty or invalid.");
+        } else if (name.length > 10) {
+            alert("Name must be under 10 letters");
+            console.log("Name was too long:", name);
+        } else if (leaderboardNames.includes(name.trim())) {
+            alert("Name already taken");
+            console.log("Name already exists in leaderboard:", name);
+        } else {
+            console.log("Valid name entered:", name);
+            break;  // Exit the loop when the name is valid
+        }
+    }
+
+    // Submit the score and store the name in localStorage
+    if (leaderboardNames && name) {
+        console.log("Submitting score with name:", name, "and money:", money);
+        await submitScore(name, money);
+        localStorage.setItem("playerName", name);
+        localStorage.setItem("nameSet", JSON.stringify(true));
+        console.log("nameSet stored:", localStorage.getItem("nameSet"));
+    }
 }
 
 async function updateVisits() {
@@ -124,42 +185,6 @@ async function submitScore(name, money) {
         console.log("nameSet stored:", localStorage.getItem("nameSet"));
     } catch (error) {
         console.error('Error submitting score:', error);
-    }
-}
-
-async function getName() {
-    let leaderboardNames = await getLeaderboardNames();  // Fetch existing leaderboard names
-    console.log("Fetched leaderboard names:", leaderboardNames);
-
-    let nameEmpty = false;
-    let name = '';
-
-    while (true) {
-        name = prompt("Enter a name for the leaderboard");
-
-        if (!name || name.length < 1) {
-            alert("Name cannot be empty");
-            nameEmpty = true;
-            console.log("Name was empty or invalid.");
-        } else if (name.length > 10) {
-            alert("Name must be under 10 letters");
-            console.log("Name was too long:", name);
-        } else if (leaderboardNames.includes(name.trim())) {
-            alert("Name already taken");
-            console.log("Name already exists in leaderboard:", name);
-        } else {
-            console.log("Valid name entered:", name);
-            nameEmpty = false;
-            break;  // Exit the loop when the name is valid
-        }
-    }
-
-    // Only submit the score and store the name if the name is valid
-    if (leaderboardNames && name && !nameEmpty) {
-        console.log("Submitting score with name:", name, "and money:", money);  // This should now be called
-        await submitScore(name, money);  // Call submitScore with valid name
-        localStorage.setItem("nameSet", JSON.stringify(true));
-        console.log("nameSet stored:", localStorage.getItem("nameSet"));
     }
 }
 

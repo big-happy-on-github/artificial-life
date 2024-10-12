@@ -1,9 +1,12 @@
+const placeBetBtn = document.getElementById('place-bet-btn');
+const resultDiv = document.getElementById('result');
+const moneyDisplay = document.getElementById('money');
+
 let money = 100;
 let selectedGameType = "coin-toss";
 
-document.getElementById('place-bet-btn').addEventListener('click', () => {
+placeBetBtn.addEventListener('click', () => {
     const betAmount = parseInt(document.getElementById('bet-amount').value);
-    const resultDiv = document.getElementById('result');
     
     if (isNaN(betAmount) || betAmount <= 0 || betAmount > money) {
         resultDiv.textContent = "you can't bet that!";
@@ -31,7 +34,7 @@ document.getElementById('place-bet-btn').addEventListener('click', () => {
 });
 
 function updateDisplay() {
-    document.getElementById('money').textContent = money;
+    moneyDisplay.textContent = `$${money}`;
 }
 
 const { data, error: selectError } = await supabase
@@ -70,3 +73,55 @@ if (data.length === 0) {
 
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "casino"`);
 }
+
+if (localStorage.getItem("gotTop1") == null) {
+    localStorage.setItem("gotTop10", money);
+    localStorage.setItem("gotTop3", money);
+    localStorage.setItem("gotTop1", money);
+}
+
+async function getLeaderboard() {
+    document.getElementById("leaderboard").style.display = 'block';
+    try {
+        const { data, error } = await supabase
+            .from('Casino leaderboard')
+            .select('*')
+            .order('money', { ascending: false }); // Sort by wave descending
+
+        if (error) {
+            throw error;
+        }
+
+        // Clear the current leaderboard display
+        while (leaderboard.firstChild) {
+            leaderboard.removeChild(leaderboard.firstChild);
+        }
+
+        // Display the top 12 entries
+        data.slice(0, 3).forEach((entry, index) => {
+            const li = document.createElement('li');
+            li.textContent = `#${index + 1}, $${entry.money} by ${entry.name}`;
+            leaderboard.appendChild(li);
+        });
+
+        // Check if the player is contending for top spots
+        data.slice(0, 10).forEach((entry, index) => {
+            if (money >= entry.money) {
+                if (index === 9 && !gotTop10) {
+                    alert("you're in the top 10!");
+                    localStorage.setItem("gotTop10", true);
+                } else if (index === 2 && !gotTop3) {
+                    alert("you're in the top 3!");
+                    localStorage.setItem("gotTop3", true);
+                } else if (index === 0 && !gotTop1) {
+                    alert("you've broken the world record!");
+                    localStorage.setItem("gotTop1", true);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+    }
+}
+
+window.getLeaderboard = getLeaderboard;

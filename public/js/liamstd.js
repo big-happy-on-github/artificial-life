@@ -1261,13 +1261,15 @@ async function endGame() {
     
                 if (name && name.length && name.length > 10) {
                     alert("name must be under 10 letters");
+                } else if (name && name == '') {
+                    alert("name cannot be empty");
                 } else {
                     break;
                 }
             }
         }
         
-        if (name && name != '') {
+        if (leaderboardNames && name && name != '') {
             submitScore(name, wave);
         }
     }
@@ -1281,6 +1283,7 @@ async function endGame() {
     towers.length = 0;
     enemies.length = 0;
     projectiles.length = 0;
+    enemyProjectiles.length = 0;
     selectedTowerType = null;
     waveInProgress = false;
     startWaveButton.disabled = false;

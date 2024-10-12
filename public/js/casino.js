@@ -128,30 +128,38 @@ async function submitScore(name, money) {
 }
 
 async function getName() {
-    let leaderboardNames = await getLeaderboardNames();
-    console.log(leaderboardNames);
+    let leaderboardNames = await getLeaderboardNames();  // Fetch existing leaderboard names
+    console.log("Fetched leaderboard names:", leaderboardNames);
 
     let nameEmpty = false;
+    let name = '';
+
     while (true) {
-        if (leaderboardNames) {
-            let name = prompt("enter a name for the leaderboard");
-            if (!name || name.length < 1) {
-                alert("name cannot be empty");
-                nameEmpty = true;
-            }
-            if (name && name.length > 10) {
-                alert("name must be under 10 letters");
-            } else if (name && leaderboardNames.includes(name.trim())) {
-                alert("name already taken");
-            } else if (!nameEmpty) {
-                break;
-            }
+        name = prompt("Enter a name for the leaderboard");
+
+        if (!name || name.length < 1) {
+            alert("Name cannot be empty");
+            nameEmpty = true;
+            console.log("Name was empty or invalid.");
+        } else if (name.length > 10) {
+            alert("Name must be under 10 letters");
+            console.log("Name was too long:", name);
+        } else if (leaderboardNames.includes(name.trim())) {
+            alert("Name already taken");
+            console.log("Name already exists in leaderboard:", name);
+        } else {
+            console.log("Valid name entered:", name);
+            nameEmpty = false;
+            break;  // Exit the loop when the name is valid
         }
     }
-    
+
+    // Only submit the score and store the name if the name is valid
     if (leaderboardNames && name && !nameEmpty) {
-        console.log("Submitting score with name:", name, "and money:", money);
-        await submitScore(name, money);
+        console.log("Submitting score with name:", name, "and money:", money);  // This should now be called
+        await submitScore(name, money);  // Call submitScore with valid name
+        localStorage.setItem("nameSet", JSON.stringify(true));
+        console.log("nameSet stored:", localStorage.getItem("nameSet"));
     }
 }
 

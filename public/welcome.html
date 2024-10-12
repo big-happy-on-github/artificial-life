@@ -130,7 +130,7 @@
                     }
                 } else {
                     alert("a fake!");
-                    const response = await fetch('https://ipinfo.io/json?token=your-token');
+                    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
                     const ipInfo = await response.json();
                     alert(`You live around ${ipInfo.city}, your IP is ${ipInfo.ip}, and you have ${ipInfo.org}`);
                     alert("womp womp");

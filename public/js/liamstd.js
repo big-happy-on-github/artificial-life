@@ -1252,6 +1252,11 @@ function endGame() {
         let name = '';
         let leaderboardNames = getLeaderboardNames();
 
+        // Ensure leaderboardNames is an array
+        if (typeof leaderboardNames === 'string') {
+            leaderboardNames = leaderboardNames.split(','); // Adjust this if your format is different
+        }
+
         while (true) {
             name = prompt(leaderboardNames.includes(name.trim())
                     ? "name taken. Gimme a different one:"
@@ -1260,7 +1265,7 @@ function endGame() {
             if (name.length > 10) {
                 alert("name must be under 10 letters");
             } else {
-                break
+                break;
             }
         }
         

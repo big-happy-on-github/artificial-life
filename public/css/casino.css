@@ -25,20 +25,6 @@ body {
     width: 100px;
 }
 
-#bet-options button {
-    padding: 10px;
-    margin-left: 10px;
-    background: #3a3a3a;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-#bet-options button:hover {
-    background: #5a5a5a;
-}
-
 #result {
     margin-top: 20px;
     font-size: 1.2em;

@@ -4,7 +4,7 @@ document.getElementById('place-bet-btn').addEventListener('click', () => {
     const betAmount = parseInt(document.getElementById('bet-amount').value);
     const resultDiv = document.getElementById('result');
     
-    if (isNaN(betAmount) || betAmount <= 0 || betAmount > fakeMoney) {
+    if (isNaN(betAmount) || betAmount <= 0 || betAmount > money) {
         resultDiv.textContent = "you can't bet that!";
         return;
     }
@@ -18,7 +18,7 @@ document.getElementById('place-bet-btn').addEventListener('click', () => {
 
     if (win) {
         const winnings = betAmount * 2;
-        fakeMoney += winnings;
+        money += winnings;
         resultDiv.textContent = `+$${winnings}! 🟢`;
     } else {
         resultDiv.textContent = `-$${betAmount}. 🔴`;
@@ -28,5 +28,5 @@ document.getElementById('place-bet-btn').addEventListener('click', () => {
 });
 
 function updateDisplay() {
-    document.getElementById('fake-money').textContent = fakeMoney;
+    document.getElementById('money').textContent = money;
 }

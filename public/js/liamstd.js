@@ -460,7 +460,7 @@ class Tower {
             this.health = 20;
             this.range = 1/0;
             this.fireRate = 0.01;
-            this.damage = 0.5;
+            this.damage = 0.3;
             this.price = 4;
             this.desc = "shoots constantly in 4 directions";
             this.canShoot = true;

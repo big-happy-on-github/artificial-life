@@ -1245,12 +1245,12 @@ async function submitScore(name, wave) {
     }
 }
 
-async function endGame() {
+function endGame() {
     alert(`game over! You died on wave ${wave}.`);
 
     if (!freeplayMode) {
         let name = '';
-        let leaderboardNames = await getLeaderboardNames();
+        let leaderboardNames = getLeaderboardNames();
 
         while (true) {
             name = prompt(leaderboardNames.includes(name.trim())
@@ -1266,7 +1266,7 @@ async function endGame() {
         
         if (name) {
             // Submit the score to the leaderboard
-            await submitScore(name, wave);
+            submitScore(name, wave);
         }
     }
 

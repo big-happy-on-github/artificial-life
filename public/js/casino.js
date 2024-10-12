@@ -117,7 +117,7 @@ async function submitScore(name, money) {
     } catch (error) {
         console.error('Error submitting score:', error);
     }
-    getLeaderboard();
+    updateDisplay();
 }
 
 async function getName() {

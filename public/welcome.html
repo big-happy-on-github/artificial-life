@@ -133,7 +133,11 @@
                             .select('feedback')
                         while (true) {
                             if (data) {
-                                alert(JSON.stringify(data.feedback));
+                                let feedbackList = [];
+                                data.forEach(feedback => {
+                                    feedbackList.push(feedback.feedback);
+                                });
+                                alert(JSON.stringify(feedbackList));
                                 break;
                             }
                         }

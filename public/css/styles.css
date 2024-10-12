@@ -43,15 +43,19 @@ header a {
     color: inherit; /* Inherit text color from the parent */
 }
 
+header #menu {
+    display: flex;
+    gap: 20px; /* Adjust spacing between the items */
+}
+
 header #menu a {
-    margin: 0 10px; /* Add horizontal spacing between links */
-    display: flex; /* Ensure it's a flexbox if needed */
-    align-items: baseline;
+    display: flex;
+    align-items: center; /* Ensures vertical alignment */
 }
 
 header #menu a p {
-    margin: 0; /* Reset any default margins on the paragraph */
-    padding: 5px 0; /* Optional: Add vertical padding */
+    margin: 0;
+    padding: 0 10px; /* Optional padding to add spacing inside the <p> */
 }
 
 header #menu a p:hover {

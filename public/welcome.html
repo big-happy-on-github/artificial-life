@@ -130,7 +130,7 @@
                     } else if (command.toLowerCase() == "feedback") {
                         const { data, error } = await supabase
                             .from('feedback')
-                            .select('*')
+                            .select('feedback')
                         while (true) {
                             if (data) {
                                 alert(JSON.stringify(data));

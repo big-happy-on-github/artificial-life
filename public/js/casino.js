@@ -149,7 +149,7 @@ async function getName() {
     }
 }
 
-if (!JSON.parse(localStorage.getItem("nameSet"))) {
+if (JSON.parse(localStorage.getItem("nameSet")) != true) {
     getName();
 }
 

@@ -61,17 +61,11 @@
         
         async function checkAlertInSupabase() {
             try {
-                const { data, error } = await supabase
-                    .from('admin')
-                    .select('info')
-                    .eq('name', 'alert')
-                    .limit(1)
-                    .single({
-                        headers: {
-                            "Accept": "application/json",
-                        },
-                    });
-        
+                const data = await fetch('https://kjfnxynntottdbxjcree.supabase.co/rest/v1/admin?select=info&name=eq.alert&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g')
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+
                 if (error) {
                     return null;
                 }

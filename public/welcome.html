@@ -143,8 +143,12 @@
         });
     
         if (!localStorage.getItem("alert") && isAlert != null) {
-            alert(isAlert);
-            localStorage.setItem("alert", isAlert);
+            if (localStorage.getItem("alert") != isAlert) {
+                alert(isAlert);
+                localStorage.setItem("alert", isAlert);
+            } else {
+                localStorage.removeItem("alert");
+            }
         }
     </script>
 </body>

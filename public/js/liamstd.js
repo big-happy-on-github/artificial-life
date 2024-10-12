@@ -898,7 +898,7 @@ class Projectile {
         this.y = y;
         this.speed = 15;
         if (this.specificType && this.specificType.split(',').includes('fast')) {
-            this.speed = 180;
+            this.speed = 840;
         }
         this.angle = angle;
         this.damage = damage;

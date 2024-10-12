@@ -140,7 +140,7 @@
             delete keysPressed[event.key];
         });
         
-        if (!localStorage.getItem("alert") && isAlert) {
+        if (!localStorage.getItem("alert") && isAlert != null) {
             alert(isAlert);
             localStorage.setItem("alert", isAlert);
         }

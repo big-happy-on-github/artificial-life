@@ -1252,6 +1252,7 @@ function endGame() {
     if (!freeplayMode) {
         let name = '';
         let leaderboardNames = getLeaderboardNames();
+        console.log(leaderboardNames);
 
         while (true) {
             name = prompt(leaderboardNames.includes(name.trim())

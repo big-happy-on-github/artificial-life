@@ -44,14 +44,12 @@ header a {
 }
 
 header #menu a {
-    text-decoration: none;
     margin: 0 10px; /* Add horizontal spacing between links */
     display: flex; /* Ensure it's a flexbox if needed */
-    align-items: center;
+    align-items: baseline;
 }
 
 header #menu a p {
-    font-size: 12px;
     margin: 0; /* Reset any default margins on the paragraph */
     padding: 5px 0; /* Optional: Add vertical padding */
 }

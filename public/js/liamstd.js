@@ -1261,7 +1261,7 @@ async function endGame() {
     
                 if (name && name.length && name.length > 10) {
                     alert("name must be under 10 letters");
-                } else if (name && name == '') {
+                } else if (name && name.length && name.length < 1) {
                     alert("name cannot be empty");
                 } else {
                     break;

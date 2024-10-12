@@ -1254,17 +1254,16 @@ async function endGame() {
 
         while (true) {
             if (leaderboardNames) {
-                name = prompt(leaderboardNames.includes(name.trim())
-                        ? "name taken. Gimme a different one:"
-                        : "enter a name for the leaderboard:");
-                if (name) {
-                    if (name && name.length && name.length > 10) {
-                        alert("name must be under 10 letters");
-                    } else if (name && name.length && name.length <= 1) {
-                        alert("name cannot be empty");
-                    } else {
-                        break;
-                    }
+                let name = prompt("enter a name for the leaderboard");
+                if (name && name.length && name.length <= 1) {
+                    alert("name cannot be empty");
+                }
+                if (name && name.length && name.length > 10) {
+                    alert("name must be under 10 letters");
+                } else if (name && leaderboardNames.includes(name.trim())) {
+                    alert("name already taken");
+                } else if (!name || !name.length) {
+                    break;
                 }
             }
         }

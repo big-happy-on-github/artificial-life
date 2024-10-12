@@ -1,4 +1,5 @@
 let money = 100;
+let selectedGameType = "coin-toss";
 
 document.getElementById('place-bet-btn').addEventListener('click', () => {
     const betAmount = parseInt(document.getElementById('bet-amount').value);
@@ -10,18 +11,20 @@ document.getElementById('place-bet-btn').addEventListener('click', () => {
     }
 
     // Deduct bet from fake money
-    fakeMoney -= betAmount;
+    money -= betAmount;
     updateDisplay();
 
-    // Simulate win or loss (50/50 chance)
-    const win = Math.random() >= 0.5;
-
-    if (win) {
-        const winnings = betAmount * 2;
-        money += winnings;
-        resultDiv.textContent = `+$${winnings}! 🟢`;
-    } else {
-        resultDiv.textContent = `-$${betAmount}. 🔴`;
+    if (selectedGameType == "coin-toss") {
+        // Simulate win or loss (50/50 chance)
+        const win = Math.random() >= 0.5;
+    
+        if (win) {
+            const winnings = betAmount * 2;
+            money += winnings;
+            resultDiv.textContent = `+$${winnings}! 🟢`;
+        } else {
+            resultDiv.textContent = `-$${betAmount}. 🔴`;
+        }
     }
 
     updateMoneyDisplay();

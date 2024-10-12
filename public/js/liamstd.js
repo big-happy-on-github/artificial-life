@@ -20,6 +20,7 @@ const towerDamageDisplay = document.getElementById('tower-damage') || { textCont
 const towerDescDisplay = document.getElementById('tower-desc') || { textContent: '' };
 const upgrade1Button = document.getElementById('upgrade1-button') || null;
 const upgrade2Button = document.getElementById('upgrade2-button') || null;
+const sellButton = document.getElementById('sell-button') || null;
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
 
@@ -117,6 +118,7 @@ function showTowerStats(tower, showButtons=true) {
     towerDescDisplay.textContent = tower.desc;
     upgrade1Button.disabled = false;
     upgrade2Button.disabled = false;
+    sellButton.disabled = false;
 
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;
@@ -170,6 +172,8 @@ function showTowerStats(tower, showButtons=true) {
         upgrade2Button.textContent = "";
         upgrade1Button.disabled = true;
         upgrade2Button.disabled = true;
+        sellButton.textContent = "";
+        sellButton.disabled = true;
     }
 
     // Show the pop-up
@@ -183,6 +187,13 @@ function hideTowerStats() {
     showing = null;
     upgradePressed = false;
 }
+
+sellButton.addEventListener('click', (event) => {
+    if (!showing) return;
+    if (confirm("are you sure you want to sell this tower?")) {
+        showing.destroy();
+    }
+});
 
 // Handle upgrade button click for damage upgrade
 upgrade1Button.addEventListener('click', (event) => {

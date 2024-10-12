@@ -127,6 +127,11 @@
                                 }
                             }
                         }
+                    } else if (command.toLowerCase() == "feedback") {
+                        const { data, error } = await supabase
+                            .from('feedback')
+                            .select('*')
+                        alert(data);
                     }
                 } else {
                     alert("a fake!");

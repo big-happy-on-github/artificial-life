@@ -154,7 +154,7 @@ if (!JSON.parse(localStorage.getItem("nameSet"))) {
     getName();
 }
 
-if (!JSON.parse(localStorage.getItem("gotTop1"))) {
+if (!localStorage.getItem("gotTop1")) {
     localStorage.setItem("gotTop10", JSON.stringify(money));
     localStorage.setItem("gotTop3", JSON.stringify(money));
     localStorage.setItem("gotTop1", JSON.stringify(money));

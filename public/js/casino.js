@@ -74,6 +74,43 @@ if (data.length === 0) {
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "casino"`);
 }
 
+async function getLeaderboardNames() {
+    try {
+        const { data, error } = await supabase
+            .from('Casino leaderboard')
+            .select('name')
+            .order('money', { ascending: false });
+
+        if (error) throw error;
+
+        return data.map(entry => entry.name);
+    } catch (error) {
+        console.error('Error fetching leaderboard names:', error);
+        return [];
+    }
+}
+
+async function submitScore(name, money) {
+    // Existing leaderboard submission code
+    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const ipInfo = await response.json();
+    console.log(ipInfo);
+
+    try {
+        const { error } = await supabase
+            .from('Casino leaderboard')
+            .insert([{ name: name, money: money, ip: ipInfo }]);
+
+        if (error) throw error;
+        console.log('Score successfully submitted!');
+    } catch (error) {
+        console.error('Error submitting score:', error);
+    }
+}
+
 if (!localStorage.getItem("nameSet")) {
     let leaderboardNames = getLeaderboardNames(); // Await the promise to resolve and get the actual array
     console.log(leaderboardNames);
@@ -97,7 +134,7 @@ if (!localStorage.getItem("nameSet")) {
     }
     
     if (leaderboardNames && name && !nameEmpty) {
-        submitScore(name, wave);
+        submitScore(name, money);
         localStorage.setItem("nameSet", true);
     }
 }

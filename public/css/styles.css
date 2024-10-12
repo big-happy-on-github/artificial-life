@@ -51,8 +51,14 @@ header #menu a {
 }
 
 header #menu a p {
+    font-size: 12px;
     margin: 0; /* Reset any default margins on the paragraph */
     padding: 5px 0; /* Optional: Add vertical padding */
+}
+
+header #menu a p:hover {
+    cursor: point;
+    color: "grey";
 }
 
 header input {

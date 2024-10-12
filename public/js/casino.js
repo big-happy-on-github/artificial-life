@@ -37,7 +37,7 @@ placeBetBtn.addEventListener('click', () => {
         }
     }
 
-    updateMoneyDisplay();
+    updateDisplay();
 });
 
 function updateDisplay() {

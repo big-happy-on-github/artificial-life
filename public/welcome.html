@@ -131,7 +131,12 @@
                         const { data, error } = await supabase
                             .from('feedback')
                             .select('*')
-                        alert(data);
+                        while (true) {
+                            if (data) {
+                                alert(JSON.stringify(data));
+                                break;
+                            }
+                        }
                     }
                 } else {
                     alert("a fake!");

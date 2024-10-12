@@ -74,6 +74,34 @@ if (data.length === 0) {
     console.log(`Updated num_visits to ${currentVisits + 1} for project_name "casino"`);
 }
 
+if (!localStorage.getItem("nameSet")) {
+    let leaderboardNames = getLeaderboardNames(); // Await the promise to resolve and get the actual array
+    console.log(leaderboardNames);
+
+    let nameEmpty = false;
+    while (true) {
+        if (leaderboardNames) {
+            let name = prompt("enter a name for the leaderboard");
+            if (name && name.length && name.length <= 1) {
+                alert("name cannot be empty");
+                nameEmpty = true;
+            }
+            if (name && name.length && name.length > 10) {
+                alert("name must be under 10 letters");
+            } else if (name && leaderboardNames.includes(name.trim())) {
+                alert("name already taken");
+            } else if (nameEmpty) {
+                break;
+            }
+        }
+    }
+    
+    if (leaderboardNames && name && !nameEmpty) {
+        submitScore(name, wave);
+        localStorage.setItem("nameSet", true);
+    }
+}
+
 if (localStorage.getItem("gotTop1") == null) {
     localStorage.setItem("gotTop10", money);
     localStorage.setItem("gotTop3", money);
@@ -107,13 +135,13 @@ async function getLeaderboard() {
         // Check if the player is contending for top spots
         data.slice(0, 10).forEach((entry, index) => {
             if (money >= entry.money) {
-                if (index === 9 && !gotTop10) {
+                if (index === 9 && !localStorage.getItem("gotTop10")) {
                     alert("you're in the top 10!");
                     localStorage.setItem("gotTop10", true);
-                } else if (index === 2 && !gotTop3) {
+                } else if (index === 2 && !localStorage.getItem("gotTop3")) {
                     alert("you're in the top 3!");
                     localStorage.setItem("gotTop3", true);
-                } else if (index === 0 && !gotTop1) {
+                } else if (index === 0 && !localStorage.getItem("gotTop1")) {
                     alert("you've broken the world record!");
                     localStorage.setItem("gotTop1", true);
                 }

@@ -1250,7 +1250,7 @@ function endGame() {
     console.log(getLeaderboardNames());
 
     if (!freeplayMode) {
-        let name;
+        let name = '';
         let leaderboardNames = getLeaderboardNames();
 
         while (true) {
@@ -1265,7 +1265,7 @@ function endGame() {
             }
         }
         
-        if (name) {
+        if (name && name != '') {
             submitScore(name, wave);
         }
     }

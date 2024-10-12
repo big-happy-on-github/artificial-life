@@ -40,7 +40,7 @@ placeBetBtn.addEventListener('click', () => {
 });
 
 function updateDisplay() {
-    moneyDisplay.textContent = ${money};
+    moneyDisplay.textContent = money;
     updatePlayerScore();  // Update the player's score in the leaderboard
     getLeaderboard();     // Refresh the leaderboard display
 }

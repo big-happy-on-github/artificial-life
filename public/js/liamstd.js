@@ -708,7 +708,7 @@ class Enemy {
             const angle = Math.atan2(tower.y - this.y, tower.x - this.x);
             if (this.color == "#FFD700") {
                 enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy', 'explosive')); // Create enemy projectile
-            else {
+            } else {
                 enemyProjectiles.push(new Projectile(this.x, this.y, angle, this.damage, 'enemy')); // Create enemy projectile
             }
             this.lastFired = Date.now();

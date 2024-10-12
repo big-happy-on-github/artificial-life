@@ -1254,14 +1254,16 @@ async function endGame() {
         console.log(leaderboardNames);
 
         while (true) {
-            name = prompt(leaderboardNames.includes(name.trim())
-                    ? "name taken. Gimme a different one:"
-                    : "enter a name for the leaderboard:");
-
-            if (name.length > 10) {
-                alert("name must be under 10 letters");
-            } else {
-                break;
+            if (leaderboardNames) {
+                name = prompt(leaderboardNames.includes(name.trim())
+                        ? "name taken. Gimme a different one:"
+                        : "enter a name for the leaderboard:");
+    
+                if (name && name.length && name.length > 10) {
+                    alert("name must be under 10 letters");
+                } else {
+                    break;
+                }
             }
         }
         

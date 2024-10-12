@@ -32,6 +32,10 @@ function updateMoneyDisplay() {
     document.getElementById('fake-money').textContent = fakeMoney;
 }
 
+document.getElementById("play-button").addEventListener('click', () => {
+    startNewRound();
+});
+
 function startNewRound() {
     document.getElementById('bet-amount').value = '';
     document.getElementById('result').textContent = '';

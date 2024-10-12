@@ -414,7 +414,7 @@ class Tower {
             this.health = 12;
             this.range = 200;
             this.fireRate = 1;
-            this.damage = 2.5;
+            this.damage = 3.5;
             this.price = 6;
             this.desc = "shoots explosive bullets";
         } else if (type == '9') {//walker

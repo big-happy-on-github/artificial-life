@@ -61,16 +61,17 @@
         
         async function checkAlertInSupabase() {
             try {
-                const data = await fetch('https://kjfnxynntottdbxjcree.supabase.co/rest/v1/admin?select=info&name=eq.alert&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g')
+                let info;
+                await fetch('https://kjfnxynntottdbxjcree.supabase.co/rest/v1/admin?select=info&name=eq.alert&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g')
                     .then(response => response.json())
-                    .then(data => console.log(data))
+                    .then(data => info = data)
                     .catch(error => console.error('Error:', error));
 
                 if (error) {
                     return null;
                 }
                 
-                return data ? data.info : null; // Return the alert info if found
+                return info ? info.info : null; // Return the alert info if found
             } catch (err) {
                 return null;
             }

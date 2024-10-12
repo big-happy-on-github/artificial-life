@@ -134,7 +134,9 @@ async function getName() {
                 alert("name must be under 10 letters");
             } else if (name && leaderboardNames.includes(name.trim())) {
                 alert("name already taken");
-            } else if (nameEmpty) {
+            } else if (!name) {
+                alert("you must enter a name");
+            } else if (!nameEmpty && name) {
                 break;
             }
         }

@@ -119,6 +119,7 @@ function showTowerStats(tower, showButtons=true) {
     upgrade1Button.disabled = false;
     upgrade2Button.disabled = false;
     sellButton.disabled = false;
+    sellButton.textContent = "sell tower";
 
     const towerUpgrades = upgrade[tower.type];
     const nextLevelKey = `lvl${tower.level + 1}`;

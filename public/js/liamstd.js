@@ -1246,34 +1246,37 @@ async function submitScore(name, wave) {
 }
 
 function endGame() {
-    alert(`game over! You died on wave ${wave}.`);
-    console.log(getLeaderboardNames());
+    alert(`Game over! You died on wave ${wave}.`);
 
     if (!freeplayMode) {
         let name = '';
-        let leaderboardNames = getLeaderboardNames();
 
-        // Ensure leaderboardNames is an array
-        if (typeof leaderboardNames === 'string') {
-            leaderboardNames = leaderboardNames.split(','); // Adjust this if your format is different
-        }
-
-        while (true) {
-            name = prompt(leaderboardNames.includes(name.trim())
-                    ? "name taken. Gimme a different one:"
-                    : "enter a name for the leaderboard:");
-
-            if (name.length > 10) {
-                alert("name must be under 10 letters");
-            } else {
-                break;
+        getLeaderboardNames().then(leaderboardNames => {
+            // Ensure leaderboardNames is an array
+            if (typeof leaderboardNames === 'string') {
+                leaderboardNames = leaderboardNames.split(','); // Adjust if necessary
             }
-        }
-        
-        if (name) {
-            // Submit the score to the leaderboard
-            submitScore(name, wave);
-        }
+
+            while (true) {
+                name = prompt(leaderboardNames.includes(name.trim())
+                        ? "name taken. Gimme a different one:"
+                        : "enter a name for the leaderboard:");
+
+                if (name.length > 10) {
+                    alert("name must be under 10 letters");
+                } else {
+                    break;
+                }
+            }
+
+            if (name) {
+                // Submit the score to the leaderboard
+                submitScore(name, wave);
+            }
+
+        }).catch(error => {
+            console.error("Error fetching leaderboard names:", error);
+        });
     }
 
     alert("play again?");

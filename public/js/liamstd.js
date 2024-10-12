@@ -1246,24 +1246,28 @@ async function submitScore(name, wave) {
 }
 
 function endGame() {
+    // Pause the game loop by stopping any active intervals or timeouts
+    pauseGame();
+
     alert(`Game over! You died on wave ${wave}.`);
 
     if (!freeplayMode) {
         let name = '';
+        let leaderboardNames = getLeaderboardNames();
 
-        getLeaderboardNames().then(leaderboardNames => {
+        leaderboardNames.then(names => {
             // Ensure leaderboardNames is an array
-            if (typeof leaderboardNames === 'string') {
-                leaderboardNames = leaderboardNames.split(','); // Adjust if necessary
+            if (typeof names === 'string') {
+                names = names.split(','); // Split if it's a comma-separated string
             }
 
             while (true) {
-                name = prompt(leaderboardNames.includes(name.trim())
-                        ? "name taken. Gimme a different one:"
-                        : "enter a name for the leaderboard:");
+                name = prompt(names.includes(name.trim())
+                    ? "Name taken. Gimme a different one:"
+                    : "Enter a name for the leaderboard:");
 
                 if (name.length > 10) {
-                    alert("name must be under 10 letters");
+                    alert("Name must be under 10 letters");
                 } else {
                     break;
                 }
@@ -1274,13 +1278,26 @@ function endGame() {
                 submitScore(name, wave);
             }
 
+            alert("Play again?");
+            resetGame(); // Reset and resume the game after user interaction
         }).catch(error => {
             console.error("Error fetching leaderboard names:", error);
         });
+    } else {
+        alert("Play again?");
+        resetGame(); // Reset and resume the game for freeplay mode
     }
+}
 
-    alert("play again?");
-    
+// Function to pause the game loop
+function pauseGame() {
+    // This is where you should stop any game loop timers, animations, or intervals
+    // For example, if you have a game loop set with setInterval, you can clear it here
+    clearInterval(gameLoopInterval); // Assuming you have a game loop running with setInterval
+}
+
+// Function to reset game state and restart the game
+function resetGame() {
     // Reset the game state
     currency = 10;
     wave = 1;

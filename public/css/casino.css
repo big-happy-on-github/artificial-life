@@ -1,5 +1,9 @@
 body {
-    
+    background-image: url('https://www.ambong-ambong.com/wp-content/uploads/2023/03/istockphoto-1172427455-612x612-1.jpeg'); /* URL of your background image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents repeating the image */
+    background-position: center center; /* Centers the image */
+    background-attachment: fixed; /* Makes the background stay fixed during scrolling */
 }
 
 #game-container {

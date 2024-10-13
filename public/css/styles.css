@@ -70,7 +70,7 @@ header input {
     color: #fff;
 }
 
-header button {
+button {
     padding: 5px 10px;
     font-size: 16px;
     cursor: pointer;
@@ -80,7 +80,7 @@ header button {
     border-radius: 5px;
 }
 
-header button:hover {
+button:hover {
     background-color: #666;
     cursor: point;
 }
@@ -129,20 +129,4 @@ main p {
     font-size: 1.2em;
     margin: 20px 0;
     color: #fff;
-}
-
-main button {
-    border: 2px solid #fff;
-    background-color: #444;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-main button:hover {
-    background-color: #666;
-    cursor: point;
 }

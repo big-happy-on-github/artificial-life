@@ -14,3 +14,7 @@ main {
     width: 80%;
     max-width: 400px;
 }
+
+main div {
+    border-bottom: 2px solid #444;
+}

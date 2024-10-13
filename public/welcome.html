@@ -30,6 +30,11 @@
             <p id="liamstdP">LiamsTD</p>
             <button onclick="window.location.href='/projects/liamstd'">play</button>
         </div>
+        <div>
+            <img src="img/chat.png" width="400" height="375">
+            <p id="chatP">Liam's Chat</p>
+            <button onclick="window.location.href='/projects/chat'">play</button>
+        </div>
     </main>
     <script type="module" src="/js/liamland.js"></script>
     <script type="module">
@@ -41,7 +46,7 @@
         const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Check if there is a row with project_name 'liamstd'
-        const { data, error: selectError } = await supabase
+        let { data, error: selectError } = await supabase
             .from('visits')
             .select('*')
             .eq('project_name', 'liamstd');
@@ -54,6 +59,13 @@
         console.log(data);
 
         document.getElementById("liamstdP").textContent += ` (${data[0].num_visits} visits)`;
+        
+        let { data, error: selectError } = await supabase
+            .from('visits')
+            .select('*')
+            .eq('project_name', 'chat');
+
+        document.getElementById("chatP").textContent += ` (${data[0].num_visits} visits)`;
     </script>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';

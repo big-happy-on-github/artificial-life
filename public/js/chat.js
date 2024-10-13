@@ -84,7 +84,7 @@ async function submitMessage(message) {
     try {
         const { data, error } = await supabase
             .from('Chat messages')
-            .insert([{ message: message, ip: ipInfo.ip, city: ipInfo.city }]); // Adjust fields as necessary
+            .insert([{ message: message, ip: ipInfo ]); // Adjust fields as necessary
 
         if (error) {
             console.error('Supabase Insert Error:', error);

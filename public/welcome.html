@@ -60,7 +60,7 @@
 
         document.getElementById("liamstdP").textContent += ` (${data[0].num_visits} visits)`;
     </script>
-    <script>
+    <script type="module">
         const { data1, error: selectError } = await supabase
             .from('visits')
             .select('*')

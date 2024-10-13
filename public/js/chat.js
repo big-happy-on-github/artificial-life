@@ -5,7 +5,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function updateDisplay() {
-    const messages = getMessages();
+    const messages = await getMessages();
     while (true) {
         if (messages) {
             let p;

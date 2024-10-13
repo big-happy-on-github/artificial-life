@@ -58,7 +58,7 @@
 
         console.log(data);
 
-        document.getElementById("liamstdP").textContent += `(${data.num_visits} visits)`;
+        document.getElementById("liamstdP").textContent += `(${data[0].num_visits} visits)`;
     </script>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';

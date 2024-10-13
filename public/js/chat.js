@@ -6,26 +6,21 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function updateDisplay() {
     const messages = await getMessages();
-    while (true) {
-        if (messages) {
-            let p;
-            let isOkay;
-            messages.forEach(message => {
-                p = document.createElement("p");
-                p.textContent = message;
-                isOkay = true;
-                for (let child in document.getElementById("messageDiv").children) {
-                    if (child.textContent == p.textContent) {
-                        isOkay = false;
-                        break;
-                    }
-                }
-                if (!isOkay) {
-                    document.getElementById("messageDiv").appendChild(p);
+    if (messages) {
+        messages.forEach(message => {
+            let p = document.createElement("p");
+            p.textContent = message;
+            let isOkay = true;
+            const children = Array.from(document.getElementById("messageDiv").children);
+            children.forEach(child => {
+                if (child.textContent === p.textContent) {
+                    isOkay = false;
                 }
             });
-            break;
-        }
+            if (isOkay) {
+                document.getElementById("messageDiv").appendChild(p);
+            }
+        });
     }
 }
 

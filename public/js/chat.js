@@ -73,7 +73,7 @@ async function getMessages() {
         const { data, error } = await supabase
             .from('Chat messages')
             .select('message')
-            .order('id', { ascending: true });
+            .order('id', { ascending: false });
 
         if (error) throw error;
 

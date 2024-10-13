@@ -18,7 +18,7 @@ async function updateDisplay() {
         limitedMessages.forEach(message => {
             let p = document.createElement("p");
             p.textContent = message;
-            messageDiv.prepend(p); // Prepend new messages to the top
+            messageDiv.append(p); // Prepend new messages to the top
         });
     }
 }

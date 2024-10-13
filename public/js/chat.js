@@ -6,20 +6,19 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function updateDisplay() {
     const messages = await getMessages();
+    const messageDiv = document.getElementById("messageDiv");
+
     if (messages) {
-        messages.forEach(message => {
+        // Clear the current messages first
+        messageDiv.innerHTML = "";
+
+        // Limit the messages to the last 5
+        const limitedMessages = messages.slice(0, 5);
+
+        limitedMessages.forEach(message => {
             let p = document.createElement("p");
             p.textContent = message;
-            let isOkay = true;
-            const children = Array.from(document.getElementById("messageDiv").children);
-            children.forEach(child => {
-                if (child.textContent === p.textContent) {
-                    isOkay = false;
-                }
-            });
-            if (isOkay) {
-                document.getElementById("messageDiv").appendChild(p);
-            }
+            messageDiv.prepend(p); // Prepend new messages to the top
         });
     }
 }
@@ -30,34 +29,25 @@ async function updateVisits() {
         .select('*')
         .eq('project_name', 'chat');
 
-    // Handle any select errors
-    if (selectError) {
-        throw selectError;
-    }
+    if (selectError) throw selectError;
 
-    // If the row doesn't exist, insert it with num_visits initialized to 1
     if (data.length === 0) {
         const { error: insertError } = await supabase
             .from('visits')
             .insert([{ project_name: 'chat', num_visits: 1 }]);
 
-        if (insertError) {
-            throw insertError;
-        }
+        if (insertError) throw insertError;
 
         console.log('Created new row with project_name "chat" and num_visits set to 1');
     } else {
-        // If the row exists, update the num_visits by incrementing its value
-        const currentVisits = data[0].num_visits || 0; // Default to 0 if num_visits is not found
+        const currentVisits = data[0].num_visits || 0;
 
         const { error: updateError } = await supabase
             .from('visits')
             .update({ num_visits: currentVisits + 1 })
             .eq('project_name', 'chat');
 
-        if (updateError) {
-            throw updateError;
-        }
+        if (updateError) throw updateError;
 
         console.log(`Updated num_visits to ${currentVisits + 1} for project_name "chat"`);
     }
@@ -66,9 +56,9 @@ async function updateVisits() {
 async function getMessages() {
     try {
         const { data, error } = await supabase
-            .from('Chat messages')
+            .from('Chat messages') // Adjust if needed
             .select('message')
-            .order('id', { ascending: false });
+            .order('id', { ascending: false }); // Newest first
 
         if (error) throw error;
 
@@ -80,18 +70,21 @@ async function getMessages() {
 }
 
 async function submitMessage(message) {
-    // Fetch IP information
-    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
+    if (message.length > 20) {
+        alert('Message cannot be longer than 20 characters.');
+        return;
     }
+
+    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
+    if (!response.ok) throw new Error('Network response was not ok');
+
     const ipInfo = await response.json();
     console.log('IP info:', ipInfo);
 
     try {
         const { data, error } = await supabase
             .from('Chat messages')
-            .insert([{ message: message, ip: ipInfo }]);
+            .insert([{ message: message, ip: ipInfo.ip, city: ipInfo.city }]); // Adjust fields as necessary
 
         if (error) {
             console.error('Supabase Insert Error:', error);
@@ -99,13 +92,15 @@ async function submitMessage(message) {
             console.log('Supabase Insert Success:', data);
         }
     } catch (error) {
-        console.error('Error submitting score:', error);
+        console.error('Error submitting message:', error);
     }
     updateDisplay();
 }
 
 document.getElementById("sendButton").addEventListener('click', () => {
-    submitMessage(document.getElementById("messageInput").value);
+    const messageInput = document.getElementById("messageInput");
+    submitMessage(messageInput.value);
+    messageInput.value = "";  // Clear input after sending
 });
 
 updateDisplay();

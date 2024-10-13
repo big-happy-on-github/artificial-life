@@ -46,7 +46,7 @@
         const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Check if there is a row with project_name 'liamstd'
-        let { data, error: selectError } = await supabase
+        const { data, error: selectError } = await supabase
             .from('visits')
             .select('*')
             .eq('project_name', 'liamstd');
@@ -59,8 +59,9 @@
         console.log(data);
 
         document.getElementById("liamstdP").textContent += ` (${data[0].num_visits} visits)`;
-        
-        let { data, error: selectError } = await supabase
+    </script>
+    <script>
+        const { data1, error: selectError } = await supabase
             .from('visits')
             .select('*')
             .eq('project_name', 'chat');

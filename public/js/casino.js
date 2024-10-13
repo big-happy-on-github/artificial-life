@@ -102,6 +102,7 @@ async function getName() {
         localStorage.setItem("playerName", name);
         localStorage.setItem("nameSet", JSON.stringify(true));
         console.log("nameSet stored:", localStorage.getItem("nameSet"));
+        updateDisplay();
     }
 }
 

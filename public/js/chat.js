@@ -12,7 +12,7 @@ async function updateDisplay() {
             messages.forEach(message => {
                 p = document.createElement("p");
                 p.textContent = message;
-                document.getElementById("messageDiv").addChild(p);
+                document.getElementById("messageDiv").appendChild(p);
             });
             break;
         }

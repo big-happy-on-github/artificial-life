@@ -9,10 +9,20 @@ async function updateDisplay() {
     while (true) {
         if (messages) {
             let p;
+            let isOkay;
             messages.forEach(message => {
                 p = document.createElement("p");
                 p.textContent = message;
-                document.getElementById("messageDiv").appendChild(p);
+                isOkay = true;
+                for (let child in document.getElementById("messageDiv").children) {
+                    if (child.textContent == p.textContent) {
+                        isOkay = false;
+                        break;
+                    }
+                }
+                if (!isOkay) {
+                    document.getElementById("messageDiv").appendChild(p);
+                }
             });
             break;
         }

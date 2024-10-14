@@ -515,7 +515,7 @@ class Tower {
             this.fireRate = 0.6;
             this.damage = 4.2;
             this.price = 3;
-            this.desc = "shoots at multiple targets at once";
+            this.desc = "shoots multiple targets at once (max 5)";
         }
 
         this.lastFired = 0;
@@ -576,6 +576,15 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
+                } else if (this.type == "15") {
+                    // Find up to 5 enemies in range
+                    const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);
+            
+                    // Shoot at each enemy
+                    enemiesInRange.forEach(enemy => {
+                        angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                    });
                 } else {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }

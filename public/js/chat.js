@@ -113,7 +113,7 @@ document.getElementById("sendButton").addEventListener('click', () => {
 document.getElementById("privateChatP").addEventListener('click', async () => {
     const currentChatCode = localStorage.getItem('currentChatCode'); // Check if user is already in a chat
 
-    if (currentChatCode) {
+    if (currentChatCode && currentChatCode != "1i0k0u") {
         const action = prompt('You are currently in a chat. Would you like to (1) Leave or (2) Join another?', '1 or 2');
 
         if (action === '1') {

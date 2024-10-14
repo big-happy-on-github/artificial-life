@@ -1594,8 +1594,10 @@ document.addEventListener('keydown', async function(event) {
                     alert("Invalid wave number.");
                 }
             } else if (command.toLowerCase() === "spawntower") {
-                towers[towers.length-1].type = prompt("what tower number?");
-                alert(`tower at ${towers[towers.length-1].x}, ${towers[towers.length-1].y} changed to type ${towers[towers.length-1].type}`);
+                const towerNumber = prompt("what tower number?");
+                const stats = { x: towers[towers.length-1].x, y: towers[towers.length-1].y }
+                towers.slice(towers.length-1);
+                towers.push(new Tower(stats.x, stats.y, towerNumber));
             }
 
             updateHUD();

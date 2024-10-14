@@ -17,5 +17,5 @@ main {
 }
 
 main div {
-    border-bottom: 2px solid #444;
+    border: 2px solid #444;
 }

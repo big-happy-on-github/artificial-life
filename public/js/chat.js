@@ -70,8 +70,8 @@ async function getMessages() {
 }
 
 async function submitMessage(message) {
-    if (message.length > 20) {
-        alert('Message cannot be longer than 20 characters.');
+    if (message.length > 60) {
+        alert('message cannot be longer than 60 characters');
         return;
     }
 

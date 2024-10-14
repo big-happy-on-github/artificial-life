@@ -440,7 +440,7 @@ class Tower {
             this.health = 15;
             this.range = 1/0;
             this.fireRate = 2;
-            this.damage = 10;
+            this.damage = 16;
             this.price = 5;
             this.desc = "sniper shots, high reload time";
         } else if (type == '7') {//mitch

@@ -157,11 +157,25 @@ function showTowerStats(tower, showButtons=true) {
 
         if (tower.level < 3) {
             upgrade1Button.textContent = `upgrade ${hasSecondUpgrade ? '(for dmg)' : ''}`;
-            upgrade2Button.textContent = hasSecondUpgrade ? `upgrade (for range)` : '';
+            upgrade1Button.style.display = 'block';
+            
+            if (hasSecondUpgrade) {
+                upgrade2Button.textContent = `upgrade (for range)`;
+                upgrade2Button.style.display = 'block';
+            } else {
+                upgrade2Button.style.display = 'none';  // Hide the second upgrade button
+            }
         } else if (tower.level == 3) {
             // Mega upgrade options for level 3 towers
             upgrade1Button.textContent = `final upgrade ${hasSecondUpgrade ? '(for dmg)' : ''}`;
-            upgrade2Button.textContent = hasSecondUpgrade ? `final upgrade (for range)` : '';
+            upgrade1Button.style.display = 'block';
+            
+            if (hasSecondUpgrade) {
+                upgrade2Button.textContent = `final upgrade (for range)`;
+                upgrade2Button.style.display = 'block';
+            } else {
+                upgrade2Button.style.display = 'none';  // Hide the second upgrade button
+            }
         }
     } else {
         // If at max level

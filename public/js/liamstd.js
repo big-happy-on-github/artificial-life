@@ -85,7 +85,8 @@ const upgrade = {
         'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: 0, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
         'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: 0, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
         'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: 0, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: 0, cost: 30 } }
-    }
+    },
+    '17': {}
 };
 
 // Function to show the tower stats pop-up
@@ -123,6 +124,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'will';
     } else if (tower.type == '16') {
         towerType = 'henry';
+    } else if (tower.type == '17') {
+        towerType = 'anders';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -546,6 +549,13 @@ class Tower {
             this.damage = 0.3;
             this.price = 4;
             this.desc = "far range, minigun shots";
+        } else if (type == '17') {//anders
+            this.health = 17;
+            this.range = 500;
+            this.fireRate = 0.1;
+            this.damage = -0.3;
+            this.price = 0;
+            this.desc = "heals the enemy every shot";
         }
 
         this.lastFired = 0;
@@ -580,8 +590,10 @@ class Tower {
             ctx.fillStyle = '#f542d1';
         } else if (this.type == '14') {
             ctx.fillStyle = '#874b26';
-        } else if (this.type == '14') {
-            ctx.fillStyle = '#fcba03';
+        } else if (this.type == '15') {
+            ctx.fillStyle = '#999999';
+        } else if (this.type == '16') {
+            ctx.fillStyle = '#000000';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }

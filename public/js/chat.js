@@ -104,8 +104,104 @@ document.getElementById("sendButton").addEventListener('click', () => {
 });
 
 document.getElementById("privateChatP").addEventListener('click', async () => {
-    
+    // Check if the user is currently in a chat by fetching a chat with the user's ID
+    const { data: currentChat, error: chatError } = await supabase
+        .from('privateChats') // Assuming this is the table you're using
+        .select('name, code') // Select only necessary columns
+        .eq('user_id', yourUserId) // Replace with actual user ID
+        .single();
+
+    if (chatError && chatError.code !== 'PGRST116') { // Error handling, excluding "No rows found" error
+        console.error('Error fetching current chat:', chatError);
+        return;
+    }
+
+    // If the user is in a chat, ask if they want to leave or join another
+    if (currentChat) {
+        const action = prompt(`You are currently in the chat "${currentChat.name}". Would you like to (1) Leave or (2) Join another chat?`, '1 or 2');
+        
+        if (action === '1') {
+            // Leave the current chat
+            await leaveChat();
+        } else if (action === '2') {
+            // Join a different chat
+            await joinChat();
+        }
+    } else {
+        // If not in a chat, prompt to join or create one
+        const action = prompt('Would you like to (1) Join an existing chat or (2) Create a new chat?', '1 or 2');
+        
+        if (action === '1') {
+            await joinChat();
+        } else if (action === '2') {
+            await createChat();
+        }
+    }
 });
+
+// Function to join an existing chat
+async function joinChat() {
+    const chatCode = prompt('Please enter the chat code:');
+    
+    const { data: chat, error: joinError } = await supabase
+        .from('privateChats')
+        .select('*')
+        .eq('code', chatCode)
+        .single(); // Fetch the chat by its code
+
+    if (joinError || !chat) {
+        alert('Chat not found or error occurred.');
+        return;
+    }
+
+    // Join the chat by updating the user's current chat reference in Supabase
+    const { error: updateError } = await supabase
+        .from('privateChats')
+        .update({ user_id: yourUserId }) // Update user to join this chat (add user ID in your schema if needed)
+        .eq('code', chatCode);
+
+    if (updateError) {
+        console.error('Error joining chat:', updateError);
+    } else {
+        alert(`Successfully joined the chat: ${chat.name}`);
+        updateDisplay(); // Refresh the chat display
+    }
+}
+
+// Function to create a new chat
+async function createChat() {
+    const chatName = prompt('Please enter a name for your new chat:');
+    const chatCode = Math.random().toString(36).substr(2, 6); // Generate a random 6-character code
+
+    // Insert new chat into the privateChats table
+    const { data, error: createError } = await supabase
+        .from('privateChats')
+        .insert({ name: chatName, code: chatCode, messages: [], user_id: yourUserId }) // user_id is optional based on your schema
+
+    if (createError) {
+        console.error('Error creating chat:', createError);
+        return;
+    }
+
+    alert(`Created chat "${chatName}" with code: ${chatCode}`);
+    updateDisplay(); // Refresh the chat display
+}
+
+// Function to leave the current chat
+async function leaveChat() {
+    // Clear user reference to the chat (or handle as needed)
+    const { error: leaveError } = await supabase
+        .from('privateChats')
+        .update({ user_id: null }) // Adjust based on how you track users in chats
+        .eq('user_id', yourUserId);
+
+    if (leaveError) {
+        console.error('Error leaving chat:', leaveError);
+    } else {
+        alert('You have left the chat.');
+        updateDisplay();
+    }
+}
 
 updateDisplay();
 updateVisits();

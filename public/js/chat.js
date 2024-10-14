@@ -103,5 +103,9 @@ document.getElementById("sendButton").addEventListener('click', () => {
     messageInput.value = "";  // Clear input after sending
 });
 
+document.getElementById("privateChatP").addEventListener('click', async () => {
+    
+});
+
 updateDisplay();
 updateVisits();

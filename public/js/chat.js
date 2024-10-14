@@ -37,7 +37,7 @@ async function updateDisplay() {
             let p = document.createElement("p");
 
             // Display IP, loc, and any additional message info (modify this if there's other relevant info to show)
-            const messageText = message; 
+            const messageText = message.message; 
             
             p.textContent = messageText;
             messageDiv.prepend(p); // Prepend new messages to the top
@@ -52,9 +52,10 @@ async function submitMessage(message) {
         return;
     }
 
-    const currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat code
+    let currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat code
     if (!currentChatCode) {
-        return;
+        localStorage.setItem("currentChatCode", "1i0k0u");
+        currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat code
     }
 
     const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
@@ -73,6 +74,8 @@ async function submitMessage(message) {
 
         if (fetchError || !chat) {
             console.error('Error fetching chat for message submission:', fetchError);
+            alert("you have an outdated chat code. Resetting...");
+            localStorage.setItem("currentChatCode", "1i0k0u");
             return;
         }
 

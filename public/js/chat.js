@@ -43,6 +43,15 @@ async function updateDisplay() {
             messageDiv.prepend(p); // Prepend new messages to the top
         });
     }
+
+    // Fetch messages for the current private chat
+    const { data: name, error: error2 } = await supabase
+        .from('privateChats')
+        .select('name')
+        .eq('code', currentChatCode)
+        .single();
+
+    document.getElementById("h3").textContent = name;
 }
 
 // Update the chat message submission logic

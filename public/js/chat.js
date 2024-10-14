@@ -48,7 +48,7 @@ async function updateDisplay() {
 // Update the chat message submission logic
 async function submitMessage(message) {
     if (message.length > 60) {
-        alert('Message cannot be longer than 60 characters');
+        alert('message cannot be longer than 60 characters');
         return;
     } else if (message.length < 1 || message == "") {
         return;
@@ -76,7 +76,7 @@ async function submitMessage(message) {
 
         if (fetchError || !chat) {
             console.error('Error fetching chat for message submission:', fetchError);
-            alert("you have an outdated chat code. Resetting...");
+            alert("you have an outdated chat code... try again now");
             localStorage.setItem("currentChatCode", "1i0k0u");
             return;
         }
@@ -114,7 +114,7 @@ document.getElementById("privateChatP").addEventListener('click', async () => {
     const currentChatCode = localStorage.getItem('currentChatCode'); // Check if user is already in a chat
 
     if (currentChatCode && currentChatCode != "1i0k0u") {
-        const action = prompt('You are currently in a chat. Would you like to (1) Leave or (2) Join another?', '1 or 2');
+        const action = prompt('would you like to (1) leave your current chat or (2) join a new chat?');
 
         if (action === '1') {
             // Leave current chat
@@ -126,7 +126,7 @@ document.getElementById("privateChatP").addEventListener('click', async () => {
             await joinChat();
         }
     } else {
-        const action = prompt('Would you like to (1) Join an existing chat or (2) Create a new chat?', '1 or 2');
+        const action = prompt('do you want to (1) join an existing chat or (2) create a new chat?');
         
         if (action === '1') {
             await joinChat();
@@ -138,7 +138,7 @@ document.getElementById("privateChatP").addEventListener('click', async () => {
 
 // Function to join an existing chat
 async function joinChat() {
-    const chatCode = prompt('Please enter the chat code:');
+    const chatCode = prompt('whats the code?');
     
     const { data: chat, error: joinError } = await supabase
         .from('privateChats')
@@ -153,13 +153,13 @@ async function joinChat() {
 
     // Store the chat code in localStorage to track the current chat
     localStorage.setItem('currentChatCode', chat.code);
-    alert(`Successfully joined the chat: ${chat.name}`);
+    alert(`joined ${chat.name}`);
     updateDisplay(); // Refresh the chat display
 }
 
 // Function to create a new chat
 async function createChat() {
-    const chatName = prompt('Please enter a name for your new chat:');
+    const chatName = prompt('what should it be called?');
     const chatCode = Math.random().toString(36).substr(2, 6); // Generate a random 6-character code
 
     // Insert new chat into the privateChats table
@@ -174,7 +174,7 @@ async function createChat() {
 
     // Store the new chat code in localStorage
     localStorage.setItem('currentChatCode', chatCode);
-    alert(`Created chat "${chatName}" with code: ${chatCode}`);
+    alert(`created "${chatName}" with code ${chatCode} (copy this)`);
     updateDisplay(); // Refresh the chat display
 }
 
@@ -232,3 +232,4 @@ document.getElementById("sendButton").addEventListener('click', () => {
 
 updateDisplay();
 updateVisits();
+setInterval(updateDisplay, 1000);

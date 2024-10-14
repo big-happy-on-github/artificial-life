@@ -31,7 +31,7 @@ async function updateDisplay() {
         messageDiv.innerHTML = "";
 
         // Limit the messages to the last 5
-        const limitedMessages = chat.messages.slice(-5);
+        const limitedMessages = chat.messages.slice(-8);
 
         limitedMessages.forEach(message => {
             let p = document.createElement("p");
@@ -49,8 +49,8 @@ async function updateDisplay() {
         .from('privateChats')
         .select('name')
         .eq('code', currentChatCode)
-        .single();
 
+    console.log(name);
     document.getElementById("h3").textContent = name;
 }
 

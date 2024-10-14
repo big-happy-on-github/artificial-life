@@ -75,7 +75,12 @@ const upgrade = {
         'lvl3': { '1': { health: 7, range: 0, damage: 0, fireRate: 0, cost: 5 } },
         'lvl4': { '1': { health: 13, range: 0, damage: 0, fireRate: 0, cost: 8 } }
     }, 
-    '14': {}
+    '14': {},
+    '15': {
+        'lvl2': { '1': { health: 7, range: 0, damage: 1.6, fireRate: -0.1, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 65, damage: 1.4, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 24, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
+    }
 };
 
 // Function to show the tower stats pop-up
@@ -109,6 +114,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'ciaran';
     } else if (tower.type == '14') {
         towerType = 'david';
+    } else if (tower.type == '15') {
+        towerType = 'will';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -435,10 +442,10 @@ class Tower {
             this.price = 5;
             this.desc = "sniper shots, high reload time";
         } else if (type == '7') {//mitch
-            this.health = 20;
-            this.range = 225;
-            this.fireRate = 0.5;
-            this.damage = 3.5;
+            this.health = 22;
+            this.range = 250;
+            this.fireRate = 0.3;
+            this.damage = 3.7;
             this.price = 3;
             this.desc = "generally good at everything";
         } else if (type == '8') {//nick
@@ -446,7 +453,7 @@ class Tower {
             this.range = 150;
             this.fireRate = 0.075;
             this.damage = 0.3;
-            this.price = 10;
+            this.price = 5;
             this.desc = "super fast, minigun-like shots";
         } else if (type == '6') {//lars
             this.health = 12;
@@ -494,7 +501,7 @@ class Tower {
             this.price = 5;
             this.desc = "meat shield, cannot shoot";
             this.canShoot = false;
-        }  else if (type == '14') {//david
+        } else if (type == '14') {//david
             this.health = 20;
             this.range = 1/0;
             this.fireRate = 0.01;
@@ -502,6 +509,13 @@ class Tower {
             this.price = 6;
             this.desc = "shoots constantly in 4 directions";
             this.canShoot = true;
+        } else if (type == '15') {//liam
+            this.health = 15;
+            this.range = 100;
+            this.fireRate = 0.6;
+            this.damage = 4.2;
+            this.price = 3;
+            this.desc = "shoots at multiple targets at once";
         }
 
         this.lastFired = 0;
@@ -536,6 +550,8 @@ class Tower {
             ctx.fillStyle = '#f542d1';
         } else if (this.type == '14') {
             ctx.fillStyle = '#874b26';
+        } else if (this.type == '14') {
+            ctx.fillStyle = '#fcba03';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }

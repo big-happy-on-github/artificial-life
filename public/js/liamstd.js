@@ -422,7 +422,7 @@ class Tower {
         } else if (type == '3') {//evan
             this.health = 10;
             this.range = 500;
-            this.fireRate = 1.5;
+            this.fireRate = 1;
             this.damage = 4.5;
             this.price = 3;
             this.desc = "far range, powerful shots";
@@ -437,7 +437,7 @@ class Tower {
         } else if (type == '5') {//philip
             this.health = 15;
             this.range = 1/0;
-            this.fireRate = 3;
+            this.fireRate = 2;
             this.damage = 10;
             this.price = 5;
             this.desc = "sniper shots, high reload time";

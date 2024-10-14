@@ -50,6 +50,8 @@ async function submitMessage(message) {
     if (message.length > 60) {
         alert('Message cannot be longer than 60 characters');
         return;
+    } else if (message.length < 1 || message == "") {
+        return;
     }
 
     let currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat code

@@ -4,7 +4,6 @@ const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with 
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g'; // Replace with your Supabase API key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Update the display based on the current chat
 async function updateDisplay() {
     const currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat from localStorage
     if (!currentChatCode) {
@@ -34,8 +33,13 @@ async function updateDisplay() {
         const limitedMessages = chat.messages.slice(-5);
 
         limitedMessages.forEach(message => {
+            // Assuming each message contains IP and loc fields, and we need to display them
             let p = document.createElement("p");
-            p.textContent = message.text; // Assuming the messages have a "text" field
+
+            // Display IP, loc, and any additional message info (modify this if there's other relevant info to show)
+            const messageText = message; 
+            
+            p.textContent = messageText;
             messageDiv.prepend(p); // Prepend new messages to the top
         });
     }
@@ -50,7 +54,6 @@ async function submitMessage(message) {
 
     const currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat code
     if (!currentChatCode) {
-        alert("You're not in any chat.");
         return;
     }
 

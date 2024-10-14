@@ -492,7 +492,7 @@ class Tower {
             this.range = 150;
             this.fireRate = 0;
             this.damage = 2;
-            this.price = 12;
+            this.price = 14;
             this.desc = "adds damage to nearby towers";
             this.canShoot = false;
         } else if (type == '13') {//ciaran

@@ -93,7 +93,7 @@
                 .single();
     
             if (error) {
-                if (error == "PGRST116") {
+                if (error.code == "PGRST116") {
                     return null;
                 }
                 console.error('Error fetching alert:', error);

@@ -5,10 +5,11 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function updateDisplay() {
-    const currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat from localStorage
+    let currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat from localStorage
     if (!currentChatCode) {
         console.log("No chat selected.");
-        return;
+        localStorage.setItem("currentChatCode", "1i0k0u");
+        currentChatCode = localStorage.getItem('currentChatCode'); // Fetch the current chat from localStorage
     }
 
     // Fetch messages for the current private chat

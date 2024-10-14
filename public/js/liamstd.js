@@ -23,6 +23,7 @@ const upgrade2Button = document.getElementById('upgrade2-button') || null;
 const sellButton = document.getElementById('sell-button') || null;
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
+let davids = 0;
 
 const upgrade = {
     '1': {
@@ -119,6 +120,9 @@ function showTowerStats(tower, showButtons=true) {
     upgrade1Button.disabled = false;
     upgrade2Button.disabled = false;
     sellButton.disabled = false;
+    upgrade1Button.style.display = "block";
+    upgrade2Button.style.display = "block";
+    sellButton.style.display = "block";
     sellButton.textContent = "sell tower";
 
     const towerUpgrades = upgrade[tower.type];
@@ -127,6 +131,7 @@ function showTowerStats(tower, showButtons=true) {
     if (!upgrade[tower.type]['lvl2']) {
         upgrade1Button.textContent = "cannot upgrade";
         upgrade2Button.textContent = "";
+        upgrade2Button.style.display = "none";
         upgrade1Button.disabled = true;
         upgrade2Button.disabled = true;
     }
@@ -155,6 +160,7 @@ function showTowerStats(tower, showButtons=true) {
         // If at max level
         upgrade1Button.textContent = "max upgrade lvl reached!";
         upgrade2Button.textContent = "";
+        upgrade2Button.style.display = "none";
     
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
@@ -175,6 +181,9 @@ function showTowerStats(tower, showButtons=true) {
         upgrade2Button.disabled = true;
         sellButton.textContent = "";
         sellButton.disabled = true;
+        upgrade1Button.style.display = "none";
+        upgrade2Button.style.display = "none";
+        sellButton.style.display = "none";
     }
 
     // Show the pop-up
@@ -192,6 +201,9 @@ function hideTowerStats() {
 sellButton.addEventListener('click', (event) => {
     if (!showing) return;
     if (confirm("are you sure you want to sell this tower?")) {
+        if (showing.type == "14") {
+            davids--;
+        }
         showing.destroy();
     }
 });
@@ -473,7 +485,7 @@ class Tower {
             this.range = 1/0;
             this.fireRate = 0.01;
             this.damage = 0.2;
-            this.price = 4;
+            this.price = 6;
             this.desc = "shoots constantly in 4 directions";
             this.canShoot = true;
         }
@@ -1073,6 +1085,12 @@ canvas.addEventListener('click', (event) => {
         const tempTower = new Tower(gridX, gridY, selectedTowerType);
         
         if (currency >= tempTower.price) {
+            if (tempTower.type == "14" && hasDavid < 3) {
+                hasDavid++;
+            } else if (temptower.type == "14" && hasDavid > 2) {
+                alert("cannot place more than 2 davids");
+                return;
+            }
             // Place the tower
             const tower = new Tower(gridX, gridY, selectedTowerType);
             const squareKey = `${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`;

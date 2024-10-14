@@ -242,13 +242,23 @@ upgrade1Button.addEventListener('click', (event) => {
             if (currency >= upgradeInfo.cost) {
                 currency -= upgradeInfo.cost;
                 console.log("Upgraded");
-            
+
+                if (!isFinite(showing.damage+upgradeInfo.damage) || showing.damage+upgradeInfo.damage < 0) let newDamage = showing.damage;
+                if (!isFinite(showing.range+upgradeInfo.range) || showing.range+upgradeInfo.range < 0) let newRange = showing.range;
+                if (!isFinite(showing.health+upgradeInfo.health) || showing.health+upgradeInfo.health < 0) let newHealth = showing.health;
+                if (!isFinite(showing.fireRate+upgradeInfo.fireRate) || showing.fireRate+upgradeInfo.fireRate < 0) let newFireRate = showing.fireRate;
+                
                 // Perform the upgrade
                 showing.level++;
-                showing.health += upgradeInfo.health;
-                showing.range += upgradeInfo.range;
-                showing.damage += upgradeInfo.damage;
-                showing.fireRate += upgradeInfo.fireRate;
+                if (!newHealth) {
+                    showing.health += upgradeInfo.health;
+                } if (!newRange) {
+                    showing.range += upgradeInfo.range;
+                } if (!newDamage) {
+                    showing.damage += upgradeInfo.damage;
+                } if (!newFireRate) {
+                    showing.fireRate += upgradeInfo.fireRate;
+                }
             
                 // Reset lastFired to prevent delays
                 showing.lastFired = Date.now();

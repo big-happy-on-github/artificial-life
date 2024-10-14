@@ -605,8 +605,9 @@ class Tower {
 
     buff(tower) {
         // Check if the tower's current damage is already at or above its maxBuff level
-        if (!tower.isMaxBuff || tower.isMaxBuff < tower.damage + this.damage) {
+        if (!tower.isMaxBuff || tower.isMaxBuff >= tower.damage + this.damage) {
             tower.damage += this.damage; // Apply the buff
+            console.log(tower.damage);
             tower.isMaxBuff = tower.damage; // Track the max buff applied
         }
     }

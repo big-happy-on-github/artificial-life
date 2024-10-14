@@ -1126,7 +1126,7 @@ canvas.addEventListener('click', (event) => {
         if (currency >= tempTower.price) {
             if (tempTower.type == "14" && hasDavid < 3) {
                 hasDavid++;
-            } else if (temptower.type == "14" && hasDavid > 2) {
+            } else if (tempTower.type == "14" && hasDavid > 2) {
                 alert("cannot place more than 2 davids");
                 return;
             }

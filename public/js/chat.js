@@ -50,8 +50,7 @@ async function updateDisplay() {
         .select('name')
         .eq('code', currentChatCode)
 
-    console.log(name);
-    document.getElementById("h3").textContent = name;
+    document.getElementById("h3").textContent = name.name;
 }
 
 // Update the chat message submission logic

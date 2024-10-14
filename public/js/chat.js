@@ -36,7 +36,7 @@ async function updateDisplay() {
             let p = document.createElement("p");
 
             // Display the message text (assuming it's stored under the "text" field), with IP and timestamp
-            const messageText = `${message.text} (Sent from IP: ${message.ip.ip} at ${new Date(message.timestamp).toLocaleString()})`;
+            const messageText = message.text;
             
             p.textContent = messageText;
             messageDiv.prepend(p); // Prepend new messages to the top

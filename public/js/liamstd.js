@@ -244,6 +244,7 @@ upgrade1Button.addEventListener('click', (event) => {
 
             upgrade1Button.textContent = `Pay $${upgradeInfo.cost}`;
             upgrade2Button.textContent = ""; // Hide other upgrade button
+            upgrade2Button.style.display = "none";
             upgradePressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {
@@ -283,7 +284,7 @@ upgrade1Button.addEventListener('click', (event) => {
             }
         }
     } else {
-        towerTypeDisplay.textContent = "Max level reached!";
+        towerTypeDisplay.textContent = "max level reached!";
     }
 }); // This parenthesis and brace close the event listener properly
 
@@ -316,6 +317,7 @@ upgrade2Button.addEventListener('click', (event) => {
 
             upgrade2Button.textContent = `Pay $${upgradeInfo.cost}`;
             upgrade1Button.textContent = ""; // Hide other upgrade button
+            upgrade1Button.style.display = "none";
             upgradePressed = true; // Set confirmation flag
         } else {
             if (currency >= upgradeInfo.cost) {

@@ -80,6 +80,11 @@ const upgrade = {
         'lvl2': { '1': { health: 7, range: 0, damage: 1.6, fireRate: -0.1, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
         'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: -0.3, cost: 12 }, '2': { health: 0, range: 65, damage: 1.4, fireRate: 0, cost: 9 } },
         'lvl4': { '1': { health: 24, range: 70, damage: 8, fireRate: -0.6, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: -0.6, cost: 30 } }
+    },
+    '16': {
+        'lvl2': { '1': { health: 8, range: 0, damage: 1.5, fireRate: 0, cost: 6 }, '2': { health: 0, range: 40, damage: 0, fireRate: 0, cost: 4 } },
+        'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: 0, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
+        'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: 0, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: 0, cost: 30 } }
     }
 };
 
@@ -116,6 +121,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'david';
     } else if (tower.type == '15') {
         towerType = 'will';
+    } else if (tower.type == '16') {
+        towerType = 'henry';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -436,7 +443,7 @@ class Tower {
             this.price = 3;
             this.desc = "short ranged, fast shots";
         } else if (type == '3') {//evan
-            this.health = 10;
+            this.health = 15;
             this.range = 500;
             this.fireRate = 1;
             this.damage = 4.5;
@@ -525,13 +532,20 @@ class Tower {
             this.price = 6;
             this.desc = "shoots constantly in 4 directions";
             this.canShoot = true;
-        } else if (type == '15') {//liam
+        } else if (type == '15') {//will
             this.health = 15;
             this.range = 100;
             this.fireRate = 0.6;
             this.damage = 4.2;
             this.price = 3;
             this.desc = "shoots multiple targets at once (max 5)";
+        } else if (type == '16') {//henry
+            this.health = 17;
+            this.range = 500;
+            this.fireRate = 0.1;
+            this.damage = 0.3;
+            this.price = 4;
+            this.desc = "far range, minigun shots";
         }
 
         this.lastFired = 0;
@@ -577,10 +591,10 @@ class Tower {
 
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
             let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5") {
-                if (this.type == "6" || this.type == "11" && this.type != "3" && this.type != "5") {
+            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16") {
+                if (this.type == "6" || this.type == "11" && this.type != "3" && this.type != "5" && this.type != "16") {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
-                } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5") {
+                } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5" && this.type == "16") {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
                 } else {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));

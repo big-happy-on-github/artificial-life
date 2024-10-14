@@ -989,7 +989,7 @@ class Projectile {
         
         // Correct handling of "fast" projectiles
         if (this.specificType && this.specificType.includes('fast')) {
-            this.speed = 30;  // Increased speed for fast projectiles
+            this.speed = 90;  // Increased speed for fast projectiles
         }
     }
 

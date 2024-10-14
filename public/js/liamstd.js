@@ -981,19 +981,23 @@ class Projectile {
     constructor(x, y, angle, damage, type = 'tower', specificType = null) {
         this.x = x;
         this.y = y;
-        this.speed = 15;
-        if (this.specificType && this.specificType.split(',').includes('fast')) {
-            this.speed = 1/0;
-        }
+        this.speed = 15;  // Default speed for normal projectiles
         this.angle = angle;
         this.damage = damage;
         this.type = type;
         this.specificType = specificType;
+        
+        // Correct handling of "fast" projectiles
+        if (this.specificType && this.specificType.includes('fast')) {
+            this.speed = 30;  // Increased speed for fast projectiles
+        }
     }
 
     draw() {
         if (this.specificType && this.specificType.split(',').includes('explosive')) {
             ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
+        } else if (this.specificType && this.specificType.split(',').includes('fast')) {
+            ctx.fillStyle = 'green';
         } else {
             ctx.fillStyle = this.type == 'tower' ? 'yellow' : 'blue'; // Normal projectile colors
         }

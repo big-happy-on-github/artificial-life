@@ -1595,7 +1595,7 @@ document.addEventListener('keydown', async function(event) {
                 }
             } else if (command.toLowerCase() === "spawntower") {
                 towers[towers.length-1].type = prompt("what tower number?");
-                alert(`tower at ${towers[towers.length-1].x}, ${towers[towers.length-1].y} changed to type ${towers[towers.length-1].type}`;
+                alert(`tower at ${towers[towers.length-1].x}, ${towers[towers.length-1].y} changed to type ${towers[towers.length-1].type}`);
             }
 
             updateHUD();

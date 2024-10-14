@@ -1328,13 +1328,15 @@ async function endGame() {
     if (!freeplayMode) {
         let leaderboardNames = await getLeaderboardNames();
         let validName = false; // Track if a valid name has been entered
+        let cancel = false;
         let name = ""; // Initialize name outside the loop
 
-        while (!validName) {
+        while (!validName || !cancel) {
             name = prompt("enter a name for the leaderboard");
 
             if (!name || name.length < 1) {
-                alert("name cannot be empty.");
+                alert("by canceling, your score will not be recorded");
+                cancel = true;
             } else if (name.length > 10) {
                 alert("name must be under 10 characters.");
             } else if (leaderboardNames.includes(name.trim())) {

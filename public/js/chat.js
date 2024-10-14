@@ -33,11 +33,10 @@ async function updateDisplay() {
         const limitedMessages = chat.messages.slice(-5);
 
         limitedMessages.forEach(message => {
-            // Assuming each message contains IP and loc fields, and we need to display them
             let p = document.createElement("p");
 
-            // Display IP, loc, and any additional message info (modify this if there's other relevant info to show)
-            const messageText = message.message; 
+            // Display the message text (assuming it's stored under the "text" field), with IP and timestamp
+            const messageText = `${message.text} (Sent from IP: ${message.ip.ip} at ${new Date(message.timestamp).toLocaleString()})`;
             
             p.textContent = messageText;
             messageDiv.prepend(p); // Prepend new messages to the top

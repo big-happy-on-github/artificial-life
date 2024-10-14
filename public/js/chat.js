@@ -40,7 +40,7 @@ async function updateDisplay() {
             const messageText = message.text;
             
             p.textContent = messageText;
-            messageDiv.prepend(p); // Prepend new messages to the top
+            messageDiv.append(p); // Prepend new messages to the top
         });
     }
 

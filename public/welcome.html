@@ -93,6 +93,9 @@
                 .single();
     
             if (error) {
+                if (error == "PGRST116") {
+                    return null;
+                }
                 console.error('Error fetching alert:', error);
                 return null;
             }

@@ -170,6 +170,9 @@ async function joinChat() {
 // Function to create a new chat
 async function createChat() {
     const chatName = prompt('what should it be called?');
+    if (!chatName) {
+        return;
+    }
     const chatCode = Math.random().toString(36).substr(2, 6); // Generate a random 6-character code
 
     // Insert new chat into the privateChats table

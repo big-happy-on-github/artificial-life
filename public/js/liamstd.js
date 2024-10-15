@@ -674,10 +674,21 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
-                } else if (this.type == '20') { // Nate's knockback behavior
+                } else if (this.type === '20') { // Nate's knockback behavior
                     const knockbackDistance = 100; // Distance to push the enemy back
-                    this.target.x += Math.cos(angle) * knockbackDistance;
-                    this.target.y += Math.sin(angle) * knockbackDistance;
+                    const previousWaypoint = path[this.target.currentPathIndex - 1];
+                    const dx = previousWaypoint.x - this.target.x;
+                    const dy = previousWaypoint.y - this.target.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Move enemy back towards the previous waypoint
+                    const moveX = (dx / distance) * knockbackDistance;
+                    const moveY = (dy / distance) * knockbackDistance;
+                    
+                    // Update enemy position but ensure they don't go past the previous waypoint
+                    this.target.x = Math.max(Math.min(this.target.x + moveX, previousWaypoint.x), previousWaypoint.x);
+                    this.target.y = Math.max(Math.min(this.target.y + moveY, previousWaypoint.y), previousWaypoint.y);
+                    
                     console.log("Nate knocked back an enemy!");
                 } else if (this.type == "15") {
                     // Find up to 5 enemies in range

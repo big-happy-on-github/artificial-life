@@ -1432,7 +1432,7 @@ async function endGame() {
         let cancel = false;
         let name = ""; // Initialize name outside the loop
 
-        while (!validName || !cancel) {
+        while (!validName && !cancel) {
             name = prompt("enter a name for the leaderboard");
 
             if (!name || name.length < 1) {

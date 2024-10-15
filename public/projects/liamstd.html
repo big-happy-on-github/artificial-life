@@ -11,7 +11,7 @@
     <meta name="google-adsense-account" content="ca-pub-9556203064620862">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body onload="newSeason()">
+<body>
     <header>
         <a href="/welcome"><h1>LIAMLAND</h1></a>
         <div id="menu">
@@ -33,7 +33,7 @@
             <div id="lives">9 lives</div>
             <div>(season 1)</div>
         </div>
-        <div id="tower-selection">
+        <div id="tower-selection-season1" style="display:none">
             <select id="general-towers">
                 <option value="0" selected>general</option>
                 <option value="1">$1 jack</option>
@@ -61,7 +61,7 @@
                 <option value="11">$∞ cole (...)</option>
             </select>
         </div>
-        <div id="tower-selection-season2" style="display:none;">
+        <div id="tower-selection" style="display:block;">
             <select id="general-towers">
                 <option value="0" selected>general</option>
                 <option value="13">$5 ciaran</option>
@@ -210,24 +210,6 @@
             // Reset freeplay state
             window.wasFreeplay = false;
             window.location.reload();
-        }
-
-        function newSeason() {
-            if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") !== "season 2 is here!") {
-                localStorage.setItem("LiamsTDAlert", "season 2 is here!");
-                alert(localStorage.getItem("LiamsTDAlert"));
-                if (!document.getElementById("tower-selection-season1")) {
-                    const towerSelection1 = document.getElementById("tower-selection");
-                    const towerSelection2 = document.getElementById("tower-selection-season2");
-                    
-                    if (towerSelection1 && towerSelection2) {
-                        towerSelection1.id = "tower-selection-season1";
-                        towerSelection1.style.display = "none";
-                        towerSelection2.id = "tower-selection";
-                        towerSelection2.style.display = "block";
-                    }
-                }
-            }
         }
     </script>
 </body>

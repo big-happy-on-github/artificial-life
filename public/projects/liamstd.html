@@ -223,14 +223,19 @@
         // Example usage
         const targetDate = '2024-10-16'; // Set your target date here (YYYY-MM-DD format)
         if (isMidnightOrPast(targetDate)) {
-            if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") != "season 2 is here!") {
+            if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") !== "season 2 is here!") {
                 localStorage.setItem("LiamsTDAlert", "season 2 is here!");
                 alert(localStorage.getItem("LiamsTDAlert"));
             }
             if (!document.getElementById("tower-selection-season1")) {
-                document.getElementById("tower-selection").id = "tower-selection-season1";
-                document.getElementById("tower-selection-season1").style.display = "none";
-                document.getElementById("tower-selection-season2").id = "tower-selection";
+                const towerSelection1 = document.getElementById("tower-selection");
+                const towerSelection2 = document.getElementById("tower-selection-season2");
+                
+                if (towerSelection1 && towerSelection2) {
+                    towerSelection1.id = "tower-selection-season1";
+                    towerSelection1.style.display = "none";
+                    towerSelection2.id = "tower-selection";
+                }
             }
         }
     </script>

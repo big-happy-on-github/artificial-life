@@ -253,6 +253,20 @@
                 }
             }
         }
+        if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") !== "season 2 is here!") {
+                    localStorage.setItem("LiamsTDAlert", "season 2 is here!");
+                    alert(localStorage.getItem("LiamsTDAlert"));
+                }
+                if (!document.getElementById("tower-selection-season1")) {
+                    const towerSelection1 = document.getElementById("tower-selection");
+                    const towerSelection2 = document.getElementById("tower-selection-season2");
+                    
+                    if (towerSelection1 && towerSelection2) {
+                        towerSelection1.id = "tower-selection-season1";
+                        towerSelection1.style.display = "none";
+                        towerSelection2.id = "tower-selection";
+                    }
+                }
     </script>
 </body>
 </html>

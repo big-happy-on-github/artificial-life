@@ -1200,9 +1200,9 @@ canvas.addEventListener('click', (event) => {
         const tempTower = new Tower(gridX, gridY, selectedTowerType);
         
         if (currency >= tempTower.price) {
-            if (tempTower.type == "14" && hasDavid < 3) {
-                hasDavid++;
-            } else if (tempTower.type == "14" && hasDavid > 2) {
+            if (tempTower.type == "14" && davids < 3) {
+                davids++;
+            } else if (tempTower.type == "14" && davids > 2) {
                 alert("cannot place more than 2 davids");
                 return;
             }

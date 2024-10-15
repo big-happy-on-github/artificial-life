@@ -92,7 +92,8 @@ const upgrade = {
         'lvl3': { '1': { health: 12, range: 0, damage: 3, fireRate: 0, cost: 12 }, '2': { health: 0, range: 60, damage: 1.5, fireRate: 0, cost: 9 } },
         'lvl4': { '1': { health: 25, range: 70, damage: 8, fireRate: 0, cost: 30 }, '2': { health: 25, range: 120, damage: 8, fireRate: 0, cost: 30 } }
     },
-    '19': {}
+    '19': {},
+    '20': {}
 };
 
 // Function to show the tower stats pop-up
@@ -136,6 +137,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'harrison';
     } else if (tower.type == '19') {
         towerType = 'huddy';
+    } else if (tower.type == '20') {
+        towerType = 'nate';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -593,6 +596,14 @@ class Tower {
             this.price = 15;
             this.desc = "shoots every 10 seconds, high damage";
             this.canShoot = true;
+        } else if (type == '20') { // Nate
+            this.health = 50;
+            this.range = 100;
+            this.fireRate = 1; // Fires every second
+            this.damage = 0; // No damage
+            this.price = 8;
+            this.desc = "knocks back enemies without dealing damage";
+            this.canShoot = true;
         }
 
         this.lastFired = 0;
@@ -637,6 +648,8 @@ class Tower {
             ctx.fillStyle = '#5c1139';
         } else if (this.type == '19') {
             ctx.fillStyle = '#d6b19a';
+        } else if (this.type == '20') {
+            ctx.fillStyle = '#cbabff';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -661,6 +674,11 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
+                } else if (this.type == '20') { // Nate's knockback behavior
+                    const knockbackDistance = 50; // Distance to push the enemy back
+                    this.target.x += Math.cos(angle) * knockbackDistance;
+                    this.target.y += Math.sin(angle) * knockbackDistance;
+                    console.log("Nate knocked back an enemy!");
                 } else if (this.type == "15") {
                     // Find up to 5 enemies in range
                     const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);

@@ -82,6 +82,7 @@
                 <option value="0" selected>special</option>
                 <option value="17">$0 anders (heals)</option>
                 <option value="10">$7 declan (freeze)</option>
+                <option value="20">$8 nate (knockback)</option>
                 <option value="12">$14 luca (+damage)</option>
                 <option value="11">$∞ cole (...)</option>
             </select>
@@ -211,10 +212,27 @@
             window.location.reload();
         }
 
-        /*if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") != "season 2 is here!") {
-            localStorage.setItem("LiamsTDAlert", "season 2 is here!");
-            alert(localStorage.getItem("LiamsTDAlert"));
-        }*/
+        function isMidnightOrPast(targetDate) {
+            const now = new Date();
+            const targetMidnight = new Date(targetDate);
+            targetMidnight.setHours(0, 0, 0, 0); // Set to midnight of the target date
+        
+            return now >= targetMidnight;
+        }
+        
+        // Example usage
+        const targetDate = '2024-10-16'; // Set your target date here (YYYY-MM-DD format)
+        if (isMidnightOrPast(targetDate)) {
+            if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") != "season 2 is here!") {
+                localStorage.setItem("LiamsTDAlert", "season 2 is here!");
+                alert(localStorage.getItem("LiamsTDAlert"));
+            }
+            if (!document.getElementById("tower-selection-season1")) {
+                document.getElementById("tower-selection").id = "tower-selection-season1";
+                document.getElementById("tower-selection-season1").style.display = "none";
+                document.getElementById("tower-selection-season2").id = "tower-selection";
+            }
+        }
     </script>
 </body>
 </html>

@@ -212,57 +212,21 @@
             window.location.reload();
         }
 
-        function isMidnightOrPast(targetDate) {
-            const now = new Date();
-            const targetMidnight = new Date(targetDate);
-            
-            // Set to midnight of the target date using UTC time
-            targetMidnight.setUTCHours(0, 0, 0, 0);
-        
-            // Convert current time to UTC for consistency
-            const nowUTC = new Date(
-                now.getUTCFullYear(),
-                now.getUTCMonth(),
-                now.getUTCDate(),
-                now.getUTCHours(),
-                now.getUTCMinutes(),
-                now.getUTCSeconds(),
-                now.getUTCMilliseconds()
-            );
-        
-            return nowUTC >= targetMidnight;
-        }
-
         function newSeason() {
-            // Example usage
-            const targetDate = '2024-10-16'; // Set your target date here (YYYY-MM-DD format)
-            if (isMidnightOrPast(targetDate)) {
-                if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") !== "season 2 is here!") {
-                    localStorage.setItem("LiamsTDAlert", "season 2 is here!");
-                    alert(localStorage.getItem("LiamsTDAlert"));
-                }
-                if (!document.getElementById("tower-selection-season1")) {
-                    const towerSelection1 = document.getElementById("tower-selection");
-                    const towerSelection2 = document.getElementById("tower-selection-season2");
-                    
-                    if (towerSelection1 && towerSelection2) {
-                        towerSelection1.id = "tower-selection-season1";
-                        towerSelection1.style.display = "none";
-                        towerSelection2.id = "tower-selection";
-                    }
+            if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") !== "season 2 is here!") {
+                localStorage.setItem("LiamsTDAlert", "season 2 is here!");
+                alert(localStorage.getItem("LiamsTDAlert"));
+            }
+            if (!document.getElementById("tower-selection-season1")) {
+                const towerSelection1 = document.getElementById("tower-selection");
+                const towerSelection2 = document.getElementById("tower-selection-season2");
+                
+                if (towerSelection1 && towerSelection2) {
+                    towerSelection1.id = "tower-selection-season1";
+                    towerSelection1.style.display = "none";
+                    towerSelection2.id = "tower-selection";
                 }
             }
-        }
-        const towerSelection1 = document.getElementById("tower-selection");
-        const towerSelection2 = document.getElementById("tower-selection-season2");
-        
-        if (towerSelection1 && towerSelection2) {
-            // Change the ID and display style of towerSelection1
-            towerSelection1.style.display = "none";
-            towerSelection1.id = "tower-selection-season1";
-            
-            // After changing towerSelection1's ID, update towerSelection2's ID
-            towerSelection2.id = "tower-selection";
         }
     </script>
 </body>

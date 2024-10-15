@@ -207,6 +207,11 @@
             window.wasFreeplay = false;
             window.location.reload();
         }
+
+        if (!localStorage.getItem("LiamsTDAlert") || localStorage.getItem("LiamsTDAlert") != "season 2 is approaching! remember, leaderboards will be cleared") {
+            localStorage.setItem("LiamsTDAlert", "season 2 is approaching! remember, leaderboards will be cleared");
+            alert(localStorage.getItem("LiamsTDAlert"));
+        }
     </script>
 </body>
 </html>

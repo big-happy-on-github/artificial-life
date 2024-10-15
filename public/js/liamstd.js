@@ -675,7 +675,7 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
                 } else if (this.type === '20') { // Nate's knockback behavior
-                    if (!this.target.gotKnockback) {
+                    if (this.target.gotKnockback != true) {
                         const knockbackDistance = 80; // Distance to push the enemy back
                         const previousWaypoint = path[this.target.currentPathIndex - 1];
                         const dx = previousWaypoint.x - this.target.x;

@@ -44,13 +44,15 @@ async function updateDisplay() {
         });
     }
 
-    // Fetch messages for the current private chat
-    const { data: name, error: error2 } = await supabase
-        .from('privateChats')
-        .select('name')
-        .eq('code', currentChatCode)
-
-    document.getElementById("h3").textContent = `${name[0].name} - ${currentChatCode}`;
+    if (currentChatCode != "1i0k0u") {
+        // Fetch messages for the current private chat
+        const { data: name, error: error2 } = await supabase
+            .from('privateChats')
+            .select('name')
+            .eq('code', currentChatCode)
+    
+        document.getElementById("h3").textContent = `${name[0].name} - ${currentChatCode}`;
+    }
 }
 
 // Update the chat message submission logic

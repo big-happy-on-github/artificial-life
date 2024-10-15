@@ -578,9 +578,9 @@ class Tower {
             this.health = 20;
             this.range = 150;
             this.fireRate = 0.1;
-            this.damage = 0.1;
+            this.damage = 0.2;
             this.price = 4;
-            this.desc = "close range, minigun";
+            this.desc = "minigun explosive bullets";
             this.canShoot = true;
         }
 
@@ -633,8 +633,8 @@ class Tower {
 
         if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
             let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16") {
-                if (this.type == "6" || this.type == "11" && this.type != "3" && this.type != "5" && this.type != "16") {
+            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16" || this.type == "18") {
+                if (this.type == "6" || this.type == "11" || this.type == "18" && this.type != "3" && this.type != "5" && this.type != "16") {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
                 } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5" && this.type == "16") {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));

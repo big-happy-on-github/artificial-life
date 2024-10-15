@@ -675,7 +675,7 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
                 } else if (this.type == '20') { // Nate's knockback behavior
-                    const knockbackDistance = 50; // Distance to push the enemy back
+                    const knockbackDistance = 100; // Distance to push the enemy back
                     this.target.x += Math.cos(angle) * knockbackDistance;
                     this.target.y += Math.sin(angle) * knockbackDistance;
                     console.log("Nate knocked back an enemy!");

@@ -675,22 +675,22 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
                 } else if (this.type === '20') { // Nate's knockback behavior
-                    if (this.target.gotKnockback != true) {
+                    if (!this.target.knockedBack) { // Check if the enemy has already been knocked back
                         const knockbackDistance = 80; // Distance to push the enemy back
-                        const previousWaypoint = path[this.target.currentPathIndex - 1];
+                        const previousWaypoint = path[Math.max(0, this.target.currentPathIndex - 1)];
                         const dx = previousWaypoint.x - this.target.x;
                         const dy = previousWaypoint.y - this.target.y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
-                        
+                
                         // Move enemy back towards the previous waypoint
                         const moveX = (dx / distance) * knockbackDistance;
                         const moveY = (dy / distance) * knockbackDistance;
-                        
-                        // Update enemy position but ensure they don't go past the previous waypoint
-                        this.target.x = Math.max(Math.min(this.target.x + moveX, previousWaypoint.x), previousWaypoint.x);
-                        this.target.y = Math.max(Math.min(this.target.y + moveY, previousWaypoint.y), previousWaypoint.y);
-                        this.target.gotKnockback = true;
-                        
+                
+                        // Ensure the enemy doesn't go past the previous waypoint
+                        this.target.x = Math.max(Math.min(this.target.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, this.target.x));
+                        this.target.y = Math.max(Math.min(this.target.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, this.target.y));
+                
+                        this.target.knockedBack = true; // Mark the enemy as knocked back
                         console.log("Nate knocked back an enemy!");
                     }
                 } else if (this.type == "15") {

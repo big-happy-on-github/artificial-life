@@ -215,9 +215,22 @@
         function isMidnightOrPast(targetDate) {
             const now = new Date();
             const targetMidnight = new Date(targetDate);
-            targetMidnight.setHours(0, 0, 0, 0); // Set to midnight of the target date
+            
+            // Set to midnight of the target date using UTC time
+            targetMidnight.setUTCHours(0, 0, 0, 0);
         
-            return now >= targetMidnight;
+            // Convert current time to UTC for consistency
+            const nowUTC = new Date(
+                now.getUTCFullYear(),
+                now.getUTCMonth(),
+                now.getUTCDate(),
+                now.getUTCHours(),
+                now.getUTCMinutes(),
+                now.getUTCSeconds(),
+                now.getUTCMilliseconds()
+            );
+        
+            return nowUTC >= targetMidnight;
         }
         
         // Example usage

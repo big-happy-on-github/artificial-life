@@ -93,7 +93,8 @@ const upgrade = {
         'lvl4': { '1': { health: 25, range: 0, damage: 8, fireRate: 0, cost: 30 }, '2': { health: 25, range: 120, damage: 0, fireRate: 0, cost: 30 } }
     },
     '19': {},
-    '20': {}
+    '20': {},
+    '21': {}
 };
 
 // Function to show the tower stats pop-up
@@ -139,6 +140,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'huddy';
     } else if (tower.type == '20') {
         towerType = 'nate';
+    } else if (tower.type == '21') {
+        towerType = 'shuka';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -175,6 +178,8 @@ function showTowerStats(tower, showButtons=true) {
             towerDamageDisplay.textContent = `0 dps`;
             if (tower.type == "4") {
                 tower.desc = `+$${tower.damage} after each wave`;
+            } else if (tower.type == "12") {
+                tower.desc = `adds ${tower.damage} to towers in range`;
             }
         }
 
@@ -213,6 +218,8 @@ function showTowerStats(tower, showButtons=true) {
                 towerDamageDisplay.textContent = `0 dps`;
                 if (tower.type == "4") {
                     tower.desc = `+$${tower.damage} after each wave`;
+                } else if (tower.type == "12") {
+                    tower.desc = `adds ${tower.damage} to towers in range`;
                 }
             }
         }
@@ -245,9 +252,6 @@ function hideTowerStats() {
 sellButton.addEventListener('click', (event) => {
     if (!showing) return;
     if (confirm("are you sure you want to sell this tower?")) {
-        if (showing.type == "14") {
-            daves--;
-        }
         showing.destroy();
     }
 });
@@ -604,6 +608,14 @@ class Tower {
             this.price = 8;
             this.desc = "knocks back enemies without dealing damage";
             this.canShoot = true;
+        } else if (type == '20') { // shuka
+            this.health = 30;
+            this.range = 200;
+            this.fireRate = 0; 
+            this.damage = 5; 
+            this.price = 6;
+            this.desc = "causes towers to explode on death";
+            this.canShoot = false;
         }
 
         this.lastFired = 0;
@@ -708,6 +720,11 @@ class Tower {
                         angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
                         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                     });
+                } else if (this.type == "21") {
+                    const towersInRange = towers.filter(tower => this.isInRange(tower));
+                    towersInRange.forEach(tower => {
+                        projectiles.push(new Projectile(tower.x, tower.y, Math.atan2(tower.x, tower.y), this.damage, "tower", "quickexplosion"));
+                    });
                 } else {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }
@@ -805,6 +822,9 @@ class Tower {
         const index = towers.indexOf(this);
         if (index > -1) {
             towers.splice(index, 1);
+            if (showing.type == "14") {
+                daves--;
+            }
     
             // Free the square previously occupied by this tower
             const gridX = Math.floor(this.x / gridSize);
@@ -998,7 +1018,7 @@ class Enemy {
         const index = enemies.indexOf(this);
         this.health = 0;
         if (this.color == "#fff" || this.color == "#1F51FF") {
-            enemyProjectiles.push(new Projectile(this.x, this.y, Math.atan2(this.x, this.y), this.damage, "enemy", "explosive"));
+            enemyProjectiles.push(new Projectile(this.x, this.y, Math.atan2(this.x, this.y), this.damage, "enemy", "quickexplosion"));
         }
         if (index > -1) {
             enemies.splice(index, 1);
@@ -1146,7 +1166,7 @@ class Projectile {
     }
 
     draw() {
-        if (this.specificType && this.specificType.split(',').includes('explosive')) {
+        if (this.specificType && this.specificType.split(',').includes('explosive') || this.specificType.split(',').includes('quickexplosion')) {
             ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
         } else if (this.specificType && this.specificType.split(',').includes('fast')) {
             ctx.fillStyle = 'green';
@@ -1198,6 +1218,11 @@ class Projectile {
 
         if (this.type == 'tower') {
             enemies.forEach(enemy => {
+                if (this.specificType == 'quickexplosion') {
+                    enemy.takeDamage(this.damage);
+                    this.explode();
+                    this.destroy();
+                }
                 const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     enemy.takeDamage(this.damage);
@@ -1209,9 +1234,17 @@ class Projectile {
             });
         } else if (this.type == 'enemy') {
             towers.forEach(tower => {
+                if (this.specificType == 'quickexplosion') {
+                    tower.takeDamage(this.damage);
+                    this.explode();
+                    this.destroy();
+                }
                 const distance = Math.sqrt((tower.x - this.x) ** 2 + (tower.y - this.y) ** 2);
                 if (distance < 20 + buffer) {
                     tower.takeDamage(this.damage);
+                    if (this.specificType == 'explosive') {
+                        this.explode(); // Trigger explosion on impact
+                    }
                     this.destroy();
                 }
             });

@@ -592,12 +592,12 @@ class Tower {
             this.health = 30;
             this.range = 150;
             this.fireRate = 10;
-            this.damage = 50;
+            this.damage = 1/0;
             this.price = 15;
             this.desc = "shoots every 10 seconds, high damage";
             this.canShoot = true;
         } else if (type == '20') { // Nate
-            this.health = 50;
+            this.health = 20;
             this.range = 100;
             this.fireRate = 1; // Fires every second
             this.damage = 0; // No damage
@@ -1044,7 +1044,7 @@ const enemyTypes = [
     { speed: 2, health: 15, color: 'blue', canShoot: true, range: 10, fireRate: 1.5, damage: 2, level: 5, nextType: null }, // Fast shooting enemy, no further transformation
     { speed: 0.3, health: 72, color: 'purple', canShoot: false, range: null, fireRate: null, damage: null, level: 7, nextType: 'yellow' },
     { speed: 1, health: 20, color: '#33fff9', canShoot: false, range: 10, fireRate: null, damage: null, level: 13, nextType: null, special: 'Heals nearby enemies every second' },
-    { speed: 0.3, health: 300, color: 'pink', canShoot: true, range: 100, fireRate: 0.5, damage: 2.5, level: 17, nextType: 'purple' },
+    { speed: 0.3, health: 150, color: 'pink', canShoot: true, range: 100, fireRate: 0.5, damage: 2.5, level: 17, nextType: 'purple' },
     { speed: 0.7, health: 35, color: '#ff7433', canShoot: false, range: null, fireRate: null, damage: null, level: 23, nextType: null, special: 'Regrows health every second' },
     { speed: 0.3, health: 500, color: '#32a852', canShoot: false, range: 0, fireRate: 0, damage: 0, level: 25, nextType: 'purple' },
     { speed: 6, health: 100, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 35, nextType: null },

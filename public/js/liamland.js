@@ -126,7 +126,13 @@ async function showGames() {
 
     const games = data[0].games;
     gameList.forEach(game => {
-        if (let game.name in games || game.cost == 0) {
+        let yn = false;
+        for (let userGame in games) {
+            if (userGame == game.name) {
+                yn = true
+            }
+        }
+        if (yn || game.cost == 0) {
             document.getElementById(`${game.name}Button`).textContent = "play";
             document.getElementById(`${game.name}Button`).removeEventListener('click', buy(game.name));
         } else {

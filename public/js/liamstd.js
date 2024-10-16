@@ -817,8 +817,10 @@ class Tower {
         const index = towers.indexOf(this);
         if (index > -1) {
             towers.splice(index, 1);
-            if (showing.type == "14") {
+            if (this.type == "14") {
                 daves--;
+            } if (this == showing) {
+                hideTowerStats();
             }
     
             // Free the square previously occupied by this tower

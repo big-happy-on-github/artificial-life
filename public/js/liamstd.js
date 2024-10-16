@@ -720,11 +720,6 @@ class Tower {
                         angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
                         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                     });
-                } else if (this.type == "21") {
-                    const towersInRange = towers.filter(tower => this.isInRange(tower));
-                    towersInRange.forEach(tower => {
-                        projectiles.push(new Projectile(tower.x, tower.y, Math.atan2(tower.x, tower.y), this.damage, "tower", "quickexplosion"));
-                    });
                 } else {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }
@@ -832,6 +827,20 @@ class Tower {
             const squareKey = `${gridX},${gridY}`;
             occupiedSquares.delete(squareKey); // Mark the square as available
             console.log(`Square [${squareKey}] is now available.`);
+
+            if (this.type == "21") {
+                projectiles.push(new Projectile(this.x, this.y, 0, shuka.damage, "tower", "quickexplosion"));
+            } else {
+                // Check for Shuka towers in range and trigger explosion if they exist
+                const shukaTowers = towers.filter(tower => tower.type === '21');
+                shukaTowers.forEach(shuka => {
+                    if (shuka.isInRange(this)) {
+                        // Shuka reacts to the tower's destruction
+                        projectiles.push(new Projectile(this.x, this.y, 0, shuka.damage, "tower", "quickexplosion"));
+                        console.log("Shuka triggered an explosion due to tower destruction!");
+                    }
+                });
+            }
         }
     }
 

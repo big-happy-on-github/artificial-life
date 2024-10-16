@@ -153,7 +153,7 @@ async function buy(game) {
         .eq("userID", userID);
     const result = gameList.find(item => item.name === game);
     if (data[0].amount >= result.cost) {
-        await addData(data[0].amount-result.cost, userID, { ...data[0].games, `${result.name}`: true });
+        await addData(data[0].amount-result.cost, userID, { ...data[0].games, [result.name]: true });
         alert(`bought ${result.name}!`);
     } else {
         alert(`you are ${result.cost-data[0].amount} limbucks short!`);

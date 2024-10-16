@@ -698,6 +698,7 @@ class Tower {
         
                         // Update last fired time
                         this.lastFired = Date.now(); 
+                    }
                 } else if (this.type == "15") {
                     // Find up to 5 enemies in range
                     const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);

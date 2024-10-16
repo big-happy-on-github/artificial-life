@@ -675,27 +675,29 @@ class Tower {
                     projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
                     projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
                 } else if (this.type === '20') { // Nate's knockback behavior
-                    if (!this.target.knockedBack) { // Check if the enemy has already been knocked back
+                    // Find the first enemy in range that has not been knocked back yet
+                    const enemyToKnockBack = enemies.find(enemy => this.isInRange(enemy) && !enemy.knockedBack);
+    
+                    if (enemyToKnockBack) {
                         const knockbackDistance = 80; // Distance to push the enemy back
-                        const previousWaypoint = path[Math.max(0, this.target.currentPathIndex - 1)];
-                        const dx = previousWaypoint.x - this.target.x;
-                        const dy = previousWaypoint.y - this.target.y;
+                        const previousWaypoint = path[Math.max(0, enemyToKnockBack.currentPathIndex - 1)];
+                        const dx = previousWaypoint.x - enemyToKnockBack.x;
+                        const dy = previousWaypoint.y - enemyToKnockBack.y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
-                
+        
                         // Move enemy back towards the previous waypoint
                         const moveX = (dx / distance) * knockbackDistance;
                         const moveY = (dy / distance) * knockbackDistance;
-                
+        
                         // Ensure the enemy doesn't go past the previous waypoint
-                        this.target.x = Math.max(Math.min(this.target.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, this.target.x));
-                        this.target.y = Math.max(Math.min(this.target.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, this.target.y));
-                
-                        this.target.knockedBack = true; // Mark the enemy as knocked back
+                        enemyToKnockBack.x = Math.max(Math.min(enemyToKnockBack.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, enemyToKnockBack.x));
+                        enemyToKnockBack.y = Math.max(Math.min(enemyToKnockBack.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, enemyToKnockBack.y));
+        
+                        enemyToKnockBack.knockedBack = true; // Mark the enemy as knocked back
                         console.log("Nate knocked back an enemy!");
         
-                        // Prevent further knockbacks until Nate finds a new target
+                        // Update last fired time
                         this.lastFired = Date.now(); 
-                    }
                 } else if (this.type == "15") {
                     // Find up to 5 enemies in range
                     const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);

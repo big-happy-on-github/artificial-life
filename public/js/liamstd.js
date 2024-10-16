@@ -692,6 +692,9 @@ class Tower {
                 
                         this.target.knockedBack = true; // Mark the enemy as knocked back
                         console.log("Nate knocked back an enemy!");
+        
+                        // Prevent further knockbacks until Nate finds a new target
+                        this.lastFired = Date.now(); 
                     }
                 } else if (this.type == "15") {
                     // Find up to 5 enemies in range

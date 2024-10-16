@@ -1577,7 +1577,7 @@ async function getLeaderboard() {
         }
 
         // Display the top 12 entries
-        data.slice(0, 3).forEach((entry, index) => {
+        data.slice(0, 5).forEach((entry, index) => {
             const li = document.createElement('li');
             li.textContent = `#${index + 1}, wave ${entry.wave} by ${entry.name}`;
             leaderboard.appendChild(li);

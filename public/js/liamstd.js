@@ -565,7 +565,7 @@ class Tower {
             this.range = 100;
             this.fireRate = 0.6;
             this.damage = 4.2;
-            this.price = 3;
+            this.price = 4;
             this.desc = "shoots multiple targets at once (max 5)";
             this.canShoot = true;
         } else if (type == '16') {//henry

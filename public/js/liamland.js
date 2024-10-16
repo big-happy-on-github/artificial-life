@@ -55,6 +55,61 @@ async function getData() {
         }
 }
 
-// Example usage
-window.getData = getData; // Expose getData to the global scope
-window.addData = addData;
+// Function to add data to Supabase
+async function addLimbucks(amount, userID) {
+    try {
+        // Add or update data in Supabase
+        const { data, error } = await supabase
+            .from('limbucks')
+            .upsert({ amount, userID });
+        
+        if (error) {
+            throw error;
+        }
+        
+        console.log('Data inserted or updated:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+
+// Function to get data from Supabase
+async function getLimbucks() {
+    if (!localStorage.getItem("userID")) {
+        localStorage.setItem("userID", generateRandomString(50));
+    }
+    const userID = localStorage.getItem("userID");
+    try {
+        const { data, error } = await supabase
+            .from('limbucks')
+            .select('amount')
+            .eq("userID", userID);
+        
+        if (error) {
+            throw error;
+        }
+        
+        if (data && data.length > 0) {
+            // Data exists, display the amount
+            document.getElementById("limbucks").textContent = `${data[0].amount} limbucks`;
+        } else {
+            // No data found, start with 10 Limbucks
+            console.warn('No data found for this user. Starting with 10 Limbucks.');
+            await addLimbucks(10, userID);
+            document.getElementById("limbucks").textContent = '10 limbucks';
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+getLimbucks();

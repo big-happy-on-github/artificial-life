@@ -23,7 +23,7 @@ const upgrade2Button = document.getElementById('upgrade2-button') || null;
 const sellButton = document.getElementById('sell-button') || null;
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
-let davids = 0;
+let daves = 0;
 
 const upgrade = {
     '1': {
@@ -126,7 +126,7 @@ function showTowerStats(tower, showButtons=true) {
     } else if (tower.type == '13') {
         towerType = 'ciaran';
     } else if (tower.type == '14') {
-        towerType = 'david';
+        towerType = 'dave';
     } else if (tower.type == '15') {
         towerType = 'will';
     } else if (tower.type == '16') {
@@ -246,7 +246,7 @@ sellButton.addEventListener('click', (event) => {
     if (!showing) return;
     if (confirm("are you sure you want to sell this tower?")) {
         if (showing.type == "14") {
-            davids--;
+            daves--;
         }
         showing.destroy();
     }
@@ -548,7 +548,7 @@ class Tower {
             this.price = 5;
             this.desc = "meat shield, cannot shoot";
             this.canShoot = false;
-        } else if (type == '14') {//david
+        } else if (type == '14') {//dave
             this.health = 20;
             this.range = 1/0;
             this.fireRate = 0.01;
@@ -1280,10 +1280,10 @@ canvas.addEventListener('click', (event) => {
         const tempTower = new Tower(gridX, gridY, selectedTowerType);
         
         if (currency >= tempTower.price) {
-            if (tempTower.type == "14" && davids < 2) {
-                davids++;
-            } else if (tempTower.type == "14" && davids > 2) {
-                alert("cannot place more than 2 davids");
+            if (tempTower.type == "14" && daves < 2) {
+                daves++;
+            } else if (tempTower.type == "14" && daves > 2) {
+                alert("cannot place more than 2 daves");
                 return;
             }
             // Place the tower

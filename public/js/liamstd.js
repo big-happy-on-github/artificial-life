@@ -1091,13 +1091,42 @@ function spawnEnemies() {
             enemies.push(bossEnemy);
         }
     });
-    
-    setTimeout(() => {
+
+    if (enemies.length < 1) {
         waveInProgress = false;
         startWaveButton.disabled = false;
         currency += 1 + Math.round(wave / 2);
-        nextWave();
-    }, enemyCount * 1000);
+        wave++;
+    
+        if (wave > JSON.parse(localStorage.getItem("topScore"))) {
+            localStorage.setItem("topScore", wave);
+        }
+    
+        // Other game logic
+        towers.forEach(tower => {
+            if (tower.type == "4") {
+                currency += tower.damage;
+                console.log("added money");
+            } else if (tower.type == "9") {
+                if (((tower.lastFired + wave) - 1) % 5 == 0) {
+                    alert("last wave was a walker smash!");
+                }
+            }
+        });
+    
+        // Check for boss in the next wave
+        bossEnemyTypes.forEach(boss => {
+            if (wave == boss.level) {
+                alert(`new color boss on wave ${wave}!`);
+            }
+        });
+    
+        enemyTypes.forEach(enemy => {
+            if (enemy.special && enemy.level == wave) {
+                alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
+            }
+        });
+    }
 }
 
 class Projectile {

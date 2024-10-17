@@ -42,7 +42,7 @@ function drawWheel() {
 
 function drawArrow() {
     ctx.beginPath();
-    ctx.moveTo(canvas.width / 2, 10); // Arrow tip position
+    ctx.moveTo(canvas.width / 2, -10); // Arrow tip position
     ctx.lineTo(canvas.width / 2 - 20, 40); // Left side of the arrow
     ctx.lineTo(canvas.width / 2 + 20, 40); // Right side of the arrow
     ctx.closePath();
@@ -60,7 +60,7 @@ function getSegmentUnderArrow() {
 
 function spinWheel() {
     const spinSpeed = Math.random() * 0.2 + 0.3; // Random initial speed
-    const deceleration = 0.99; // Rate at which the wheel slows down
+    const deceleration = Math.random() * 0.4 + 0.8;
     let spinAngle = spinSpeed;
     let isSpinning = true;
 
@@ -98,4 +98,5 @@ function spinWheel() {
 
 drawWheel();
 drawArrow();
+
 canvas.addEventListener('click', spinWheel);

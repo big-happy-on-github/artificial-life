@@ -44,24 +44,21 @@ function drawArrow() {
 // Function to find the segment that the arrow intersects with when the wheel stops
 function getSegmentUnderArrow() {
     const arcSize = (2 * Math.PI) / segments.length;
-    const arrowX = 250;
-    const arrowY = 0; // Arrow tip is at the top center of the canvas
+    // Calculate the angle of the arrow relative to the rotated wheel
+    const arrowAngle = (2 * Math.PI - currentAngle) % (2 * Math.PI);
 
     for (let i = 0; i < segments.length; i++) {
-        const startAngle = (i * arcSize - currentAngle + 2 * Math.PI) % (2 * Math.PI);
-        const endAngle = ((i + 1) * arcSize - currentAngle + 2 * Math.PI) % (2 * Math.PI);
+        const startAngle = (i * arcSize) % (2 * Math.PI);
+        const endAngle = ((i + 1) * arcSize) % (2 * Math.PI);
 
-        // Check if the arrow's coordinates fall within this segment's angular range
+        // Check if the arrow's angle falls within this segment's angular range
         if (startAngle < endAngle) {
-            // Regular case where segment doesn't wrap around 0 degrees
-            if (Math.atan2(arrowY - 250, arrowX - 250) >= startAngle && 
-                Math.atan2(arrowY - 250, arrowX - 250) < endAngle) {
+            if (arrowAngle >= startAngle && arrowAngle < endAngle) {
                 return i;
             }
         } else {
-            // Case where the segment wraps around 0 degrees
-            if (Math.atan2(arrowY - 250, arrowX - 250) >= startAngle || 
-                Math.atan2(arrowY - 250, arrowX - 250) < endAngle) {
+            // Segment wraps around 0 degrees
+            if (arrowAngle >= startAngle || arrowAngle < endAngle) {
                 return i;
             }
         }
@@ -93,6 +90,7 @@ function spinWheel() {
 
             // Update the angle based on the current spin speed
             currentAngle += spinAngle;
+            currentAngle %= 2 * Math.PI; // Keep the angle within [0, 2 * Math.PI]
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(250, 250);
@@ -104,7 +102,7 @@ function spinWheel() {
             // Draw the arrow after the wheel to ensure it's always on top
             drawArrow();
 
-            requestAnimationFrame(animate);
+            spinTimeout = requestAnimationFrame(animate);
         }
     }
 

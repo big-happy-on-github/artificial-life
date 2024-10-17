@@ -42,6 +42,16 @@ async function checkCooldown() {
             alert(`you can spin again in ${hoursLeft} hours`);
             return false;
         }
+    } else if (error.code === "PGRST116") {
+        const { data, error: insertError } = await supabase
+            .from('wheel')
+            .insert({ userID: userID, time: new Date().toISOString() });
+    
+        if (insertError) {
+            console.error('Error inserting new spin record:', insertError);
+        } else {
+            console.log('Spin time recorded successfully:', data);
+        }
     }
 
     return true; // Allow spin if 24 hours have passed or no record found

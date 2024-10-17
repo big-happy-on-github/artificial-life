@@ -1116,7 +1116,6 @@ function spawnEnemies() {
             const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
-        enemiesSpawned = true;
     }
     
     // Spawn boss if wave matches boss level
@@ -1127,7 +1126,9 @@ function spawnEnemies() {
         }
     });
 
-    if (enemies.length === 0 && waveInProgress) {
+    enemiesSpawned = true;
+
+    if (enemies.length == 0 && waveInProgress && enemiesSpawned) {
         waveInProgress = false;
         startWaveButton.disabled = false; // Re-enable button for the next wave
         currency += 1 + Math.round(wave / 2); // Bonus for finishing the wave

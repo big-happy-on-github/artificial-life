@@ -52,9 +52,10 @@ function drawArrow() {
 
 function getSegmentUnderArrow() {
     const arcSize = (2 * Math.PI) / segments.length;
-    const adjustedAngle = (2 * Math.PI - currentAngle + Math.PI / 2) % (2 * Math.PI);
-
-    return Math.floor(adjustedAngle / arcSize);
+    // Adjust the currentAngle to match the arrow pointing upwards
+    const adjustedAngle = (currentAngle + Math.PI / 2) % (2 * Math.PI);
+    const index = Math.floor(adjustedAngle / arcSize);
+    return (segments.length - 1 - index + segments.length) % segments.length;
 }
 
 function spinWheel() {
@@ -98,4 +99,3 @@ function spinWheel() {
 drawWheel();
 drawArrow();
 canvas.addEventListener('click', spinWheel);
-

@@ -220,9 +220,9 @@
             const liamstdScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/liamstd&dimension=1024x768?delay=2000`;
             const chatScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/chat&dimension=1024x768?delay=2000`;
         
-            await document.getElementById('wheelImg').src = wheelScreenshot;
-            await document.getElementById('liamstdImg').src = liamstdScreenshot;
-            await document.getElementById('chatImg').src = chatScreenshot;
+            document.getElementById('wheelImg').src = wheelScreenshot;
+            document.getElementById('liamstdImg').src = liamstdScreenshot;
+            document.getElementById('chatImg').src = chatScreenshot;
         }
     
         // Load the screenshots on page load

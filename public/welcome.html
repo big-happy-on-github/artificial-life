@@ -216,9 +216,9 @@
             const screenshotServiceUrl = 'https://api.screenshotmachine.com'; // Screenshot service URL
             const apiKey = '7cf226'; // Replace with your API key
         
-            const wheelScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/wheel&dimension=1024x768?delay=2000`;
-            const liamstdScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/liamstd&dimension=1024x768?delay=2000`;
-            const chatScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/chat&dimension=1024x768?delay=2000`;
+            const wheelScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/wheel&dimension=1024x768?delay=2000?cachedLimit=0`;
+            const liamstdScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/liamstd&dimension=1024x768?delay=2000?cachedLimit=0`;
+            const chatScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/chat&dimension=1024x768?delay=2000?cachedLimit=0`;
         
             document.getElementById('wheelImg').src = wheelScreenshot;
             document.getElementById('liamstdImg').src = liamstdScreenshot;

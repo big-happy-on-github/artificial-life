@@ -59,12 +59,10 @@ function spinWheel() {
                 // Find the segment where the wheel lands
                 const arcSize = (2 * Math.PI) / segments.length;
                 const adjustedAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-                const index = Math.floor((adjustedAngle + arcSize / 2) / arcSize) % segments.length;
+                // The arrow is pointing to the top of the canvas, so calculate the segment at the top
+                const index = Math.floor((adjustedAngle) / arcSize) % segments.length;
 
-                // Correct the index so it matches the segment the arrow is pointing to
-                const correctedIndex = (segments.length - index) % segments.length;
-
-                console.log('Result:', segments[correctedIndex]);
+                console.log('Result:', segments[index]);
                 return;
             }
 

@@ -1,7 +1,8 @@
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 
-const segments = ['Prize 1', 'Prize 2', 'Prize 3', 'Prize 4', 'Prize 5', 'Prize 6'];
+const segments = ['+1 limbuck', '+2 limbucks', '+3 limbucks', '+4 limbucks', '+10 limbucks', '+1000000 limbucks'];
+const prizes = [1, 2, 3, 4, 10, 1000000];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5'];
 
 let currentAngle = 0;
@@ -141,8 +142,10 @@ async function spinWheel() {
             if (spinAngle < 0.002) { // Stop condition
                 isSpinning = false;
                 const index = getSegmentUnderArrow();
-                console.log('Result:', segments[index]);
-
+                const result = segments[index];
+                const prize = prizes[index];
+                alert(`you got ${result}!`);
+                
                 updateSpinTime(); // Update the spin time once the wheel stops
                 return;
             }

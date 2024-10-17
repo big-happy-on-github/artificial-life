@@ -41,6 +41,35 @@ function drawArrow() {
     ctx.fill();
 }
 
+// Function to find the segment that the arrow intersects with when the wheel stops
+function getSegmentUnderArrow() {
+    const arcSize = (2 * Math.PI) / segments.length;
+    const arrowX = 250;
+    const arrowY = 0; // Arrow tip is at the top center of the canvas
+
+    for (let i = 0; i < segments.length; i++) {
+        const startAngle = (i * arcSize - currentAngle + 2 * Math.PI) % (2 * Math.PI);
+        const endAngle = ((i + 1) * arcSize - currentAngle + 2 * Math.PI) % (2 * Math.PI);
+
+        // Check if the arrow's coordinates fall within this segment's angular range
+        if (startAngle < endAngle) {
+            // Regular case where segment doesn't wrap around 0 degrees
+            if (Math.atan2(arrowY - 250, arrowX - 250) >= startAngle && 
+                Math.atan2(arrowY - 250, arrowX - 250) < endAngle) {
+                return i;
+            }
+        } else {
+            // Case where the segment wraps around 0 degrees
+            if (Math.atan2(arrowY - 250, arrowX - 250) >= startAngle || 
+                Math.atan2(arrowY - 250, arrowX - 250) < endAngle) {
+                return i;
+            }
+        }
+    }
+
+    return -1; // Should never happen if the segments cover the entire wheel
+}
+
 function spinWheel() {
     const spinSpeed = 0.2; // Initial speed
     const deceleration = 0.99; // Rate at which the wheel slows down
@@ -56,13 +85,8 @@ function spinWheel() {
             if (spinAngle < 0.002) {
                 isSpinning = false;
 
-                // Calculate the segment where the arrow is pointing
-                const arcSize = (2 * Math.PI) / segments.length;
-                const adjustedAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-
-                // Find the segment that the arrow is pointing at
-                const index = Math.floor(adjustedAngle / arcSize) % segments.length;
-
+                // Find the segment under the arrow
+                const index = getSegmentUnderArrow();
                 console.log('Result:', segments[index]);
                 return;
             }

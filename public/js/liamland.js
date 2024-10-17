@@ -20,12 +20,16 @@ async function addData(feedback) {
                 console.log(ipInfo); // Logs the IP information
                 alert("thank you!")
                 document.getElementById("feedbackInput").value = "";
-                
+
+                if (!localStorage.getItem("userID")) {
+                    localStorage.setItem("userID", generateRandomString(50));
+                }
+                const userID = localStorage.getItem("userID");
                 // Add data to Supabase
                 const { data, error } = await supabase
                     .from('feedback') // Assuming 'feedback' is the name of your table
                     .insert([
-                        { ip: ipInfo, feedback: feedback }
+                        { ip: ipInfo, feedback: feedback, userID: userID }
                     ]);
                 
                 if (error) {

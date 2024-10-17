@@ -58,10 +58,10 @@ function spinWheel() {
 
                 // Find the segment where the wheel lands
                 const arcSize = (2 * Math.PI) / segments.length;
-                const adjustedAngle = (2 * Math.PI - currentAngle % (2 * Math.PI)) % (2 * Math.PI);
-                const resultIndex = Math.floor(adjustedAngle / arcSize) % segments.length;
+                const adjustedAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+                const index = Math.floor((adjustedAngle + arcSize / 2) / arcSize) % segments.length;
 
-                console.log('Result:', segments[resultIndex]);
+                console.log('Result:', segments[index]);
                 return;
             }
 

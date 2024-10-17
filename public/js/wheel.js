@@ -182,7 +182,7 @@ async function addLimbucks(amount) {
         .select('*')
         .eq("userID", userID);
     const newAmount = data[0].amount+amount;
-    const { data: data2, error } = await supabase
+    const { data: data2, error: error2 } = await supabase
         .from('limbucks')
         .update({ "amount": newAmount })
         .eq("userID", userID);

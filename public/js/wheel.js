@@ -13,15 +13,24 @@ function drawWheel() {
     segments.forEach((segment, i) => {
         const angle = i * arcSize;
         ctx.beginPath();
-        ctx.arc(250, 250, 250, angle, angle + arcSize);
-        ctx.lineTo(250, 250);
+        ctx.moveTo(canvas.width / 2, canvas.height / 2);
+        ctx.arc(
+            canvas.width / 2,
+            canvas.height / 2,
+            200, // Radius of the wheel
+            angle,
+            angle + arcSize
+        );
+        ctx.closePath();
         ctx.fillStyle = colors[i];
         ctx.fill();
         ctx.stroke();
+        
+        // Draw text
         ctx.save();
         ctx.translate(
-            250 + Math.cos(angle + arcSize / 2) * 150,
-            250 + Math.sin(angle + arcSize / 2) * 150
+            canvas.width / 2 + Math.cos(angle + arcSize / 2) * 150,
+            canvas.height / 2 + Math.sin(angle + arcSize / 2) * 150
         );
         ctx.rotate(angle + arcSize / 2 + Math.PI / 2);
         ctx.fillStyle = '#000';
@@ -33,73 +42,47 @@ function drawWheel() {
 
 function drawArrow() {
     ctx.beginPath();
-    ctx.moveTo(250, 0); // Starting point at the top center of the canvas
-    ctx.lineTo(240, 30); // Left edge of the arrow
-    ctx.lineTo(260, 30); // Right edge of the arrow
+    ctx.moveTo(canvas.width / 2, 10); // Arrow tip position
+    ctx.lineTo(canvas.width / 2 - 20, 40); // Left side of the arrow
+    ctx.lineTo(canvas.width / 2 + 20, 40); // Right side of the arrow
     ctx.closePath();
     ctx.fillStyle = '#000';
     ctx.fill();
 }
 
-// Function to find the segment that the arrow intersects with when the wheel stops
 function getSegmentUnderArrow() {
     const arcSize = (2 * Math.PI) / segments.length;
-    // Calculate the angle of the arrow relative to the rotated wheel
-    const arrowAngle = (2 * Math.PI - currentAngle) % (2 * Math.PI);
+    const adjustedAngle = (2 * Math.PI - currentAngle + Math.PI / 2) % (2 * Math.PI);
 
-    for (let i = 0; i < segments.length; i++) {
-        const startAngle = (i * arcSize) % (2 * Math.PI);
-        const endAngle = ((i + 1) * arcSize) % (2 * Math.PI);
-
-        // Check if the arrow's angle falls within this segment's angular range
-        if (startAngle < endAngle) {
-            if (arrowAngle >= startAngle && arrowAngle < endAngle) {
-                return i;
-            }
-        } else {
-            // Segment wraps around 0 degrees
-            if (arrowAngle >= startAngle || arrowAngle < endAngle) {
-                return i;
-            }
-        }
-    }
-
-    return -1; // Should never happen if the segments cover the entire wheel
+    return Math.floor(adjustedAngle / arcSize);
 }
 
 function spinWheel() {
-    const spinSpeed = 0.2; // Initial speed
+    const spinSpeed = Math.random() * 0.2 + 0.3; // Random initial speed
     const deceleration = 0.99; // Rate at which the wheel slows down
     let spinAngle = spinSpeed;
     let isSpinning = true;
 
     function animate() {
         if (isSpinning) {
-            // Gradually decrease the spin speed
             spinAngle *= deceleration;
 
-            // Stop the wheel when the spin speed is very low
             if (spinAngle < 0.002) {
                 isSpinning = false;
-
-                // Find the segment under the arrow
                 const index = getSegmentUnderArrow();
                 console.log('Result:', segments[index]);
                 return;
             }
 
-            // Update the angle based on the current spin speed
             currentAngle += spinAngle;
-            currentAngle %= 2 * Math.PI; // Keep the angle within [0, 2 * Math.PI]
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            ctx.translate(250, 250);
+            ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(currentAngle);
-            ctx.translate(-250, -250);
+            ctx.translate(-canvas.width / 2, -canvas.height / 2);
             drawWheel();
             ctx.restore();
 
-            // Draw the arrow after the wheel to ensure it's always on top
             drawArrow();
 
             spinTimeout = requestAnimationFrame(animate);
@@ -115,3 +98,4 @@ function spinWheel() {
 drawWheel();
 drawArrow();
 canvas.addEventListener('click', spinWheel);
+

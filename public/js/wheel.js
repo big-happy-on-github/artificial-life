@@ -147,6 +147,7 @@ async function spinWheel() {
                 alert(`you got ${result}!`);
                 
                 updateSpinTime(); // Update the spin time once the wheel stops
+                addLimbucks(prize);
                 return;
             }
 

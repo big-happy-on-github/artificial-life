@@ -31,6 +31,16 @@ function drawWheel() {
     });
 }
 
+function drawArrow() {
+    ctx.beginPath();
+    ctx.moveTo(250, 0); // Starting point at the top center of the canvas
+    ctx.lineTo(240, 30); // Left edge of the arrow
+    ctx.lineTo(260, 30); // Right edge of the arrow
+    ctx.closePath();
+    ctx.fillStyle = '#000';
+    ctx.fill();
+}
+
 function spinWheel() {
     const spinSpeed = 0.2; // Initial speed
     const deceleration = 0.99; // Rate at which the wheel slows down
@@ -48,7 +58,8 @@ function spinWheel() {
 
                 // Find the segment where the wheel lands
                 const arcSize = (2 * Math.PI) / segments.length;
-                const resultIndex = Math.floor((segments.length - (currentAngle / (2 * Math.PI)) % 1 * segments.length)) % segments.length;
+                const adjustedAngle = (2 * Math.PI - currentAngle % (2 * Math.PI)) % (2 * Math.PI);
+                const resultIndex = Math.floor(adjustedAngle / arcSize) % segments.length;
 
                 console.log('Result:', segments[resultIndex]);
                 return;
@@ -64,6 +75,9 @@ function spinWheel() {
             drawWheel();
             ctx.restore();
 
+            // Draw the arrow after the wheel to ensure it's always on top
+            drawArrow();
+
             requestAnimationFrame(animate);
         }
     }
@@ -75,4 +89,5 @@ function spinWheel() {
 }
 
 drawWheel();
+drawArrow();
 canvas.addEventListener('click', spinWheel);

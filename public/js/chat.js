@@ -91,8 +91,13 @@ async function submitMessage(message) {
             return;
         }
 
+        if (!localStorage.getItem("userID")) {
+            localStorage.setItem("userID", generateRandomString(50));
+        }
+        const userID = localStorage.getItem("userID");
+        
         // Append the new message
-        const updatedMessages = [...chat.messages, { text: message, ip: ipInfo, timestamp: new Date().toISOString() }];
+        const updatedMessages = [...chat.messages, { text: message, ip: ipInfo, timestamp: new Date().toISOString(), userID: userID }];
 
         // Update the chat's messages
         const { error: updateError } = await supabase

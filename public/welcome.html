@@ -205,21 +205,26 @@
                 localStorage.setItem("alert", isAlert);
             }
         }
-
+    </script>
+    <script type="module">
         // Use Screenshot Machine API to load screenshots from URLs
         const screenshotServiceUrl = 'https://api.screenshotmachine.com'; // Replace with your service URL
         const apiKey = '7cf226'; // Replace with your API key
-
+    
         async function loadScreenshots() {
-            const wheelScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=https://${window.location.href}/projects/wheel`;
-            const liamstdScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=https://${window.location.href}/projects/liamstd`;
-            const chatScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=https://${window.location.href}/projects/chat`;
-
+            const domain = window.location.origin; // Get the domain including the protocol
+            const screenshotServiceUrl = 'https://api.screenshotmachine.com'; // Screenshot service URL
+            const apiKey = '7cf226'; // Replace with your API key
+        
+            const wheelScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/wheel&dimension=1024x768`;
+            const liamstdScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/liamstd&dimension=1024x768`;
+            const chatScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/chat&dimension=1024x768`;
+        
             document.getElementById('wheelImg').src = wheelScreenshot;
             document.getElementById('liamstdImg').src = liamstdScreenshot;
             document.getElementById('chatImg').src = chatScreenshot;
         }
-
+    
         // Load the screenshots on page load
         window.onload = loadScreenshots;
     </script>

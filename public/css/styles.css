@@ -136,7 +136,6 @@ main p {
     position: fixed;
     top: 60px; /* Places it right under the header */
     left: 10px; /* Keeps it aligned to the left edge */
-    font-size: 20px;
     background-color: rgba(34, 34, 34, 0.8); /* Adds a slightly transparent background */
     padding: 10px;
     border-radius: 5px;

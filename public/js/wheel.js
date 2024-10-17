@@ -128,16 +128,17 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const spinSpeed = Math.random() * 0.2 + 0.3;
-    const deceleration = Math.random() * 0.4 + 0.8;
-    let spinAngle = spinSpeed;
+    const initialSpinSpeed = Math.random() * 0.3 + 0.5; // Higher initial speed
+    const deceleration = 0.99; // Deceleration factor (slightly less than 1)
+    let spinAngle = initialSpinSpeed;
     let isSpinning = true;
 
     function animate() {
         if (isSpinning) {
+            // Apply the deceleration factor to reduce the speed gradually
             spinAngle *= deceleration;
 
-            if (spinAngle < 0.002) {
+            if (spinAngle < 0.002) { // Stop condition
                 isSpinning = false;
                 const index = getSegmentUnderArrow();
                 console.log('Result:', segments[index]);

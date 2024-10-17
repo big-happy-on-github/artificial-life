@@ -925,7 +925,7 @@ class Enemy {
     update() {
         if (this.isFrozen && Date.now() > this.freezeEndTime) {
             this.isFrozen = false;
-            this.speed = this.speedBackup; // Restore original speed
+            this.speed = this.speedBackup; // Restore original speed after freeze
         }
 
         // If the enemy is frozen, draw blue overlay
@@ -1177,7 +1177,7 @@ class Projectile {
     }
 
     draw() {
-        if (this.specificType && this.specificType.split(',').includes('explosive') || this.specificType.split(',').includes('quickexplosion')) {
+        if (this.specificType && this.specificType.split(',').includes('explosive') || this.specificType && this.specificType.split(',').includes('quickexplosion')) {
             ctx.fillStyle = 'red'; // Red for Lars' explosive bullets
         } else if (this.specificType && this.specificType.split(',').includes('fast')) {
             ctx.fillStyle = 'green';

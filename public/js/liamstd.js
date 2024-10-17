@@ -1105,7 +1105,7 @@ function spawnEnemies() {
     }
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
+            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level < wave);
             const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
             if ((wave-25)/10 >= 0) {
                 randomType.health += Math.round(5+2*((wave-25)/10));

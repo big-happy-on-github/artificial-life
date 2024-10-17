@@ -38,8 +38,12 @@ async function checkCooldown() {
 
         // Check if 24 hours (86400000 milliseconds) have passed
         if (timeDiff < 86400000) {
-            const hoursLeft = Math.floor((86400000 - timeDiff) / (1000 * 60 * 60));
-            alert(`you can spin again in ${hoursLeft} hours`);
+            const timeRemaining = 86400000 - timeDiff;
+            const hoursLeft = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsLeft = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            
+            alert(`you can spin again in ${hoursLeft} hours, ${minutesLeft} minutes, and ${secondsLeft} seconds`);
             return false;
         }
     } else if (error.code === "PGRST116") {

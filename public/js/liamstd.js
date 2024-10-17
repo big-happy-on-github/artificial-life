@@ -1508,10 +1508,15 @@ async function submitScore(name, wave) {
     const ipInfo = await response.json();
     console.log(ipInfo);
 
+    if (!localStorage.getItem("userID")) {
+        localStorage.setItem("userID", generateRandomString(50));
+    }
+    const userID = localStorage.getItem("userID");
+
     try {
         const { error } = await supabase
             .from('LiamsTD leaderboard')
-            .insert([{ name: name, wave: wave, ip: ipInfo }]);
+            .insert([{ name: name, wave: wave, ip: ipInfo, userID: userID }]);
 
         if (error) throw error;
         console.log('Score successfully submitted!');

@@ -1,8 +1,8 @@
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 
-const segments = ['+1 limbuck', '+2 limbucks', '+3 limbucks', '+4 limbucks', '+10 limbucks', '+1000000 limbucks'];
-const prizes = [1, 2, 3, 4, 10, 1000000];
+const segments = ['+1 limbuck', '+2 limbucks', '+3 limbucks', '+4 limbucks', '+1 limbuck', '+5 limbucks'];
+const prizes = [1, 2, 3, 4, 1, 5];
 const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5'];
 
 let currentAngle = 0;
@@ -173,6 +173,15 @@ async function spinWheel() {
 }
 
 async function addLimbucks(amount) {
+    if (!localStorage.getItem("userID")) {
+        localStorage.setItem("userID", generateRandomString(50));
+    }
+    const userID = localStorage.getItem("userID");
+    const { data, error } = await supabase
+        .from('limbucks')
+        .select('*')
+        .eq("userID", userID);
+    const newAmount = data[0].amount+amount;
     const { data, error } = await supabase
         .from('limbucks')
         .replace([{ "amount": newAmount }]);

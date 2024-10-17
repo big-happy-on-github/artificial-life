@@ -61,7 +61,10 @@ function spinWheel() {
                 const adjustedAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
                 const index = Math.floor((adjustedAngle + arcSize / 2) / arcSize) % segments.length;
 
-                console.log('Result:', segments[index]);
+                // Correct the index so it matches the segment the arrow is pointing to
+                const correctedIndex = (segments.length - index) % segments.length;
+
+                console.log('Result:', segments[correctedIndex]);
                 return;
             }
 

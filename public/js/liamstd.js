@@ -147,7 +147,7 @@ function showTowerStats(tower, showButtons=true) {
     towerTypeDisplay.textContent = `${towerType} tower`;
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health} hp`;
-    towerRangeDisplay.textContent = `${tower.range} px range`;
+    towerRangeDisplay.textContent = `${tower.range/50} square range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
     towerDescDisplay.textContent = tower.desc;
     upgrade1Button.disabled = false;
@@ -273,7 +273,7 @@ upgrade1Button.addEventListener('click', (event) => {
             towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
+            towerRangeDisplay.textContent = `${showing.range/50} square range ➔ ${(showing.range + upgradeInfo.range)/50}`;
 
             if (showing.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
@@ -346,7 +346,7 @@ upgrade2Button.addEventListener('click', (event) => {
             towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range}px range ➔ ${showing.range + upgradeInfo.range}`;
+            towerRangeDisplay.textContent = `${showing.range/50} square range ➔ ${(showing.range + upgradeInfo.range)/50}`;
 
             if (showing.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
@@ -608,7 +608,7 @@ class Tower {
             this.price = 8;
             this.desc = "knocks back enemies without dealing damage";
             this.canShoot = true;
-        } else if (type == '20') { // shuka
+        } else if (type == '21') { // shuka
             this.health = 30;
             this.range = 200;
             this.fireRate = 0; 
@@ -662,6 +662,8 @@ class Tower {
             ctx.fillStyle = '#d6b19a';
         } else if (this.type == '20') {
             ctx.fillStyle = '#cbabff';
+        } else if (this.type == '21') {
+            ctx.fillStyle = '#42f598';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -831,7 +833,7 @@ class Tower {
             console.log(`Square [${squareKey}] is now available.`);
 
             if (this.type == "21") {
-                projectiles.push(new Projectile(this.x, this.y, 0, shuka.damage, "tower", "quickexplosion"));
+                projectiles.push(new Projectile(this.x, this.y, 0, this.damage, "tower", "quickexplosion"));
             } else {
                 // Check for Shuka towers in range and trigger explosion if they exist
                 const shukaTowers = towers.filter(tower => tower.type === '21');

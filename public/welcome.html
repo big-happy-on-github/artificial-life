@@ -224,10 +224,12 @@
             const wheelScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/wheel&dimension=400x375&delay=500`;
             const liamstdScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/liamstd&dimension=400x375&delay=500`;
             const chatScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/chat&dimension=400x375&delay=500`;
+            const adminScreenshot = `${screenshotServiceUrl}?key=${apiKey}&url=${domain}/projects/admin&dimension=400x375&delay=500`;
         
             document.getElementById('wheelImg').src = wheelScreenshot;
             document.getElementById('liamstdImg').src = liamstdScreenshot;
             document.getElementById('chatImg').src = chatScreenshot;
+            document.getElementById('adminImg').src = adminScreenshot;
         }
 
         // Load the screenshots on page load

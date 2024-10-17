@@ -6,6 +6,54 @@ const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5'
 
 let currentAngle = 0;
 let spinTimeout = null;
+const userID = 'user123'; // Replace with actual user ID
+
+// Supabase client setup
+const supabaseUrl = 'https://your-supabase-url.supabase.co';
+const supabaseKey = 'your-supabase-key';
+const { createClient } = supabase;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+async function checkCooldown() {
+    const { data, error } = await supabase
+        .from('wheel')
+        .select('time')
+        .eq('userID', userID)
+        .single();
+
+    if (error) {
+        console.error('Error fetching data:', error);
+        return true; // Allow spin if there's an error fetching
+    }
+
+    if (data) {
+        const lastSpinTime = new Date(data.time);
+        const currentTime = new Date();
+        const timeDiff = currentTime - lastSpinTime;
+
+        // Check if 24 hours (86400000 milliseconds) have passed
+        if (timeDiff < 86400000) {
+            const hoursLeft = Math.floor((86400000 - timeDiff) / (1000 * 60 * 60));
+            alert(`You can spin again in ${hoursLeft} hours.`);
+            return false;
+        }
+    }
+
+    return true; // Allow spin if 24 hours have passed or no record found
+}
+
+async function updateSpinTime() {
+    const currentTime = new Date().toISOString();
+    const { data, error } = await supabase
+        .from('wheel')
+        .upsert({ userID: userID, time: currentTime });
+
+    if (error) {
+        console.error('Error updating spin time:', error);
+    } else {
+        console.log('Spin time updated:', data);
+    }
+}
 
 function drawWheel() {
     const arcSize = (2 * Math.PI) / segments.length;
@@ -42,9 +90,9 @@ function drawWheel() {
 
 function drawArrow() {
     ctx.beginPath();
-    ctx.moveTo(canvas.width / 2, -10); // Arrow tip position
-    ctx.lineTo(canvas.width / 2 - 20, 40); // Left side of the arrow
-    ctx.lineTo(canvas.width / 2 + 20, 40); // Right side of the arrow
+    ctx.moveTo(canvas.width / 2, -10);
+    ctx.lineTo(canvas.width / 2 - 20, 40);
+    ctx.lineTo(canvas.width / 2 + 20, 40);
     ctx.closePath();
     ctx.fillStyle = '#000';
     ctx.fill();
@@ -52,14 +100,16 @@ function drawArrow() {
 
 function getSegmentUnderArrow() {
     const arcSize = (2 * Math.PI) / segments.length;
-    // Adjust the currentAngle to match the arrow pointing upwards
     const adjustedAngle = (currentAngle + Math.PI / 2) % (2 * Math.PI);
     const index = Math.floor(adjustedAngle / arcSize);
     return (segments.length - 1 - index + segments.length) % segments.length;
 }
 
-function spinWheel() {
-    const spinSpeed = Math.random() * 0.2 + 0.3; // Random initial speed
+async function spinWheel() {
+    const canSpin = await checkCooldown();
+    if (!canSpin) return;
+
+    const spinSpeed = Math.random() * 0.2 + 0.3;
     const deceleration = Math.random() * 0.4 + 0.8;
     let spinAngle = spinSpeed;
     let isSpinning = true;
@@ -72,6 +122,8 @@ function spinWheel() {
                 isSpinning = false;
                 const index = getSegmentUnderArrow();
                 console.log('Result:', segments[index]);
+
+                updateSpinTime(); // Update the spin time once the wheel stops
                 return;
             }
 

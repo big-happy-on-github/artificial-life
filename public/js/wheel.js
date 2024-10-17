@@ -6,7 +6,10 @@ const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5'
 
 let currentAngle = 0;
 let spinTimeout = null;
-const userID = 'user123'; // Replace with actual user ID
+if (!localStorage.getItem("userID")) {
+    localStorage.setItem("userID", generateRandomString(50));
+}
+const userID = localStorage.getItem("userID");
 
 // Import the Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -36,7 +39,7 @@ async function checkCooldown() {
         // Check if 24 hours (86400000 milliseconds) have passed
         if (timeDiff < 86400000) {
             const hoursLeft = Math.floor((86400000 - timeDiff) / (1000 * 60 * 60));
-            alert(`You can spin again in ${hoursLeft} hours.`);
+            alert(`you can spin again in ${hoursLeft} hours`);
             return false;
         }
     }

@@ -1433,7 +1433,7 @@ document.getElementById('special-towers').addEventListener('change', handleTower
 
 // Handle start wave button click
 startWaveButton.addEventListener('click', () => {
-    if (autoStartCheckbox.checked && !waveInProgress) {
+    if (!waveInProgress) {
         waveInProgress = true;
         spawnEnemies();
     }

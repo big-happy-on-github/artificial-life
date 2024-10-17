@@ -1098,6 +1098,7 @@ const bossEnemyTypes = [
 let enemiesSpawned = false;
 
 function spawnEnemies() {
+    startWaveButton.disabled = true; // Disable once wave starts
     let enemyCount = 5 + wave;
     if (enemyCount > 35) {
         enemyCount = 35;
@@ -1128,7 +1129,7 @@ function spawnEnemies() {
 
     if (enemies.length === 0 && waveInProgress) {
         waveInProgress = false;
-        startWaveButton.disabled = false; // Enable for next wave
+        startWaveButton.disabled = false; // Re-enable button for the next wave
         currency += 1 + Math.round(wave / 2); // Bonus for finishing the wave
 
         wave++;
@@ -1376,7 +1377,6 @@ function update(deltaTime) {
     if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;
         spawnEnemies();
-        startWaveButton.disabled = true; // Disable once wave starts
     }
 }
 
@@ -1436,7 +1436,6 @@ startWaveButton.addEventListener('click', () => {
     if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;
         spawnEnemies();
-        startWaveButton.disabled = true; // Disable once wave starts
     }
 });
 

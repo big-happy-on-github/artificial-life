@@ -191,3 +191,42 @@ drawWheel();
 drawArrow();
 
 canvas.addEventListener('click', spinWheel);
+
+
+// Check if there is a row with project_name 'liamstd'
+const { data, error: selectError } = await supabase
+    .from('visits')
+    .select('*')
+    .eq('project_name', 'wheel');
+
+// Handle any select errors
+if (selectError) {
+    throw selectError;
+}
+
+// If the row doesn't exist, insert it with num_visits initialized to 1
+if (data.length === 0) {
+    const { error: insertError } = await supabase
+        .from('visits')
+        .insert([{ project_name: 'wheel', num_visits: 1 }]);
+
+    if (insertError) {
+        throw insertError;
+    }
+
+    console.log('Created new row with project_name "wheel" and num_visits set to 1');
+} else {
+    // If the row exists, update the num_visits by incrementing its value
+    const currentVisits = data[0].num_visits || 0; // Default to 0 if num_visits is not found
+
+    const { error: updateError } = await supabase
+        .from('visits')
+        .update({ num_visits: currentVisits + 1 })
+        .eq('project_name', 'wheel');
+
+    if (updateError) {
+        throw updateError;
+    }
+
+    console.log(`Updated num_visits to ${currentVisits + 1} for project_name "wheel"`);
+}

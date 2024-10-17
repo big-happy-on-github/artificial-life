@@ -1095,6 +1095,8 @@ const bossEnemyTypes = [
     { speed: 2, health: 200, color: '#1F51FF', canShoot: false, range: null, fireRate: null, damage: 50, level: 60, nextType: null, special: 'Explodes on death' } //do
 ];
 
+let enemiesSpawned = false;
+
 function spawnEnemies() {
     let enemyCount = 5 + wave;
     if (enemyCount > 35) {
@@ -1113,6 +1115,7 @@ function spawnEnemies() {
             const enemy = new Enemy(randomType);
             enemies.push(enemy);
         }, i * 1000);
+        enemiesSpawned = true;
     }
     
     // Spawn boss if wave matches boss level
@@ -1123,7 +1126,8 @@ function spawnEnemies() {
         }
     });
 
-    if (enemies.length < 1) {
+    if (enemies.length < 1 && enemiesSpawned) {
+        enemiesSpawned = false;
         waveInProgress = false;
         startWaveButton.disabled = false;
         currency += 1 + Math.round(wave / 2);

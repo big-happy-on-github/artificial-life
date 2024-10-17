@@ -1126,11 +1126,11 @@ function spawnEnemies() {
         }
     });
 
-    if (enemies.length < 1 && enemiesSpawned) {
-        enemiesSpawned = false;
+    if (enemies.length === 0 && waveInProgress) {
         waveInProgress = false;
-        startWaveButton.disabled = false;
-        currency += 1 + Math.round(wave / 2);
+        startWaveButton.disabled = false; // Enable for next wave
+        currency += 1 + Math.round(wave / 2); // Bonus for finishing the wave
+
         wave++;
     
         if (wave > JSON.parse(localStorage.getItem("topScore"))) {
@@ -1376,7 +1376,7 @@ function update(deltaTime) {
     if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;
         spawnEnemies();
-        startWaveButton.disabled = true;
+        startWaveButton.disabled = true; // Disable once wave starts
     }
 }
 
@@ -1433,10 +1433,10 @@ document.getElementById('special-towers').addEventListener('change', handleTower
 
 // Handle start wave button click
 startWaveButton.addEventListener('click', () => {
-    if (!waveInProgress) {
+    if (autoStartCheckbox.checked && !waveInProgress) {
         waveInProgress = true;
         spawnEnemies();
-        startWaveButton.disabled = true; // Disable button during wave
+        startWaveButton.disabled = true; // Disable once wave starts
     }
 });
 
@@ -1467,39 +1467,6 @@ canvas.addEventListener('mousemove', (event) => {
         }
     });
 });
-
-async function nextWave() {
-    wave++;
-
-    if (wave > JSON.parse(localStorage.getItem("topScore"))) {
-        localStorage.setItem("topScore", wave);
-    }
-
-    // Other game logic
-    towers.forEach(tower => {
-        if (tower.type == "4") {
-            currency += tower.damage;
-            console.log("added money");
-        } else if (tower.type == "9") {
-            if (((tower.lastFired + wave) - 1) % 5 == 0) {
-                alert("last wave was a walker smash!");
-            }
-        }
-    });
-
-    // Check for boss in the next wave
-    bossEnemyTypes.forEach(boss => {
-        if (wave == boss.level) {
-            alert(`new color boss on wave ${wave}!`);
-        }
-    });
-
-    enemyTypes.forEach(enemy => {
-        if (enemy.special && enemy.level == wave) {
-            alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
-        }
-    });
-}
 
 // Initialize Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';

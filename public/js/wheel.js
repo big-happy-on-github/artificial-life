@@ -32,29 +32,39 @@ function drawWheel() {
 }
 
 function spinWheel() {
-    const spinAngle = Math.random() * 10 + 15;
-    const duration = 3000;
-    const startTime = Date.now();
+    const spinSpeed = 0.2; // Initial speed
+    const deceleration = 0.99; // Rate at which the wheel slows down
+    let spinAngle = spinSpeed;
+    let isSpinning = true;
 
     function animate() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeOutProgress = Math.pow(progress - 1, 3) + 1;
+        if (isSpinning) {
+            // Gradually decrease the spin speed
+            spinAngle *= deceleration;
 
-        currentAngle += spinAngle * easeOutProgress;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.translate(250, 250);
-        ctx.rotate(currentAngle);
-        ctx.translate(-250, -250);
-        drawWheel();
-        ctx.restore();
+            // Stop the wheel when the spin speed is very low
+            if (spinAngle < 0.002) {
+                isSpinning = false;
 
-        if (progress < 1) {
-            spinTimeout = requestAnimationFrame(animate);
-        } else {
-            const resultIndex = Math.floor((segments.length - (currentAngle / (2 * Math.PI)) % 1 * segments.length)) % segments.length;
-            console.log('Result:', segments[resultIndex]);
+                // Find the segment where the wheel lands
+                const arcSize = (2 * Math.PI) / segments.length;
+                const resultIndex = Math.floor((segments.length - (currentAngle / (2 * Math.PI)) % 1 * segments.length)) % segments.length;
+
+                console.log('Result:', segments[resultIndex]);
+                return;
+            }
+
+            // Update the angle based on the current spin speed
+            currentAngle += spinAngle;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(250, 250);
+            ctx.rotate(currentAngle);
+            ctx.translate(-250, -250);
+            drawWheel();
+            ctx.restore();
+
+            requestAnimationFrame(animate);
         }
     }
 

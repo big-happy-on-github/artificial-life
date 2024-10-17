@@ -134,7 +134,7 @@ async function spinWheel() {
     let spinAngle = initialSpinSpeed;
     let isSpinning = true;
 
-    function animate() {
+    async function animate() {
         if (isSpinning) {
             // Apply the deceleration factor to reduce the speed gradually
             spinAngle *= deceleration;
@@ -147,7 +147,7 @@ async function spinWheel() {
                 alert(`you got ${result}!`);
                 
                 updateSpinTime(); // Update the spin time once the wheel stops
-                addLimbucks(prize);
+                await addLimbucks(prize);
                 return;
             }
 
@@ -170,6 +170,12 @@ async function spinWheel() {
         cancelAnimationFrame(spinTimeout);
     }
     animate();
+}
+
+async function addLimbucks(amount) {
+    const { data, error } = await supabase
+        .from('limbucks')
+        .replace([{ "amount": newAmount }]);
 }
 
 drawWheel();

@@ -182,9 +182,10 @@ async function addLimbucks(amount) {
         .select('*')
         .eq("userID", userID);
     const newAmount = data[0].amount+amount;
-    const { data, error } = await supabase
+    const { data: data2, error } = await supabase
         .from('limbucks')
-        .replace([{ "amount": newAmount }]);
+        .update({ "amount": newAmount })
+        .eq("userID", userID);
 }
 
 drawWheel();

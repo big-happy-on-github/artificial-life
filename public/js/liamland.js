@@ -6,7 +6,7 @@ const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co'; // Replace with 
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgxNjE2MzIsImV4cCI6MjA0MzczNzYzMn0.ot3Wtv5RL8bBYOu0YRRZZotPJXBQ5a6c9kSFSmihgCI'; // Replace with your Supabase API key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const gameList = [{ name: "liamstd", cost: 0 }, { name: "liamstd", cost: 0 }];
+const gameList = [{ name: "liamstd", cost: 0 }, { name: "chat", cost: 0 }, { name: "wheel", cost: 0 }];
 
 // Function to add data to Supabase
 async function addData(feedback) {

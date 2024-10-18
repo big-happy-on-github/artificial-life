@@ -138,7 +138,7 @@ async function showGames() {
         }
         if (yn || game.cost == 0) {
             document.getElementById(`${game.name}Button`).textContent = "play";
-            document.getElementById(`${game.name}Button`).removeEventListener('click', () => window.location.href=`/projects/${game.name}`);
+            document.getElementById(`${game.name}Button`).addEventListener('click', () => window.location.href=`/projects/${game.name}`);
             document.getElementById(`${game.name}Button`).removeEventListener('click', () => buy(game.name));
         } else {
             document.getElementById(`${game.name}Button`).textContent = `buy (${game.cost})`;

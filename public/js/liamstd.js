@@ -422,7 +422,6 @@ const enemies = [];
 const projectiles = [];
 const enemyProjectiles = []; // Array to hold projectiles fired by enemies
 let selectedTowerType = null;
-let waveInProgress = false; // Track if a wave is in progress
 let occupiedSquares = new Set();
 
 // Canvas settings
@@ -1097,6 +1096,15 @@ const bossEnemyTypes = [
     { speed: 2, health: 200, color: '#1F51FF', canShoot: false, range: null, fireRate: null, damage: 50, level: 60, nextType: null, special: 'Explodes on death' } //do
 ];
 
+// Function to handle the start of a wave
+function startWave() {
+    if (!waveInProgress) {
+        waveInProgress = true;
+        spawnEnemies();
+    }
+}
+
+let waveInProgress = false; // Track if a wave is in progress
 let enemiesSpawned = false;
 
 function spawnEnemies() {
@@ -1128,48 +1136,33 @@ function spawnEnemies() {
         }
     });
 
-    enemiesSpawned = true;
+let waveInProgress = false; // Track if a wave is in progress
+let enemiesSpawned = false;
 
-    if (enemies.length == 0 && waveInProgress && enemiesSpawned) {
-        waveInProgress = false;
-        startWaveButton.disabled = false; // Re-enable button for the next wave
-        currency += 1 + Math.round(wave / 2); // Bonus for finishing the wave
+// Function to spawn enemies and manage waves
+function spawnEnemies() {
+    startWaveButton.disabled = true; // Disable start button once wave begins
+    let enemyCount = 5 + wave;
+    if (enemyCount > 35) enemyCount = 35;
 
-        wave++;
-    
-        if (wave > JSON.parse(localStorage.getItem("topScore"))) {
-            localStorage.setItem("topScore", wave);
-        }
-    
-        // Other game logic
-        towers.forEach(tower => {
-            if (tower.type == "4") {
-                currency += tower.damage;
-                console.log("added money");
-            } else if (tower.type == "9") {
-                if (((tower.lastFired + wave) - 1) % 5 == 0) {
-                    alert("last wave was a walker smash!");
-                }
-            }
-        });
-    
-        // Check for boss in the next wave
-        bossEnemyTypes.forEach(boss => {
-            if (wave == boss.level) {
-                alert(`new color boss on wave ${wave}!`);
-            }
-        });
-    
-        enemyTypes.forEach(enemy => {
-            if (enemy.special && enemy.level == wave) {
-                alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
-            }
-        });
-        if (autoStartCheckbox.checked && !waveInProgress) {
-            waveInProgress = true;
-            spawnEnemies();
-        }
+    for (let i = 0; i < enemyCount; i++) {
+        setTimeout(() => {
+            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level < wave);
+            const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
+            const enemy = new Enemy(randomType);
+            enemies.push(enemy);
+        }, i * 1000);
     }
+
+    // If it's a boss wave, spawn the boss
+    bossEnemyTypes.forEach(boss => {
+        if (wave === boss.level) {
+            const bossEnemy = new Enemy(boss);
+            enemies.push(bossEnemy);
+        }
+    });
+
+    enemiesSpawned = true;
 }
 
 class Projectile {
@@ -1366,25 +1359,26 @@ canvas.addEventListener('click', (event) => {
 // Update the game loop to include drawing the grid
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
+    drawPath();
 
-    drawGrid(); // Draw the grid
-    drawPath(); // Draw the path
-
-    towers.forEach((tower, index) => {
-        if (tower.health > 0) {
-            tower.update(deltaTime);
-        } else {
-            towers.splice(index, 1);
-        }
-    });
-
+    towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
-    enemyProjectiles.forEach(projectile => projectile.update()); // Update enemy projectiles
+    enemyProjectiles.forEach(projectile => projectile.update());
 
-    if (autoStartCheckbox.checked && !waveInProgress) {
-        waveInProgress = true;
-        spawnEnemies();
+    // Check if the current wave has finished and auto-start is enabled
+    if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
+        waveInProgress = false;
+        startWaveButton.disabled = false; // Re-enable start button for next wave
+        currency += Math.round(wave / 2); // Give currency bonus
+
+        wave++;
+        updateHUD();
+
+        if (autoStartCheckbox.checked) {
+            startWave(); // Automatically start the next wave
+        }
     }
 }
 
@@ -1439,11 +1433,10 @@ document.getElementById('close-range-towers').addEventListener('change', handleT
 document.getElementById('far-range-towers').addEventListener('change', handleTowerSelection);
 document.getElementById('special-towers').addEventListener('change', handleTowerSelection);
 
-// Handle start wave button click
+// Event listener for the start wave button
 startWaveButton.addEventListener('click', () => {
     if (!waveInProgress) {
-        waveInProgress = true;
-        spawnEnemies();
+        startWave();
     }
 });
 

@@ -1335,7 +1335,7 @@ canvas.addEventListener('click', (event) => {
             if (tempTower.type == "14" && daves < 2) {
                 daves++;
                 console.log(daves);
-            } else if (tempTower.type == "14" && daves > 2) {
+            } else if (tempTower.type == "14") {
                 alert("cannot place more than 2 daves");
                 return;
             }

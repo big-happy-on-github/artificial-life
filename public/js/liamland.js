@@ -163,8 +163,8 @@ async function buy(game) {
     } else {
         alert(`you are ${result.cost-data[0].amount} limbucks short!`);
     }
-    document.getElementById(`${game.name}Button`).addEventListener('click', () => window.location.href=`/projects/${game.name}`);
     updateDisplay();
+    window.location.href=`/projects/${result.name}`;
 }
 
 async function updateDisplay() {
@@ -173,3 +173,4 @@ async function updateDisplay() {
 }
 
 updateDisplay();
+setInterval(updateDisplay, 1000);

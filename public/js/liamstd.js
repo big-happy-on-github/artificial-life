@@ -1165,6 +1165,10 @@ function spawnEnemies() {
                 alert(`new color special enemy that ${enemy.special.toLowerCase()} on wave ${wave}!`);
             }
         });
+        if (autoStartCheckbox.checked && !waveInProgress) {
+            waveInProgress = true;
+            spawnEnemies();
+        }
     }
 }
 

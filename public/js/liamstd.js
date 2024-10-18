@@ -1334,6 +1334,7 @@ canvas.addEventListener('click', (event) => {
         if (currency >= tempTower.price) {
             if (tempTower.type == "14" && daves < 2) {
                 daves++;
+                console.log(daves);
             } else if (tempTower.type == "14" && daves > 2) {
                 alert("cannot place more than 2 daves");
                 return;

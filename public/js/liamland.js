@@ -184,6 +184,14 @@ const { data, error } = await supabase
 const games = data[0].games;
 const url = window.location.pathname;
 const lastPart = url.substring(url.lastIndexOf('/')); // Output: "/d"
-if (!games[lastPart]) {
+let free = false;
+gameList.forEach(game => {
+    if (`/${game.name}` == lastPart) {
+        if (game.cost < 1) {
+            free = true;
+        }
+    }
+});
+if (!games[lastPart] && !free) {
     window.location.href="/";
 }

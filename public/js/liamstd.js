@@ -415,7 +415,7 @@ canvas.addEventListener('click', (event) => {
 
 // Game State
 let currency = 10;
-let wave = 0;
+let wave = 1;
 let lives = 9;
 const towers = [];
 const enemies = [];
@@ -1108,9 +1108,6 @@ let waveInProgress = false; // Track if a wave is in progress
 let enemiesSpawned = false;
 
 function spawnEnemies() {
-    if (wave == 0) {
-        wave++;
-    }
     startWaveButton.disabled = true; // Disable start button once wave begins
     let enemyCount = 5 + wave;
     if (enemyCount > 35) enemyCount = 35;
@@ -1365,6 +1362,7 @@ function update(deltaTime) {
         if (autoStartCheckbox.checked) {
             startWave(); // Automatically start the next wave
         }
+        enemiesSpawned = false;
     }
 }
 
@@ -1616,11 +1614,7 @@ let wasFreeplay = false;
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
-    if (wave == 0) {
-        waveDisplay.textContent = "wave 1";
-    } else {
-        waveDisplay.textContent = `wave ${wave}`;
-    }
+    waveDisplay.textContent = `wave ${wave}`;
     livesDisplay.textContent = `${lives} lives`;
 
     if (freeplayMode) {

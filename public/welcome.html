@@ -149,7 +149,6 @@
                                     .from('admin')
                                     .delete()
                                     .eq('name', 'alert')
-                                    .eq('userID', userID || null); // Ensure alert for correct user or global
     
                                 if (!error) {
                                     alert('Alert canceled successfully.');

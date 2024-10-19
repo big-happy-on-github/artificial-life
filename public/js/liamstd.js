@@ -1109,7 +1109,7 @@ let enemiesSpawned = false;
 
 function spawnEnemies() {
     startWaveButton.disabled = true; // Disable start button once wave begins
-    let enemyCount = 5 + wave;
+    let enemyCount = wave+Math.round(wave/2);
     if (enemyCount > 35) enemyCount = 35;
 
     for (let i = 0; i < enemyCount; i++) {

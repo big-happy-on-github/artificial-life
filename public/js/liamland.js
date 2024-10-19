@@ -192,6 +192,6 @@ gameList.forEach(game => {
         }
     }
 });
-if (!games[lastPart] && !free) {
-    window.location.href="/";
+if (games && !games[lastPart.substring(1)] && !free) {
+    window.location.href = "/";
 }

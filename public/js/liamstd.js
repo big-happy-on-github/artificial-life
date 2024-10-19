@@ -1108,39 +1108,6 @@ let waveInProgress = false; // Track if a wave is in progress
 let enemiesSpawned = false;
 
 function spawnEnemies() {
-    startWaveButton.disabled = true; // Disable once wave starts
-    let enemyCount = 5 + wave;
-    if (enemyCount > 35) {
-        enemyCount = 35;
-    }
-    for (let i = 0; i < enemyCount; i++) {
-        setTimeout(() => {
-            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level < wave);
-            const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
-            if ((wave-25)/10 >= 0) {
-                randomType.health += Math.round(5+2*((wave-25)/10));
-                if (randomType.canShoot) {
-                    randomType.damage += Math.round(5+((wave-25)/10));
-                }
-            }
-            const enemy = new Enemy(randomType);
-            enemies.push(enemy);
-        }, i * 1000);
-    }
-    
-    // Spawn boss if wave matches boss level
-    bossEnemyTypes.forEach(boss => {
-        if (wave == boss.level) {
-            const bossEnemy = new Enemy(boss);
-            enemies.push(bossEnemy);
-        }
-    });
-
-let waveInProgress = false; // Track if a wave is in progress
-let enemiesSpawned = false;
-
-// Function to spawn enemies and manage waves
-function spawnEnemies() {
     startWaveButton.disabled = true; // Disable start button once wave begins
     let enemyCount = 5 + wave;
     if (enemyCount > 35) enemyCount = 35;
@@ -1163,6 +1130,18 @@ function spawnEnemies() {
     });
 
     enemiesSpawned = true;
+}
+
+if (enemies.length == 0 && enemiesSpawned) {
+    currency += 1+wave/2;
+    towers.forEach(tower => {
+        if (tower.type == "4") {
+            currency += tower.damage;
+        } else if (tower.type == "9" && wave == tower.lastFired+1) {
+            alert("last wave was a walker smash!");
+        }
+    });
+    enemiesSpawned = false;
 }
 
 class Projectile {

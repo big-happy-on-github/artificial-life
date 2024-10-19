@@ -1137,6 +1137,7 @@ function spawnEnemies() {
 }
 
 if (enemies.length == 0 && enemiesSpawned) {
+    enemiesSpawned = false;
     currency += 1+wave/2;
     towers.forEach(tower => {
         if (tower.type == "4") {
@@ -1145,7 +1146,6 @@ if (enemies.length == 0 && enemiesSpawned) {
             alert("last wave was a walker smash!");
         }
     });
-    enemiesSpawned = false;
 }
 
 class Projectile {

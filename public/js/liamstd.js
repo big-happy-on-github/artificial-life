@@ -738,6 +738,7 @@ class Tower {
                 } else if (this.type == '22') { // Kabir spawns mini enemies
                     if (Date.now() - this.lastFired > this.fireRate * 1000) {
                         miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
+                        console.log("spawned mini enemy");
                         this.lastFired = Date.now();
                     }
                 } else if (this.canShoot) {

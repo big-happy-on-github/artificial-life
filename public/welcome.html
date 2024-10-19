@@ -105,23 +105,21 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     
         const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqZm54eW5udG90dGRieGpjcmVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODE2MTYzMiwiZXhwIjoyMDQzNzM3NjMyfQ.NLNoMifNOv4seeTLCCV_ZiUmR-YGS7MJnm1bUqZ2B8g';
+        const supabaseKey = 'your-supabase-key'; // Replace with your Supabase API key
         const supabase = createClient(supabaseUrl, supabaseKey);
     
         const keysPressed = {};
     
-        // Function to check the alert status in Supabase
-        async function checkAlertInSupabase() {
+        // Function to check if there is an alert for the current user
+        async function checkUserAlert(userID) {
             const { data, error } = await supabase
                 .from('admin')
                 .select('info')
+                .or(`user_id.eq.${userID},user_id.is.null`) // Check for user-specific alert or global (null)
                 .eq('name', 'alert')
                 .single();
     
             if (error) {
-                if (error.code == "PGRST116") {
-                    return null;
-                }
                 console.error('Error fetching alert:', error);
                 return null;
             }
@@ -129,7 +127,8 @@
             return data ? data.info : null;
         }
     
-        let isAlert = await checkAlertInSupabase();
+        let userID = localStorage.getItem("userID"); // Get the userID from localStorage
+        let userAlert = await checkUserAlert(userID);
     
         document.addEventListener('keydown', async function (event) {
             keysPressed[event.key] = true;
@@ -137,17 +136,15 @@
             if (keysPressed['Control'] && keysPressed['l'] && keysPressed['b']) {
                 alert("ooh, so I see you know the command...");
                 const password = prompt("...but do you know the password?");
-                
+    
                 if (password === "HURRICANEHELENE") {
                     alert("ahh, ok");
                     const command = prompt("what would you like to do?");
     
                     if (command.toLowerCase() === "alert") {
-                        isAlert = await checkAlertInSupabase();
-    
-                        if (isAlert) {
-                            alert("A past alert must be canceled");
-                            if (confirm(`Are you sure you want to cancel "${isAlert}"?`)) {
+                        if (userAlert) {
+                            alert("A past alert must be canceled first");
+                            if (confirm(`Are you sure you want to cancel "${userAlert}"?`)) {
                                 const { error } = await supabase
                                     .from('admin')
                                     .delete()
@@ -155,7 +152,7 @@
     
                                 if (!error) {
                                     alert('Alert canceled successfully.');
-                                    isAlert = null;
+                                    userAlert = null;
                                 } else {
                                     alert('Failed to cancel alert.');
                                 }
@@ -163,39 +160,39 @@
                         } else {
                             const newAlert = prompt("What should the alert say?");
                             if (newAlert) {
-                                const { error } = await supabase
-                                    .from('admin')
-                                    .insert([{ name: 'alert', info: newAlert }]);
+                                const sendToAll = confirm("Send this alert to everyone?");
     
-                                if (!error) {
-                                    alert('New alert set successfully.');
-                                    isAlert = newAlert;
+                                if (sendToAll) {
+                                    const { error } = await supabase
+                                        .from('admin')
+                                        .insert([{ name: 'alert', info: newAlert, user_id: null }]); // Null means global alert
+    
+                                    if (!error) {
+                                        alert('New global alert set successfully.');
+                                        userAlert = newAlert;
+                                    } else {
+                                        alert('Failed to set new global alert.');
+                                    }
                                 } else {
-                                    alert('Failed to set new alert.');
+                                    const targetUserID = prompt("Enter the userID to alert:");
+                                    if (targetUserID) {
+                                        const { error } = await supabase
+                                            .from('admin')
+                                            .insert([{ name: 'alert', info: newAlert, user_id: targetUserID }]); // Store the alert for specific user
+    
+                                        if (!error) {
+                                            alert('New user-specific alert set successfully.');
+                                            userAlert = newAlert;
+                                        } else {
+                                            alert('Failed to set user-specific alert.');
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                    } else if (command.toLowerCase() == "feedback") {
-                        const { data, error } = await supabase
-                            .from('feedback')
-                            .select('feedback')
-                        while (true) {
-                            if (data) {
-                                let feedbackList = [];
-                                data.forEach(feedback => {
-                                    feedbackList.push(feedback.feedback);
-                                });
-                                alert(JSON.stringify(feedbackList));
-                                break;
                             }
                         }
                     }
                 } else {
                     alert("a fake!");
-                    const response = await fetch('https://ipinfo.io/json?token=ca3a9249251d12');
-                    const ipInfo = await response.json();
-                    alert(`You live around ${ipInfo.city}, your IP is ${ipInfo.ip}, and you have ${ipInfo.org}`);
-                    alert("womp womp");
                 }
             }
         });
@@ -204,11 +201,8 @@
             delete keysPressed[event.key];
         });
     
-        if (!localStorage.getItem("alert") && isAlert != null || isAlert != localStorage.getItem("alert") != isAlert && isAlert != null) {
-            if (localStorage.getItem("alert") != isAlert) {
-                alert(isAlert);
-                localStorage.setItem("alert", isAlert);
-            }
+        if (userAlert) {
+            alert(userAlert); // Show the alert if there is one for this userID or for everyone
         }
     </script>
     <script type="module">

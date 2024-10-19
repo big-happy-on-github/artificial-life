@@ -1109,8 +1109,11 @@ let enemiesSpawned = false;
 
 function spawnEnemies() {
     startWaveButton.disabled = true; // Disable start button once wave begins
-    let enemyCount = wave+Math.round(wave/2);
+    let enemyCount = wave + Math.round(wave / 2);
     if (enemyCount > 35) enemyCount = 35;
+
+    // Track when enemies finish spawning
+    let enemiesToSpawn = enemyCount;
 
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
@@ -1122,6 +1125,12 @@ function spawnEnemies() {
             } else {
                 console.error("No valid enemy type found for the wave.");
             }
+
+            // Decrease enemiesToSpawn when an enemy is added
+            enemiesToSpawn--;
+            if (enemiesToSpawn === 0) {
+                enemiesSpawned = true; // Only set this when all enemies are spawned
+            }
         }, i * 1000);
     }
 
@@ -1130,10 +1139,9 @@ function spawnEnemies() {
         if (wave === boss.level) {
             const bossEnemy = new Enemy(boss);
             enemies.push(bossEnemy);
+            enemiesSpawned = true; // Boss wave is treated as fully spawned after boss
         }
     });
-
-    enemiesSpawned = true;
 }
 
 if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
@@ -1141,13 +1149,13 @@ if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
     startWaveButton.disabled = false; // Re-enable start button for next wave
     currency += Math.round(wave / 2); // Give currency bonus
 
-    wave++;  // Move wave increment here so it happens only after all enemies are defeated
+    wave++; // Increment the wave only after the current one completes
     updateHUD();
 
     if (autoStartCheckbox.checked) {
         startWave(); // Automatically start the next wave
     }
-    enemiesSpawned = false;
+    enemiesSpawned = false; // Reset enemiesSpawned for the next wave
 }
 
 class Projectile {

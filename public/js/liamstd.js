@@ -415,7 +415,7 @@ canvas.addEventListener('click', (event) => {
 
 // Game State
 let currency = 10;
-let wave = 1;
+let wave = 0;
 let lives = 9;
 const towers = [];
 const enemies = [];
@@ -1609,7 +1609,11 @@ let wasFreeplay = false;
 
 function updateHUD() {
     currencyDisplay.textContent = `$${currency}`;
-    waveDisplay.textContent = `wave ${wave}`;
+    if (wave == 0) {
+        waveDisplay.textContent = "wave 1";
+    } else {
+        waveDisplay.textContent = `wave ${wave}`;
+    }
     livesDisplay.textContent = `${lives} lives`;
 
     if (freeplayMode) {

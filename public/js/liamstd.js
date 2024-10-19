@@ -1628,6 +1628,11 @@ function gameLoop(timestamp) {
 
     update(deltaTime);
 
+    // Check if auto-start is enabled and no wave is in progress
+    if (autoStartCheckbox && autoStartCheckbox.checked && !waveInProgress) {
+        startWave();  // Automatically start the wave
+    }
+
     requestAnimationFrame(gameLoop);
 }
 

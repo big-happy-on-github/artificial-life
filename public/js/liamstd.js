@@ -1154,9 +1154,6 @@ if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
     wave++; // Increment the wave only after the current one completes
     updateHUD();
 
-    if (autoStartCheckbox.checked) {
-        startWave(); // Automatically start the next wave
-    }
     enemiesSpawned = false; // Reset enemiesSpawned for the next wave
 }
 
@@ -1361,10 +1358,6 @@ function update(deltaTime) {
     enemies.forEach(enemy => enemy.update());
     projectiles.forEach(projectile => projectile.update());
     enemyProjectiles.forEach(projectile => projectile.update());
-
-    if (autoStartCheckbox.checked && !waveInProgress) {
-        startWave(); // Automatically start the next wave
-    }
 }
 
 function resetOtherDropdowns(excludeId) {

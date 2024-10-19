@@ -172,3 +172,18 @@ async function updateDisplay() {
 }
 
 updateDisplay();
+if (!localStorage.getItem("userID")) {
+    localStorage.setItem("userID", generateRandomString(50));
+}
+const userID = localStorage.getItem("userID");
+const { data, error } = await supabase
+    .from('limbucks')
+    .select('games')
+    .eq("userID", userID);
+
+const games = data[0].games;
+const url = window.location.pathname;
+const lastPart = url.substring(url.lastIndexOf('/')); // Output: "/d"
+if (!games[lastPart]) {
+    window.location.href="/";
+}

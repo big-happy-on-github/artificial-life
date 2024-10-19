@@ -1362,19 +1362,8 @@ function update(deltaTime) {
     projectiles.forEach(projectile => projectile.update());
     enemyProjectiles.forEach(projectile => projectile.update());
 
-    // Check if the current wave has finished and auto-start is enabled
-    if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
-        waveInProgress = false;
-        startWaveButton.disabled = false; // Re-enable start button for next wave
-        currency += Math.round(wave / 2); // Give currency bonus
-
-        wave++;
-        updateHUD();
-
-        if (autoStartCheckbox.checked) {
-            startWave(); // Automatically start the next wave
-        }
-        enemiesSpawned = false;
+    if (autoStartCheckbox.checked && !waveInProgress) {
+        startWave(); // Automatically start the next wave
     }
 }
 

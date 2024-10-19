@@ -94,7 +94,8 @@ const upgrade = {
     },
     '19': {},
     '20': {},
-    '21': {}
+    '21': {},
+    '22': {}
 };
 
 // Function to show the tower stats pop-up
@@ -142,6 +143,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'nate';
     } else if (tower.type == '21') {
         towerType = 'shuka';
+    } else if (tower.type == '22') {
+        towerType = 'kabir';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -615,6 +618,14 @@ class Tower {
             this.price = 6;
             this.desc = "causes towers to explode on death";
             this.canShoot = false;
+        } else if (type == '22') { // Kabir
+            this.health = 20;
+            this.range = 0; // No range as it doesn't shoot
+            this.fireRate = 1; // Spawns a mini enemy every second
+            this.damage = 2; // Damage dealt by the mini enemy
+            this.price = 10;
+            this.desc = "spawns minions that attack in reverse";
+            this.canShoot = false; // Doesn't shoot directly
         }
 
         this.lastFired = 0;
@@ -663,6 +674,8 @@ class Tower {
             ctx.fillStyle = '#cbabff';
         } else if (this.type == '21') {
             ctx.fillStyle = '#42f598';
+        } else if (this.type == '22') {
+            ctx.fillStyle = '#47380c';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -721,6 +734,11 @@ class Tower {
                         angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
                         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                     });
+                } else if (this.type == '22') { // Kabir spawns mini enemies
+                    if (Date.now() - this.lastFired > this.fireRate * 1000) {
+                        miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
+                        this.lastFired = Date.now();
+                    }
                 } else if (this.canShoot) {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }
@@ -846,7 +864,62 @@ class Tower {
             }
         }
     }
+}
 
+class MiniEnemy {
+    constructor(x, y, damage) {
+        this.x = x;
+        this.y = y;
+        this.speed = 1.5;  // Speed of the mini enemy
+        this.damage = damage;
+        this.currentPathIndex = path.length - 1;  // Start at the end of the path
+        this.health = 1;  // Mini enemies die after one hit
+    }
+
+    update() {
+        // Move mini enemy in reverse direction along the path
+        if (this.currentPathIndex >= 0) {
+            const target = path[this.currentPathIndex];
+            const dx = target.x - this.x;
+            const dy = target.y - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            const moveX = (dx / distance) * this.speed;
+            const moveY = (dy / distance) * this.speed;
+
+            if (distance < this.speed) {
+                this.x = target.x;
+                this.y = target.y;
+                this.currentPathIndex--; // Move to the previous waypoint
+            } else {
+                this.x += moveX;
+                this.y += moveY;
+            }
+        }
+
+        // Check for collision with enemies and deal damage
+        enemies.forEach(enemy => {
+            const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
+            if (distance < 15) {  // Adjust collision detection radius
+                enemy.takeDamage(this.damage);
+                this.die();  // Mini enemy dies after dealing damage
+            }
+        });
+
+        this.draw();
+    }
+
+    draw() {
+        ctx.fillStyle = 'orange';  // Color for mini enemies
+        ctx.fillRect(this.x - 10, this.y - 10, 20, 20);  // Mini enemy size
+    }
+
+    die() {
+        const index = miniEnemies.indexOf(this);
+        if (index > -1) {
+            miniEnemies.splice(index, 1);  // Remove from the array
+        }
+    }
 }
 
 class Enemy {
@@ -1248,7 +1321,7 @@ class Projectile {
                 }
             });
         } else if (this.type == 'enemy') {
-            towers.forEach(tower => {
+            .forEach(tower => {
                 if (this.specificType == 'quickexplosion') {
                     tower.takeDamage(this.damage);
                     this.explode();
@@ -1340,7 +1413,7 @@ canvas.addEventListener('click', (event) => {
             const squareKey = `${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`;
             console.log(`Marking square [${squareKey}] as occupied`);
             occupiedSquares.add(squareKey);
-            towers.push(tower);
+            .push(tower);
             currency -= tower.price;
             updateHUD();
             
@@ -1355,7 +1428,8 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
-// Update the game loop to include drawing the grid
+let miniEnemies = [];  // Array to store mini enemies
+
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
@@ -1363,6 +1437,7 @@ function update(deltaTime) {
 
     towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
+    miniEnemies.forEach(miniEnemy => miniEnemy.update());  // Update mini enemies
     projectiles.forEach(projectile => projectile.update());
     enemyProjectiles.forEach(projectile => projectile.update());
 }

@@ -1029,15 +1029,13 @@ class Enemy {
     die(crossed) {
         const index = enemies.indexOf(this);
         this.health = 0;
-        if (this.color == "#fff" || this.color == "#1F51FF") {
-            enemyProjectiles.push(new Projectile(this.x, this.y, Math.atan2(this.x, this.y), this.damage, "enemy", "quickexplosion"));
-        }
         if (index > -1) {
             enemies.splice(index, 1);
             if (crossed) {
                 lives--;
                 if (lives <= 0) {
                     endGame();
+                    return; // Exit to avoid further checks if the game is over
                 }
             } else {
                 // Transform into the next enemy type if available
@@ -1047,21 +1045,30 @@ class Enemy {
                         const newEnemy = new Enemy(nextEnemyType);
                         newEnemy.x = this.x; // Set the new enemy's position to the current enemy's position
                         newEnemy.y = this.y;
-    
-                        // Calculate the nearest path index for the new enemy, ensuring it's ahead on the path
+        
                         let closestDistance = Infinity;
-                        for (let i = this.currentPathIndex; i < path.length; i++) { // Start from the current path index
+                        for (let i = this.currentPathIndex; i < path.length; i++) {
                             const distance = Math.sqrt((path[i].x - this.x) ** 2 + (path[i].y - this.y) ** 2);
                             if (distance < closestDistance) {
                                 closestDistance = distance;
                                 newEnemy.currentPathIndex = i;
                             }
                         }
-                        
                         enemies.push(newEnemy);
                     }
                 }
             }
+    
+            // Check if all enemies are gone
+            if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
+                waveInProgress = false;
+                currency += Math.round(wave / 2); // Reward currency for completing wave
+                wave++; // Increment the wave only when all enemies are cleared
+                updateHUD();
+                startWaveButton.disabled = false; // Re-enable start button for next wave
+                enemiesSpawned = false; // Reset for next wave
+            }
+    
             updateHUD();
         }
     }

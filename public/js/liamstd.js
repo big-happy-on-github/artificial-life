@@ -619,7 +619,7 @@ class Tower {
             this.price = 6;
             this.desc = "causes towers to explode on death";
             this.canShoot = false;
-        } else if (type == '22') { // Kabir
+        }else if (type == '22') { // Kabir
             this.health = 20;
             this.range = 0; // No range as it doesn't shoot
             this.fireRate = 1; // Spawns a mini enemy every second

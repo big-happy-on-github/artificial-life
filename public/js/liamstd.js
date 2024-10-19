@@ -1136,16 +1136,18 @@ function spawnEnemies() {
     enemiesSpawned = true;
 }
 
-if (enemies.length == 0 && enemiesSpawned) {
+if (enemies.length === 0 && waveInProgress && enemiesSpawned) {
+    waveInProgress = false;
+    startWaveButton.disabled = false; // Re-enable start button for next wave
+    currency += Math.round(wave / 2); // Give currency bonus
+
+    wave++;  // Move wave increment here so it happens only after all enemies are defeated
+    updateHUD();
+
+    if (autoStartCheckbox.checked) {
+        startWave(); // Automatically start the next wave
+    }
     enemiesSpawned = false;
-    currency += 1+wave/2;
-    towers.forEach(tower => {
-        if (tower.type == "4") {
-            currency += tower.damage;
-        } else if (tower.type == "9" && wave == tower.lastFired+1) {
-            alert("last wave was a walker smash!");
-        }
-    });
 }
 
 class Projectile {

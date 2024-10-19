@@ -61,6 +61,9 @@ async function getData() {
         }
 }
 
+window.getData = getData;
+window.addData = addData;
+
 // Function to add data to Supabase
 async function addLimbucks(amount, userID, games) {
     try {

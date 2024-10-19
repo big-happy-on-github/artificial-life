@@ -1428,8 +1428,6 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
-let miniEnemies = [];  // Array to store mini enemies
-
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
@@ -1622,6 +1620,7 @@ async function endGame() {
     enemies.length = 0;
     projectiles.length = 0;
     enemyProjectiles.length = 0;
+    miniEnemies.length = 0;
     selectedTowerType = null;
     waveInProgress = false;
     startWaveButton.disabled = false;

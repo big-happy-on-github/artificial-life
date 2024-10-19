@@ -115,12 +115,12 @@
             const { data, error } = await supabase
                 .from('admin')
                 .select('info')
-                .or(`userID.eq.${userID},userID.is.null`) // Check for user-specific alert or global (null)
+                .or(`userID.eq.${userID},userID.is.null`) // Correct filtering for user-specific or global alert
                 .eq('name', 'alert')
-                .single();
+                .single(); // Fetch only a single alert
     
             if (error) {
-                console.error('Error fetching alert:', error);
+                console.error('Error fetching alert:', error.message);
                 return null;
             }
     
@@ -148,7 +148,8 @@
                                 const { error } = await supabase
                                     .from('admin')
                                     .delete()
-                                    .eq('name', 'alert');
+                                    .eq('name', 'alert')
+                                    .eq('userID', userID || null); // Ensure alert for correct user or global
     
                                 if (!error) {
                                     alert('Alert canceled successfully.');
@@ -165,7 +166,7 @@
                                 if (sendToAll) {
                                     const { error } = await supabase
                                         .from('admin')
-                                        .insert([{ name: 'alert', info: newAlert, user_id: null }]); // Null means global alert
+                                        .insert([{ name: 'alert', info: newAlert, userID: null }]); // Null means global alert
     
                                     if (!error) {
                                         alert('New global alert set successfully.');
@@ -178,7 +179,7 @@
                                     if (targetUserID) {
                                         const { error } = await supabase
                                             .from('admin')
-                                            .insert([{ name: 'alert', info: newAlert, user_id: targetUserID }]); // Store the alert for specific user
+                                            .insert([{ name: 'alert', info: newAlert, userID: targetUserID }]); // Store the alert for specific user
     
                                         if (!error) {
                                             alert('New user-specific alert set successfully.');

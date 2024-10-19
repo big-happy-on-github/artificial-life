@@ -1117,7 +1117,7 @@ function spawnEnemies() {
 
     for (let i = 0; i < enemyCount; i++) {
         setTimeout(() => {
-            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level < wave);
+            const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
             const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
             if (randomType) {
                 const enemy = new Enemy(randomType);

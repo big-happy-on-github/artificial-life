@@ -721,7 +721,7 @@ class Tower {
                         angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
                         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                     });
-                } else {
+                } else if (this.canShoot) {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }
             }

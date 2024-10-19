@@ -1116,8 +1116,12 @@ function spawnEnemies() {
         setTimeout(() => {
             const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level < wave);
             const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
-            const enemy = new Enemy(randomType);
-            enemies.push(enemy);
+            if (randomType) {
+                const enemy = new Enemy(randomType);
+                enemies.push(enemy);
+            } else {
+                console.error("No valid enemy type found for the wave.");
+            }
         }, i * 1000);
     }
 

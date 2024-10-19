@@ -422,6 +422,7 @@ let wave = 1;
 let lives = 9;
 const towers = [];
 const enemies = [];
+const miniEnemies = [];
 const projectiles = [];
 const enemyProjectiles = []; // Array to hold projectiles fired by enemies
 let selectedTowerType = null;

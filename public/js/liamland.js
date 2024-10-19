@@ -185,15 +185,15 @@ const games = data[0].games;
 const url = window.location.pathname;
 const lastPart = url.substring(url.lastIndexOf('/')); // Output: "/d"
 let free = false;
-console.log(lastPart);
-debugger;
-gameList.forEach(game => {
-    if (`/${game.name}` == lastPart) {
-        if (game.cost < 1 || lastPart == "/welcome") {
-            free = true;
+if (lastPart != "/welcome") {
+    gameList.forEach(game => {
+        if (`/${game.name}` == lastPart) {
+            if (game.cost < 1) {
+                free = true;
+            }
         }
+    });
+    if (games && !games[lastPart.substring(1)] && !free) {
+        window.location.href = "/";
     }
-});
-if (games && !games[lastPart.substring(1)] && !free) {
-    window.location.href = "/";
 }

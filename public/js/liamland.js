@@ -187,7 +187,7 @@ const lastPart = url.substring(url.lastIndexOf('/')); // Output: "/d"
 let free = false;
 gameList.forEach(game => {
     if (`/${game.name}` == lastPart) {
-        if (game.cost < 1) {
+        if (game.cost < 1 || lastPart == "/welcome") {
             free = true;
         }
     }

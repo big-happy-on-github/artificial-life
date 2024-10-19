@@ -1124,6 +1124,8 @@ function spawnEnemies() {
                 enemies.push(enemy);
             } else {
                 console.error("No valid enemy type found for the wave.");
+                console.log(randomType);
+                console.log(wave);
             }
 
             // Decrease enemiesToSpawn when an enemy is added

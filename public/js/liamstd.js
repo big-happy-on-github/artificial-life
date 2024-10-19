@@ -1413,7 +1413,7 @@ canvas.addEventListener('click', (event) => {
             const squareKey = `${Math.floor(x / gridSize)},${Math.floor(y / gridSize)}`;
             console.log(`Marking square [${squareKey}] as occupied`);
             occupiedSquares.add(squareKey);
-            .push(tower);
+            towers.push(tower);
             currency -= tower.price;
             updateHUD();
             

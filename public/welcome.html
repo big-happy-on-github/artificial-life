@@ -115,7 +115,7 @@
             const { data, error } = await supabase
                 .from('admin')
                 .select('info')
-                .or(`user_id.eq.${userID},user_id.is.null`) // Check for user-specific alert or global (null)
+                .or(`userID.eq.${userID},userID.is.null`) // Check for user-specific alert or global (null)
                 .eq('name', 'alert')
                 .single();
     

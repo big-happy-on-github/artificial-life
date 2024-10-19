@@ -1321,7 +1321,7 @@ class Projectile {
                 }
             });
         } else if (this.type == 'enemy') {
-            .forEach(tower => {
+            towers.forEach(tower => {
                 if (this.specificType == 'quickexplosion') {
                     tower.takeDamage(this.damage);
                     this.explode();

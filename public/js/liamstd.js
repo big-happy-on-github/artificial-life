@@ -1108,6 +1108,9 @@ let waveInProgress = false; // Track if a wave is in progress
 let enemiesSpawned = false;
 
 function spawnEnemies() {
+    if (wave == 0) {
+        wave++;
+    }
     startWaveButton.disabled = true; // Disable start button once wave begins
     let enemyCount = 5 + wave;
     if (enemyCount > 35) enemyCount = 35;

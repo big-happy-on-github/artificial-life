@@ -2,9 +2,9 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-const supabaseUrl = response1.text();
+const supabaseUrl = await response1.text()
 const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-const supabaseKey = response2.text();
+const supabaseKey = await response2.text();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gameList = [{ name: "liamstd", cost: 0 }, { name: "chat", cost: 0 }, { name: "wheel", cost: 0 }, { name: "admin", cost: 1/0 }];

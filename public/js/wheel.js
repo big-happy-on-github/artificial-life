@@ -1,9 +1,15 @@
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 
-const segments = ['+1 limbuck', '+2 limbucks', '+3 limbucks', '+4 limbucks', '+5 limbucks', '+1 limbuck', '+Infinity limbucks'];
-const prizes = [1, 2, 3, 4, 5, 1, 1/0];
-const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5', '#A6FF33'];
+const wheelData = [
+    { segment: '+1 limbuck', prize: 1 },
+    { segment: '+2 limbucks', prize: 2 },
+    { segment: '+3 limbucks', prize: 3 },
+    { segment: '+4 limbucks', prize: 4 },
+    { segment: '+5 limbucks', prize: 5 },
+    { segment: '+1 limbuck', prize: 1 },
+    { segment: '+Infinity limbucks', prize: Infinity },
+];
 
 let currentAngle = 0;
 let spinTimeout = null;
@@ -74,10 +80,12 @@ async function updateSpinTime() {
 }
 
 function drawWheel() {
-    const arcSize = (2 * Math.PI) / segments.length;
+    const arcSize = (2 * Math.PI) / wheelData.length;
 
-    segments.forEach((segment, i) => {
+    wheelData.forEach((data, i) => {
         const angle = i * arcSize;
+        const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`; // Random color
+        
         ctx.beginPath();
         ctx.moveTo(canvas.width / 2, canvas.height / 2);
         ctx.arc(
@@ -88,10 +96,10 @@ function drawWheel() {
             angle + arcSize
         );
         ctx.closePath();
-        ctx.fillStyle = colors[i];
+        ctx.fillStyle = color;
         ctx.fill();
         ctx.stroke();
-        
+
         // Draw text
         ctx.save();
         ctx.translate(
@@ -101,7 +109,7 @@ function drawWheel() {
         ctx.rotate(angle + arcSize / 2 + Math.PI / 2);
         ctx.fillStyle = '#000';
         ctx.font = '18px Arial';
-        ctx.fillText(segment, -ctx.measureText(segment).width / 2, 0);
+        ctx.fillText(data.segment, -ctx.measureText(data.segment).width / 2, 0);
         ctx.restore();
     });
 }
@@ -117,10 +125,10 @@ function drawArrow() {
 }
 
 function getSegmentUnderArrow() {
-    const arcSize = (2 * Math.PI) / segments.length;
+    const arcSize = (2 * Math.PI) / wheelData.length;
     const adjustedAngle = (currentAngle + Math.PI / 2) % (2 * Math.PI);
     const index = Math.floor(adjustedAngle / arcSize);
-    return (segments.length - 1 - index + segments.length) % segments.length;
+    return (wheelData.length - 1 - index + wheelData.length) % wheelData.length;
 }
 
 function predictFinalSegment(initialSpinSpeed, deceleration) {
@@ -149,27 +157,29 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const deceleration = 0.99; // Deceleration factor (slightly less than 1)
-    let initialSpinSpeed = Math.random() * 0.3 + 0.5; // Higher initial speed
-    while (predictFinalSegment(initialSpinSpeed, deceleration) == 5) {
-        initialSpinSpeed = Math.random() * 0.3 + 0.5; // Higher initial speed
+    const deceleration = 0.99;
+    let initialSpinSpeed = Math.random() * 0.3 + 0.5;
+
+    // Ensuring not to land on "+Infinity limbucks" repeatedly
+    while (predictFinalSegment(initialSpinSpeed, deceleration) == wheelData.findIndex(data => data.prize === Infinity)) {
+        initialSpinSpeed = Math.random() * 0.3 + 0.5;
     }
+
     let spinAngle = initialSpinSpeed;
     let isSpinning = true;
 
     async function animate() {
         if (isSpinning) {
-            // Apply the deceleration factor to reduce the speed gradually
             spinAngle *= deceleration;
 
-            if (spinAngle < 0.002) { // Stop condition
+            if (spinAngle < 0.002) {
                 isSpinning = false;
                 const index = getSegmentUnderArrow();
-                const result = segments[index];
-                const prize = prizes[index];
+                const result = wheelData[index].segment;
+                const prize = wheelData[index].prize;
                 alert(`you got ${result}!`);
-                
-                updateSpinTime(); // Update the spin time once the wheel stops
+
+                updateSpinTime();
                 await addLimbucks(prize);
                 return;
             }

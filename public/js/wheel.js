@@ -16,9 +16,9 @@ const userID = localStorage.getItem("userID");
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-const supabaseUrl = response1.text();
+const supabaseUrl = response1.json();
 const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-const supabaseKey = response2.text();
+const supabaseKey = response2.json();
 console.log(supabaseUrl);
 console.log(supabaseKey);
 const supabase = createClient(supabaseUrl, supabaseKey);

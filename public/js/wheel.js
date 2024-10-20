@@ -134,7 +134,7 @@ function getSegmentUnderArrow() {
 function predictFinalSegment(initialSpinSpeed, deceleration) {
     let totalAngle = 0;
     let speed = initialSpinSpeed;
-    
+
     // Sum up the angles until the speed drops below a small threshold
     while (speed > 0.002) {
         totalAngle += speed;
@@ -145,12 +145,12 @@ function predictFinalSegment(initialSpinSpeed, deceleration) {
     const finalAngle = (currentAngle + totalAngle) % (2 * Math.PI);
 
     // Calculate the final segment based on the final angle
-    const arcSize = (2 * Math.PI) / segments.length;
+    const arcSize = (2 * Math.PI) / wheelData.length;
     const adjustedAngle = (finalAngle + Math.PI / 2) % (2 * Math.PI);
     const index = Math.floor(adjustedAngle / arcSize);
-    
+
     // Return the segment the wheel will land on
-    return (segments.length - 1 - index + segments.length) % segments.length;
+    return (wheelData.length - 1 - index + wheelData.length) % wheelData.length;
 }
 
 async function spinWheel() {

@@ -1538,8 +1538,8 @@ canvas.addEventListener('mousemove', (event) => {
 // Initialize Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = os.environ.get('supabaseUrl')
-const supabaseKey = os.environ.get('supabaseKey')
+const supabaseUrl = process.env.supabaseUrl;
+const supabaseKey = process.env.supabaseKey;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Fetch leaderboard and check for duplicate names

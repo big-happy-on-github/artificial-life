@@ -886,7 +886,9 @@ class MiniEnemy {
     }
 
     update() {
-        if (!waveInProgress) this.die;
+        if (!waveInProgress) {
+            this.die();
+        }
         // Move mini enemy in reverse direction along the path
         if (this.currentPathIndex >= 0) {
             const target = path[this.currentPathIndex];

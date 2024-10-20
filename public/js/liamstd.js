@@ -623,7 +623,7 @@ class Tower {
             this.health = 20;
             this.range = 0; // No range as it doesn't shoot
             this.fireRate = 1; // Spawns a mini enemy every second
-            this.damage = 2; // Damage dealt by the mini enemy
+            this.damage = 3; // Damage dealt by the mini enemy
             this.price = 10;
             this.desc = "spawns minions that attack in reverse";
             this.canShoot = false; // Doesn't shoot directly

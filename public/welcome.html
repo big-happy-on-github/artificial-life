@@ -199,11 +199,11 @@
         async function loadScreenshots() {
             const domain = window.location.origin; // Get the domain including the protocol
         
-            const wheelScreenshot = `https://api.shrinkin.io/v1/screenshot?url=${window.location.origin}/projects/wheel&full_page=true&delay=500`;
-            const liamstdScreenshot = `https://api.shrinkin.io/v1/screenshot?url=${window.location.origin}/projects/liamstd&full_page=true&delay=500`;
-            const chatScreenshot = `https://api.shrinkin.io/v1/screenshot?url=${window.location.origin}/projects/chat&full_page=true&delay=500`;
-            const adminScreenshot = `https://api.shrinkin.io/v1/screenshot?url=${window.location.origin}/projects/admin&full_page=true&delay=500`;
-        
+            const wheelScreenshot = `https://image.thum.io/get/fullpage/${window.location.origin}/projects/wheel`;
+            const liamstdScreenshot = `https://image.thum.io/get/fullpage/${window.location.origin}/projects/liamstd`;
+            const chatScreenshot = `https://image.thum.io/get/fullpage/${window.location.origin}/projects/chat`;
+            const adminScreenshot = `https://image.thum.io/get/fullpage/${window.location.origin}/projects/admin`;
+
             document.getElementById('wheelImg').src = wheelScreenshot;
             document.getElementById('liamstdImg').src = liamstdScreenshot;
             document.getElementById('chatImg').src = chatScreenshot;

@@ -868,8 +868,8 @@ class Tower {
 
 class MiniEnemy {
     constructor(x, y, damage) {
-        this.x = x;
-        this.y = y;
+        this.x = path[path.length - 1].x;  // Start at the last waypoint
+        this.y = path[path.length - 1].y;  // Start at the last waypoint
         this.speed = 1.5;  // Speed of the mini enemy
         this.damage = damage;
         this.currentPathIndex = path.length - 1;  // Start at the end of the path
@@ -907,18 +907,6 @@ class MiniEnemy {
         });
 
         this.draw();
-    }
-
-    draw() {
-        ctx.fillStyle = 'orange';  // Color for mini enemies
-        ctx.fillRect(this.x - 10, this.y - 10, 20, 20);  // Mini enemy size
-    }
-
-    die() {
-        const index = miniEnemies.indexOf(this);
-        if (index > -1) {
-            miniEnemies.splice(index, 1);  // Remove from the array
-        }
     }
 }
 

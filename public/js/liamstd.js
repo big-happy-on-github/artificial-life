@@ -95,7 +95,11 @@ const upgrade = {
     '19': {},
     '20': {},
     '21': {},
-    '22': {}
+    '22': {
+        'lvl2': { '1': { health: 0, range: 0, damage: 0.5, fireRate: -0.2, cost: 3 } },
+        'lvl3': { '1': { health: 0, range: 0, damage: 1, fireRate: -0.25, cost: 5 } },
+        'lvl4': { '1': { health: 5, range: 0, damage: 8, fireRate: -0.5, cost: 7 } }
+    }
 };
 
 // Function to show the tower stats pop-up
@@ -177,8 +181,9 @@ function showTowerStats(tower, showButtons=true) {
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-        if (tower.canShoot == false) {
+        if (tower.canShoot == false || !tower.canShoot) {
             towerDamageDisplay.textContent = `0 dps`;
+            towerRangeDisplay.textContent = `0 square range`;
             if (tower.type == "4") {
                 tower.desc = `+$${tower.damage} after each wave`;
             } else if (tower.type == "12") {
@@ -217,8 +222,9 @@ function showTowerStats(tower, showButtons=true) {
         if (towerUpgrades && towerUpgrades[nextLevelKey]) {
             const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
             const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
-            if (tower.canShoot == false) {
+            if (tower.canShoot == false || !tower.canShoot) {
                 towerDamageDisplay.textContent = `0 dps`;
+                towerRangeDisplay.textContent = `0 square range`;
                 if (tower.type == "4") {
                     tower.desc = `+$${tower.damage} after each wave`;
                 } else if (tower.type == "12") {

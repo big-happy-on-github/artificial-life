@@ -21,7 +21,7 @@ exports.handler = async (event) => {
             headers: {
               'Access-Control-Allow-Origin': '*',
             },
-            body: keys[name]
+            body: JSON.stringify(keys[name])
         };
     } else {
         // If the key is not found, return an error message

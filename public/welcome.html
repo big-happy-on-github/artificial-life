@@ -53,9 +53,9 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-        const supabaseUrl = response1.text();
+        const supabaseUrl = JSON.parse(await response1.text());
         const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-        const supabaseKey = response2.text();
+        const supabaseKey = JSON.parse(await response2.text());
         const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Check if there is a row with project_name 'liamstd'
@@ -78,9 +78,9 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-        const supabaseUrl = response1.text();
+        const supabaseUrl = JSON.parse(await response1.text());
         const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-        const supabaseKey = response2.text();
+        const supabaseKey = JSON.parse(await response2.text());
         const supabase = createClient(supabaseUrl, supabaseKey);
         
         const { data, error: selectError } = await supabase
@@ -95,9 +95,9 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-        const supabaseUrl = response1.text();
+        const supabaseUrl = JSON.parse(await response1.text());
         const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-        const supabaseKey = response2.text();
+        const supabaseKey = JSON.parse(await response2.text());
         const supabase = createClient(supabaseUrl, supabaseKey);
         
         const { data, error: selectError } = await supabase
@@ -111,9 +111,9 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     
         const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-        const supabaseUrl = response1.text();
+        const supabaseUrl = JSON.parse(await response1.text());
         const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-        const supabaseKey = response2.text();
+        const supabaseKey = JSON.parse(await response2.text());
         const supabase = createClient(supabaseUrl, supabaseKey);
     
         const keysPressed = {};
@@ -199,7 +199,7 @@
         // Use Screenshot Machine API to load screenshots from URLs
         const screenshotServiceUrl = 'https://api.screenshotmachine.com'; // Replace with your service URL
         const response = await fetch(`/.netlify/functions/well-kept?name=screenshotKey`, { mode: 'no-cors' });
-        const apiKey = response.text();
+        const apiKey = JSON.parse(await response.text());
     
         async function loadScreenshots() {
             const domain = window.location.origin; // Get the domain including the protocol

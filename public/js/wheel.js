@@ -15,8 +15,8 @@ const userID = localStorage.getItem("userID");
 // Import the Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = await fetch(`netlify/functions/well-kept.js?name=supabaseUrl`).json();
-const supabaseKey = await fetch(`netlify/functions/well-kept.js?name=supabaseKey`).json();
+const supabaseUrl = await fetch(`/netlify/functions/well-kept.js?name=supabaseUrl`).json();
+const supabaseKey = await fetch(`/netlify/functions/well-kept.js?name=supabaseKey`).json();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkCooldown() {

@@ -60,14 +60,15 @@ async function checkCooldown() {
 
 async function updateSpinTime() {
     const currentTime = new Date().toISOString();
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('wheel')
-        .upsert({ userID: userID, time: currentTime });
-
+        .upsert({ userID: userID, time: currentTime })
+        .onConflict('userID'); // Ensures conflict resolution by userID
+    
     if (error) {
-        console.error('Error updating spin time:', error);
+        console.error('Error during upsert:', error);
     } else {
-        console.log('Spin time updated successfully');
+        console.log('Upsert successful:', data);
     }
 }
 

@@ -736,11 +736,9 @@ class Tower {
                         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                     });
                 } else if (this.type == '22') { // Kabir spawns mini enemies
-                    if (Date.now() - this.lastFired > this.fireRate * 1000) {
-                        miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
-                        console.log("spawned mini enemy");
-                        this.lastFired = Date.now();
-                    }
+                    miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
+                    console.log("spawned mini enemy");
+                    this.lastFired = Date.now();
                 } else if (this.canShoot) {
                     projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }
@@ -782,8 +780,6 @@ class Tower {
                 }, 50); // Small delay for effect
                 this.lastFired = wave; // Update the last fired wave
             }
-        } else if (this.type == "22") {
-            this.shoot();
         } else {
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
                 this.shoot();

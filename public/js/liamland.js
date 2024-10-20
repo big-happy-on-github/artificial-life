@@ -188,7 +188,7 @@ const games = data[0].games;
 const url = window.location.pathname;
 const lastPart = url.substring(url.lastIndexOf('/')); // Output: "/d"
 let free = false;
-if (lastPart != "/welcome") {
+if (window.location.href.includes("projects")) {
     gameList.forEach(game => {
         if (`/${game.name}` == lastPart) {
             if (game.cost < 1) {

@@ -1538,8 +1538,8 @@ canvas.addEventListener('mousemove', (event) => {
 // Initialize Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = process.env.supabaseUrl;
-const supabaseKey = process.env.supabaseKey;
+const supabaseUrl = await fetch(`${window.location.origin}/.netlify/functions/well-kept.js?name=supabaseUrl`).json();
+const supabaseKey = await fetch(`${window.location.origin}/.netlify/functions/well-kept.js?name=supabaseKey`).json();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Fetch leaderboard and check for duplicate names

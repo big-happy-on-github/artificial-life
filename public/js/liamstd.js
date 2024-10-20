@@ -1539,9 +1539,9 @@ canvas.addEventListener('mousemove', (event) => {
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-const supabaseUrl = response1.text();
+const supabaseUrl = JSON.parse(await response1.text());
 const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-const supabaseKey = response2.text();
+const supabaseKey = JSON.parse(await response2.text());
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Fetch leaderboard and check for duplicate names

@@ -198,8 +198,8 @@
     <script type="module">
         // Use Screenshot Machine API to load screenshots from URLs
         const screenshotServiceUrl = 'https://api.screenshotmachine.com'; // Replace with your service URL
-        const response = await fetch(`/.netlify/functions/well-kept?name=screenshotKey`, { mode: 'no-cors' });
-        const apiKey = JSON.parse(await response.text());
+        const response1 = await fetch(`/.netlify/functions/well-kept?name=screenshotKey`, { mode: 'no-cors' });
+        const apiKey = JSON.parse(await response1.text());
     
         async function loadScreenshots() {
             const domain = window.location.origin; // Get the domain including the protocol

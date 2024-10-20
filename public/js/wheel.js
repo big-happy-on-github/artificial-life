@@ -15,10 +15,10 @@ const userID = localStorage.getItem("userID");
 // Import the Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const response1 = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseUrl`, { mode: 'no-cors' });
-const supabaseUrl = response1.json();
-const response2 = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseKey`, { mode: 'no-cors' });
-const supabaseKey = response2.json();
+const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
+const supabaseUrl = response1.text();
+const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
+const supabaseKey = response2.text();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkCooldown() {

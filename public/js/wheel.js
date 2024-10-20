@@ -27,9 +27,15 @@ async function checkCooldown() {
         .eq('userID', userID)
         .single();
 
-    if (error) {
+    if (error && error.code === "PGRST116") {
+        // If there's no record for this user, allow the spin and insert the new record
+        await supabase
+            .from('wheel')
+            .insert({ userID: userID, time: new Date().toISOString() });
+        return true;
+    } else if (error) {
         console.error('Error fetching data:', error);
-        return true; // Allow spin if there's an error fetching
+        return false; // Disallow spin if there's a different error
     }
 
     if (data) {
@@ -44,34 +50,24 @@ async function checkCooldown() {
             const minutesLeft = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             const secondsLeft = Math.floor((timeRemaining % (1000 * 60)) / 1000);
             
-            alert(`you can spin again in ${hoursLeft} hours, ${minutesLeft} minutes, and ${secondsLeft} seconds`);
-            return false;
-        }
-    } else if (error.code === "PGRST116") {
-        const { data, error: insertError } = await supabase
-            .from('wheel')
-            .insert({ userID: userID, time: new Date().toISOString() });
-    
-        if (insertError) {
-            console.error('Error inserting new spin record:', insertError);
-        } else {
-            console.log('Spin time recorded successfully:', data);
+            alert(`You can spin again in ${hoursLeft} hours, ${minutesLeft} minutes, and ${secondsLeft} seconds`);
+            return false; // Don't allow spin
         }
     }
 
-    return true; // Allow spin if 24 hours have passed or no record found
+    return true; // Allow spin if 24 hours have passed
 }
 
 async function updateSpinTime() {
     const currentTime = new Date().toISOString();
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from('wheel')
         .upsert({ userID: userID, time: currentTime });
 
     if (error) {
         console.error('Error updating spin time:', error);
     } else {
-        console.log('Spin time updated:', data);
+        console.log('Spin time updated successfully');
     }
 }
 

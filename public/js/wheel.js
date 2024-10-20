@@ -1,9 +1,9 @@
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 
-const segments = ['+1 limbuck', '+2 limbucks', '+3 limbucks', '+4 limbucks', '+1 limbuck', '+5 limbucks'];
-const prizes = [1, 2, 3, 4, 1, 5];
-const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5'];
+const segments = ['+1 limbuck', '+2 limbucks', '+3 limbucks', '+4 limbucks', '+5 limbucks', '+1 limbuck', '+Infinity limbucks'];
+const prizes = [1, 2, 3, 4, 5, 1, 1/0];
+const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#A6FF33', '#33FFF5', '#A6FF33'];
 
 let currentAngle = 0;
 let spinTimeout = null;
@@ -123,12 +123,37 @@ function getSegmentUnderArrow() {
     return (segments.length - 1 - index + segments.length) % segments.length;
 }
 
+function predictFinalSegment(initialSpinSpeed, deceleration) {
+    let totalAngle = 0;
+    let speed = initialSpinSpeed;
+    
+    // Sum up the angles until the speed drops below a small threshold
+    while (speed > 0.002) {
+        totalAngle += speed;
+        speed *= deceleration;
+    }
+
+    // Add the total spin angle to the current angle
+    const finalAngle = (currentAngle + totalAngle) % (2 * Math.PI);
+
+    // Calculate the final segment based on the final angle
+    const arcSize = (2 * Math.PI) / segments.length;
+    const adjustedAngle = (finalAngle + Math.PI / 2) % (2 * Math.PI);
+    const index = Math.floor(adjustedAngle / arcSize);
+    
+    // Return the segment the wheel will land on
+    return (segments.length - 1 - index + segments.length) % segments.length;
+}
+
 async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const initialSpinSpeed = Math.random() * 0.3 + 0.5; // Higher initial speed
     const deceleration = 0.99; // Deceleration factor (slightly less than 1)
+    let initialSpinSpeed = Math.random() * 0.3 + 0.5; // Higher initial speed
+    while (predictFinalSegment(initialSpinSpeed, deceleration) == 5) {
+        initialSpinSpeed = Math.random() * 0.3 + 0.5; // Higher initial speed
+    }
     let spinAngle = initialSpinSpeed;
     let isSpinning = true;
 

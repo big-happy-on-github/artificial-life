@@ -779,7 +779,7 @@ class Tower {
                 this.lastFired = wave; // Update the last fired wave
             }
         } else if (this.type == '22') { // Kabir spawns mini enemies
-            if (Date.now() - this.lastFired > this.fireRate * 1000) {
+            if (waveInProgress && Date.now() - this.lastFired > this.fireRate * 1000) {
                 miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
                 console.log("Kabir spawned a mini enemy");
                 this.lastFired = Date.now();
@@ -906,6 +906,11 @@ class MiniEnemy {
             }
         }
 
+        // Check if the mini enemy has reached the start of the path
+        if (this.currentPathIndex < 0) {
+            this.die();  // Mini enemy dies when it reaches the start of the path
+        }
+
         // Check for collision with enemies and deal damage
         enemies.forEach(enemy => {
             const distance = Math.sqrt((enemy.x - this.x) ** 2 + (enemy.y - this.y) ** 2);
@@ -916,6 +921,13 @@ class MiniEnemy {
         });
 
         this.draw();
+    }
+
+    die() {
+        const index = miniEnemies.indexOf(this);
+        if (index > -1) {
+            miniEnemies.splice(index, 1);  // Remove mini enemy from the array
+        }
     }
 }
 

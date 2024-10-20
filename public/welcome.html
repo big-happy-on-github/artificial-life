@@ -190,9 +190,19 @@
         document.addEventListener('keyup', function (event) {
             delete keysPressed[event.key];
         });
-    
+
+        const localAlerts = JSON.parse(localStorage.getItem("alert")) || []; // Initialize as empty array if null
+
         if (userAlerts.length > 0) {
-            userAlerts.forEach(alertMessage => alert(alertMessage)); // Show all alerts for this userID or global ones
+            userAlerts.forEach(alertMessage => {
+                // Check if alertMessage is not already in localAlerts
+                if (!localAlerts.includes(alertMessage)) {
+                    alert(alertMessage); // Show the alert if it's new
+                }
+            });
+            
+            // After showing all new alerts, update localStorage
+            localStorage.setItem("alert", JSON.stringify(userAlerts));
         }
     </script>
     <script type="module">

@@ -18,9 +18,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const supabaseUrl = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseUrl`, {
   mode: 'no-cors'
 }).json();
-const supabaseKey = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseKey`. {
-  mode: 'no-cors'
-}).json();
+const supabaseKey = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseKey`, { mode: 'no-cors' }).json();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkCooldown() {

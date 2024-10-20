@@ -782,6 +782,8 @@ class Tower {
                 }, 50); // Small delay for effect
                 this.lastFired = wave; // Update the last fired wave
             }
+        } else if (this.type == "22") {
+            this.shoot();
         } else {
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
                 this.shoot();

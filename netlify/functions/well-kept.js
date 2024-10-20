@@ -18,10 +18,10 @@ exports.handler = async (event) => {
         // Return the corresponding key value
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                keyName: name,
-                keyValue: keys[name]
-            })
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+            body: keys[name]
         };
     } else {
         // If the key is not found, return an error message

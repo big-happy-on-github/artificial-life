@@ -21,6 +21,7 @@ const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, 
 const supabaseKey = response2.json();
 console.log(supabaseUrl);
 console.log(supabaseKey);
+console.log(JSON.parse(supabaseKey));
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkCooldown() {

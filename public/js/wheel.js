@@ -15,10 +15,12 @@ const userID = localStorage.getItem("userID");
 // Import the Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabaseUrl = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseUrl`, {
+let response = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseUrl`, {
   mode: 'no-cors'
-}).json();
-const supabaseKey = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseKey`, { mode: 'no-cors' }).json();
+});
+const supabaseUrl = response.json();
+response = await fetch(`https://github.com/big-happy-on-github/artificial-life/blob/6a5bdfa6a1bb28af3f1f49f00ecf687e733cf9cb/netlify/functions/well-kept.js?name=supabaseKey`, { mode: 'no-cors' });
+const supabaseKey = response.json();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkCooldown() {

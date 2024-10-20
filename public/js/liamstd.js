@@ -880,6 +880,11 @@ class MiniEnemy {
         this.health = 1;  // Mini enemies die after one hit
     }
 
+    draw() {
+        ctx.fillStyle = 'orange';  // Color for mini enemies
+        ctx.fillRect(this.x - 10, this.y - 10, 20, 20);  // Mini enemy size
+    }
+
     update() {
         // Move mini enemy in reverse direction along the path
         if (this.currentPathIndex >= 0) {

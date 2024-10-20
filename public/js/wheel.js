@@ -19,6 +19,8 @@ const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, 
 const supabaseUrl = response1.text();
 const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
 const supabaseKey = response2.text();
+console.log(supabaseUrl);
+console.log(supabaseKey);
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function checkCooldown() {

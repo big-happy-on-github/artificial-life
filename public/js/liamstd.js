@@ -684,64 +684,66 @@ class Tower {
    shoot() {
         if (!this.target || this.target.health <= 0) return; // Ensure there's a target
 
-        if (this.canShoot && Date.now() - this.lastFired > this.fireRate * 1000) {
-            let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16" || this.type == "18" || this.type == "19") {
-                if (this.type == "6" || this.type == "11" || this.type == "18" && this.type != "3" && this.type != "5" && this.type != "16" && this.type != "19") {
-                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
-                } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5" && this.type == "16" && this.type == "19") {
-                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
-                } else {
-                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));
-                }
-            } else {
-                if (this.type == "14") {
-                    // North (up), South (down), East (right), West (left)
-                    projectiles.push(new Projectile(this.x, this.y, Math.PI / 2, this.damage));   // North
-                    projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
-                    projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
-                    projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
-                } else if (this.type === '20') { // Nate's knockback behavior
-                    // Find the first enemy in range that has not been knocked back yet
-                    const enemyToKnockBack = enemies.find(enemy => this.isInRange(enemy) && !enemy.knockedBack);
-    
-                    if (enemyToKnockBack) {
-                        const knockbackDistance = 80; // Distance to push the enemy back
-                        const previousWaypoint = path[Math.max(0, enemyToKnockBack.currentPathIndex - 1)];
-                        const dx = previousWaypoint.x - enemyToKnockBack.x;
-                        const dy = previousWaypoint.y - enemyToKnockBack.y;
-                        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-                        // Move enemy back towards the previous waypoint
-                        const moveX = (dx / distance) * knockbackDistance;
-                        const moveY = (dy / distance) * knockbackDistance;
-        
-                        // Ensure the enemy doesn't go past the previous waypoint
-                        enemyToKnockBack.x = Math.max(Math.min(enemyToKnockBack.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, enemyToKnockBack.x));
-                        enemyToKnockBack.y = Math.max(Math.min(enemyToKnockBack.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, enemyToKnockBack.y));
-        
-                        enemyToKnockBack.knockedBack = true; // Mark the enemy as knocked back
-                        console.log("Nate knocked back an enemy!");
-        
-                        // Update last fired time
-                        this.lastFired = Date.now(); 
+        if (Date.now() - this.lastFired > this.fireRate * 1000) {
+            if (this.canShoot) {
+                let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+                if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16" || this.type == "18" || this.type == "19") {
+                    if (this.type == "6" || this.type == "11" || this.type == "18" && this.type != "3" && this.type != "5" && this.type != "16" && this.type != "19") {
+                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
+                    } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5" && this.type == "16" && this.type == "19") {
+                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
+                    } else {
+                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));
                     }
-                } else if (this.type == "15") {
-                    // Find up to 5 enemies in range
-                    const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);
+                } else {
+                    if (this.type == "14") {
+                        // North (up), South (down), East (right), West (left)
+                        projectiles.push(new Projectile(this.x, this.y, Math.PI / 2, this.damage));   // North
+                        projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
+                        projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
+                        projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
+                    } else if (this.type === '20') { // Nate's knockback behavior
+                        // Find the first enemy in range that has not been knocked back yet
+                        const enemyToKnockBack = enemies.find(enemy => this.isInRange(enemy) && !enemy.knockedBack);
+        
+                        if (enemyToKnockBack) {
+                            const knockbackDistance = 80; // Distance to push the enemy back
+                            const previousWaypoint = path[Math.max(0, enemyToKnockBack.currentPathIndex - 1)];
+                            const dx = previousWaypoint.x - enemyToKnockBack.x;
+                            const dy = previousWaypoint.y - enemyToKnockBack.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
             
-                    // Shoot at each enemy
-                    enemiesInRange.forEach(enemy => {
-                        angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+                            // Move enemy back towards the previous waypoint
+                            const moveX = (dx / distance) * knockbackDistance;
+                            const moveY = (dy / distance) * knockbackDistance;
+            
+                            // Ensure the enemy doesn't go past the previous waypoint
+                            enemyToKnockBack.x = Math.max(Math.min(enemyToKnockBack.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, enemyToKnockBack.x));
+                            enemyToKnockBack.y = Math.max(Math.min(enemyToKnockBack.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, enemyToKnockBack.y));
+            
+                            enemyToKnockBack.knockedBack = true; // Mark the enemy as knocked back
+                            console.log("Nate knocked back an enemy!");
+            
+                            // Update last fired time
+                            this.lastFired = Date.now(); 
+                        }
+                    } else if (this.type == "15") {
+                        // Find up to 5 enemies in range
+                        const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);
+                
+                        // Shoot at each enemy
+                        enemiesInRange.forEach(enemy => {
+                            angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+                            projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                        });
+                    } else if (this.canShoot) {
                         projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
-                    });
-                } else if (this.type == '22') { // Kabir spawns mini enemies
-                    miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
-                    console.log("spawned mini enemy");
-                    this.lastFired = Date.now();
-                } else if (this.canShoot) {
-                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                    }
                 }
+            } else if (this.type == '22') { // Kabir spawns mini enemies
+                miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
+                console.log("spawned mini enemy");
+                this.lastFired = Date.now();
             }
         }
     }

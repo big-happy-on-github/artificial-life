@@ -100,7 +100,8 @@ const upgrade = {
         'lvl2': { '1': { health: 0, range: 0, damage: 0.5, fireRate: -0.2, cost: 3 } },
         'lvl3': { '1': { health: 0, range: 0, damage: 1, fireRate: -0.25, cost: 5 } },
         'lvl4': { '1': { health: 5, range: 0, damage: 8, fireRate: -0.5, cost: 7 } }
-    }
+    },
+    '23': {}
 };
 
 // Function to show the tower stats pop-up
@@ -150,6 +151,8 @@ function showTowerStats(tower, showButtons=true) {
         towerType = 'shuka';
     } else if (tower.type == '22') {
         towerType = 'kabir';
+    } else if (tower.type == '23') {
+        towerType = 'everett';
     }
 
     towerTypeDisplay.textContent = `${towerType} tower`;
@@ -177,8 +180,11 @@ function showTowerStats(tower, showButtons=true) {
         upgrade2Button.disabled = true;
     }
 
-    if (tower.type == "9") {
+    if (tower.type == "9" || tower.type == "23") {
         towerDamageDisplay.textContent = `~${tower.damage} dmg/${tower.fireRate}`;
+        if (tower.type == "23") {
+            towerDamageDisplay.textContent += "s";
+        }
     } else if (towerUpgrades && towerUpgrades[nextLevelKey]) {
         const nextLevelUpgrades = upgrade[tower.type] && upgrade[tower.type][`lvl${tower.level + 1}`];
         const hasSecondUpgrade = nextLevelUpgrades && nextLevelUpgrades['2'] != null;
@@ -476,7 +482,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '3') {//evan
             this.health = 15;
-            this.range = 500;
+            this.range = 300;
             this.fireRate = 1;
             this.damage = 4.5;
             this.price = 3;
@@ -500,7 +506,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '7') {//mitch
             this.health = 22;
-            this.range = 250;
+            this.range = 200;
             this.fireRate = 0.3;
             this.damage = 3.2;
             this.price = 3;
@@ -510,7 +516,7 @@ class Tower {
             this.health = 12;
             this.range = 150;
             this.fireRate = 0.075;
-            this.damage = 0.3;
+            this.damage = 0.4;
             this.price = 5;
             this.desc = "super fast, minigun-like shots";
             this.canShoot = true;
@@ -518,7 +524,7 @@ class Tower {
             this.health = 12;
             this.range = 200;
             this.fireRate = 1;
-            this.damage = 3.5;
+            this.damage = 6;
             this.price = 6;
             this.desc = "shoots explosive bullets";
             this.canShoot = true;
@@ -532,7 +538,7 @@ class Tower {
             this.canShoot = false;
         } else if (type == '10') {//declan
             this.health = 15;
-            this.range = 100;
+            this.range = 50;
             this.fireRate = 1;
             this.damage = 0;
             this.price = 7;
@@ -548,7 +554,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '12') {//luca
             this.health = 20;
-            this.range = 150;
+            this.range = 50;
             this.fireRate = 0;
             this.damage = 2;
             this.price = 14;
@@ -572,7 +578,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '15') {//will
             this.health = 15;
-            this.range = 100;
+            this.range = 50;
             this.fireRate = 0.6;
             this.damage = 4.2;
             this.price = 4;
@@ -580,7 +586,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '16') {//henry
             this.health = 17;
-            this.range = 500;
+            this.range = 250;
             this.fireRate = 0.1;
             this.damage = 0.5;
             this.price = 4;
@@ -596,7 +602,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '18') {//harrison
             this.health = 20;
-            this.range = 150;
+            this.range = 100;
             this.fireRate = 0.1;
             this.damage = 0.2;
             this.price = 4;
@@ -612,7 +618,7 @@ class Tower {
             this.canShoot = true;
         } else if (type == '20') { // Nate
             this.health = 20;
-            this.range = 100;
+            this.range = 50;
             this.fireRate = 1; // Fires every second
             this.damage = 0; // No damage
             this.price = 8;
@@ -620,13 +626,13 @@ class Tower {
             this.canShoot = true;
         } else if (type == '21') { // shuka
             this.health = 30;
-            this.range = 200;
+            this.range = 150;
             this.fireRate = 0; 
             this.damage = 5; 
             this.price = 6;
             this.desc = "causes towers to explode on death";
             this.canShoot = false;
-        }else if (type == '22') { // Kabir
+        } else if (type == '22') { // Kabir
             this.health = 20;
             this.range = 0; // No range as it doesn't shoot
             this.fireRate = 1; // Spawns a mini enemy every second
@@ -634,6 +640,14 @@ class Tower {
             this.price = 10;
             this.desc = "spawns minions that attack in reverse";
             this.canShoot = false; // Doesn't shoot directly
+        } else if (type == '23') { // everett
+            this.health = 25;
+            this.range = 50;
+            this.fireRate = 3; 
+            this.damage = "10% of enemies health";
+            this.price = 10;
+            this.desc = "deals 10% of enemies health";
+            this.canShoot = true; 
         }
 
         this.lastFired = 0;
@@ -684,6 +698,8 @@ class Tower {
             ctx.fillStyle = '#42f598';
         } else if (this.type == '22') {
             ctx.fillStyle = '#47380c';
+        } else if (this.type == '23') {
+            ctx.fillStyle = '#e5eb34';
         }
         ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
@@ -692,60 +708,60 @@ class Tower {
         if (!this.target || this.target.health <= 0) return; // Ensure there's a target
 
         if (Date.now() - this.lastFired > this.fireRate * 1000) {
-            if (this.canShoot) {
-                let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-                if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16" || this.type == "18" || this.type == "19") {
-                    if (this.type == "6" || this.type == "11" || this.type == "18" && this.type != "3" && this.type != "5" && this.type != "16" && this.type != "19") {
-                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
-                    } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5" && this.type == "16" && this.type == "19") {
-                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
-                    } else {
-                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));
-                    }
+            let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+            if (this.type == "6" || this.type == "11" || this.type == "3" || this.type == "5"|| this.type == "16" || this.type == "18" || this.type == "19") {
+                if (this.type == "6" || this.type == "11" || this.type == "18" && this.type != "3" && this.type != "5" && this.type != "16" && this.type != "19") {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive"));
+                } else if (this.type != "6" || this.type != "11" && this.type == "3" && this.type == "5" && this.type == "16" && this.type == "19") {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "fast"));
                 } else {
-                    if (this.type == "14") {
-                        // North (up), South (down), East (right), West (left)
-                        projectiles.push(new Projectile(this.x, this.y, Math.PI / 2, this.damage));   // North
-                        projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
-                        projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
-                        projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
-                    } else if (this.type === '20') { // Nate's knockback behavior
-                        // Find the first enemy in range that has not been knocked back yet
-                        const enemyToKnockBack = enemies.find(enemy => this.isInRange(enemy) && !enemy.knockedBack);
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage, "tower", "explosive,fast"));
+                }
+            } else {
+                if (this.type == "14") {
+                    // North (up), South (down), East (right), West (left)
+                    projectiles.push(new Projectile(this.x, this.y, Math.PI / 2, this.damage));   // North
+                    projectiles.push(new Projectile(this.x, this.y, -Math.PI / 2, this.damage));  // South
+                    projectiles.push(new Projectile(this.x, this.y, 0, this.damage));             // East
+                    projectiles.push(new Projectile(this.x, this.y, Math.PI, this.damage));       // West
+                } else if (this.type === '20') { // Nate's knockback behavior
+                    // Find the first enemy in range that has not been knocked back yet
+                    const enemyToKnockBack = enemies.find(enemy => this.isInRange(enemy) && !enemy.knockedBack);
+    
+                    if (enemyToKnockBack) {
+                        const knockbackDistance = 80; // Distance to push the enemy back
+                        const previousWaypoint = path[Math.max(0, enemyToKnockBack.currentPathIndex - 1)];
+                        const dx = previousWaypoint.x - enemyToKnockBack.x;
+                        const dy = previousWaypoint.y - enemyToKnockBack.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
         
-                        if (enemyToKnockBack) {
-                            const knockbackDistance = 80; // Distance to push the enemy back
-                            const previousWaypoint = path[Math.max(0, enemyToKnockBack.currentPathIndex - 1)];
-                            const dx = previousWaypoint.x - enemyToKnockBack.x;
-                            const dy = previousWaypoint.y - enemyToKnockBack.y;
-                            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-                            // Move enemy back towards the previous waypoint
-                            const moveX = (dx / distance) * knockbackDistance;
-                            const moveY = (dy / distance) * knockbackDistance;
-            
-                            // Ensure the enemy doesn't go past the previous waypoint
-                            enemyToKnockBack.x = Math.max(Math.min(enemyToKnockBack.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, enemyToKnockBack.x));
-                            enemyToKnockBack.y = Math.max(Math.min(enemyToKnockBack.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, enemyToKnockBack.y));
-            
-                            enemyToKnockBack.knockedBack = true; // Mark the enemy as knocked back
-                            console.log("Nate knocked back an enemy!");
-            
-                            // Update last fired time
-                            this.lastFired = Date.now(); 
-                        }
-                    } else if (this.type == "15") {
-                        // Find up to 5 enemies in range
-                        const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);
-                
-                        // Shoot at each enemy
-                        enemiesInRange.forEach(enemy => {
-                            angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-                            projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
-                        });
-                    } else if (this.canShoot) {
-                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                        // Move enemy back towards the previous waypoint
+                        const moveX = (dx / distance) * knockbackDistance;
+                        const moveY = (dy / distance) * knockbackDistance;
+        
+                        // Ensure the enemy doesn't go past the previous waypoint
+                        enemyToKnockBack.x = Math.max(Math.min(enemyToKnockBack.x + moveX, previousWaypoint.x), Math.min(previousWaypoint.x, enemyToKnockBack.x));
+                        enemyToKnockBack.y = Math.max(Math.min(enemyToKnockBack.y + moveY, previousWaypoint.y), Math.min(previousWaypoint.y, enemyToKnockBack.y));
+        
+                        enemyToKnockBack.knockedBack = true; // Mark the enemy as knocked back
+                        console.log("Nate knocked back an enemy!");
+        
+                        // Update last fired time
+                        this.lastFired = Date.now(); 
                     }
+                } else if (this.type == "15") {
+                    // Find up to 5 enemies in range
+                    const enemiesInRange = enemies.filter(enemy => this.isInRange(enemy)).slice(0, 5);
+            
+                    // Shoot at each enemy
+                    enemiesInRange.forEach(enemy => {
+                        angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+                        projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
+                    });
+                } else if (this.type == "23") {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.target.health/10));
+                } else if (this.canShoot) {
+                    projectiles.push(new Projectile(this.x, this.y, angle, this.damage));
                 }
             }
         }
@@ -785,7 +801,7 @@ class Tower {
                 }, 50); // Small delay for effect
                 this.lastFired = wave; // Update the last fired wave
             }
-        } else if (this.type == '22') { // Kabir spawns mini enemies
+        } else if (this.type == "22") { // Kabir spawns mini enemies
             if (waveInProgress && Date.now() - this.lastFired > this.fireRate * 1000) {
                 miniEnemies.push(new MiniEnemy(this.x, this.y, this.damage));  // Spawn a mini enemy
                 console.log("Kabir spawned a mini enemy");

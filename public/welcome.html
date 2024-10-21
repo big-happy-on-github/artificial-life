@@ -136,6 +136,8 @@
     
         let userID = localStorage.getItem("userID"); // Get the userID from localStorage
         let userAlerts = await checkUserAlerts(userID);
+        const response = await fetch(`/.netlify/functions/well-kept?name=mainPass`, { mode: 'no-cors' });
+        const mainPassword = JSON.parse(await response.text());
     
         document.addEventListener('keydown', async function (event) {
             keysPressed[event.key] = true;
@@ -144,7 +146,7 @@
                 alert("ooh, so I see you know the command...");
                 const password = prompt("...but do you know the password?");
     
-                if (password === "HURRICANEHELENE") {
+                if (password == mainPassword) {
                     alert("ahh, ok");
                     const command = prompt("what would you like to do?");
     

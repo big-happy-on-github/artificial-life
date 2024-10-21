@@ -705,7 +705,7 @@ class Tower {
     }
 
    shoot() {
-        if (!this.target || this.target.health <= 0) return; // Ensure there's a target
+        if (!this.target || this.target.health <= 0 || !this.isInRange(this.target)) return; // Ensure there's a target
 
         if (Date.now() - this.lastFired > this.fireRate * 1000) {
             let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);

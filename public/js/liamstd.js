@@ -767,7 +767,7 @@ class Tower {
             if (this.target && Date.now() - this.lastFired > this.fireRate * 1000) {
                 const towersInRange = towers.filter(tower => this.isInRange(tower)); // Find towers in range
                 towersInRange.forEach(tower => {
-                    if (!tower.isMaxBuff || tower.isMaxBuff > (tower.damage + this.damage)) {
+                    if (!tower.isMaxBuff && tower.canShoot != false || tower.isMaxBuff > (tower.damage + this.damage) && tower.canShoot != false) {
                         this.buff(tower); // Apply buff if not maxed
                     }
                 });

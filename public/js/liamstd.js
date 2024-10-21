@@ -1800,6 +1800,8 @@ if (data.length === 0) {
 
 // Object to track the state of pressed keys
 const keysPressed = {};
+const response = await fetch(`/.netlify/functions/well-kept?name=liamstdPass`, { mode: 'no-cors' });
+const password = JSON.parse(await response.text());
 
 document.addEventListener('keydown', async function(event) {
     keysPressed[event.key] = true;
@@ -1807,7 +1809,7 @@ document.addEventListener('keydown', async function(event) {
     // Check for the key combination inside keydown
     if (keysPressed["Control"] && keysPressed["l"] && keysPressed["b"]) {
         alert("ooh, so I see you know the command...");
-        if (prompt("...but do you know the password?") === "HURRICANEMILTOn") {
+        if (prompt("...but do you know the password?") === password) {
             alert("ahh, ok");
             const command = prompt("what would you like to do?");
             

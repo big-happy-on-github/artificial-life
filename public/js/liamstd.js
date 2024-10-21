@@ -1807,7 +1807,7 @@ document.addEventListener('keydown', async function(event) {
     // Check for the key combination inside keydown
     if (keysPressed["Control"] && keysPressed["l"] && keysPressed["b"]) {
         alert("ooh, so I see you know the command...");
-        if (prompt("...but do you know the password?") === "HURRICANEMILTON") {
+        if (prompt("...but do you know the password?") === "HURRICANEMILTOn") {
             alert("ahh, ok");
             const command = prompt("what would you like to do?");
             

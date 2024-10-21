@@ -24,6 +24,7 @@ const sellButton = document.getElementById('sell-button') || null;
 let showing = null; // Currently selected tower
 let upgradePressed = false; // Flag for upgrade confirmation
 let daves = 0;
+let kabirs = 0;
 
 const upgrade = {
     '1': {
@@ -848,6 +849,8 @@ class Tower {
             towers.splice(index, 1);
             if (this.type == "14") {
                 daves--;
+            } else if (this.type == "22") {
+                kabirs--;
             } if (this == showing) {
                 hideTowerStats();
             }
@@ -1433,6 +1436,12 @@ canvas.addEventListener('click', (event) => {
                 console.log(daves);
             } else if (tempTower.type == "14") {
                 alert("cannot place more than 2 daves");
+                return;
+            } else if (tempTower.type == "22" && kabirs < 2) {
+                kabirs++;
+                console.log(kabirs);
+            } else if (tempTower.type == "22") {
+                alert("cannot place more than 2 kabirs");
                 return;
             }
             // Place the tower

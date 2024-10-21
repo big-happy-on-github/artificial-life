@@ -157,7 +157,7 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const deceleration = 0.999;
+    const deceleration = 0.95;
     let initialSpinSpeed = Math.random() * 0.8 + 0.5;
 
     // Ensuring not to land on "+Infinity limbucks" repeatedly

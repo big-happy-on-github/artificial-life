@@ -157,12 +157,12 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const deceleration = 0.95;
-    let initialSpinSpeed = Math.random() * 0.8 + 0.5;
+    const deceleration = 0.97;
+    let initialSpinSpeed = Math.random() * 0.5 + 0.5;
 
     // Ensuring not to land on "+Infinity limbucks" repeatedly
     while (predictFinalSegment(initialSpinSpeed, deceleration) == wheelData.findIndex(data => data.prize === Infinity)) {
-        initialSpinSpeed = Math.random() * 0.8 + 0.5;
+        initialSpinSpeed = Math.random() * 0.5 + 0.5;
     }
 
     let spinAngle = initialSpinSpeed;

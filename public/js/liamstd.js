@@ -1183,6 +1183,9 @@ const enemyTypes = [
     { speed: 1.5, health: 250, color: '#808080', canShoot: true, range: 100, fireRate: 1, damage: 5, level: 45, nextType: null },
     { speed: 1.2, health: 300, color: '#000', canShoot: false, range: 100, fireRate: null, damage: null, level: 50, nextType: null, special: 'Heals nearby enemies by 5 every second' },
     { speed: 0.8, health: 600, color: '#FFD700', canShoot: true, range: 150, fireRate: 0.5, damage: 5, level: 55, nextType: null, special: 'Shoots explosive bullets' },
+    { speed: 10, health: 125, color: '#7b9e89', canShoot: false, range: null, fireRate: null, damage: null, level: 63, nextType: null }, // Basic enemy
+    { speed: 1.5, health: 2500, color: '#102e1c', canShoot: true, range: 1000, fireRate: 0.1, damage: 50, level: 65, nextType: null },
+    { speed: 2, health: 500, color: '#402d3e', canShoot: true, range: 10, fireRate: 0.1, damage: 2, level: 67, nextType: null }, // Fast shooting enemy, no further transformation
 ];
 
 const bossEnemyTypes = [
@@ -1191,7 +1194,9 @@ const bossEnemyTypes = [
     { speed: 6, health: 300, color: '#4032a8', canShoot: true, range: 1/0, fireRate: 0.1, damage: 0.4, level: 30, nextType: null },
     { speed: 0.5, health: 2500, color: '#DC143C', canShoot: false, range: null, fireRate: null, damage: null, level: 40, nextType: '#fff' },
     { speed: 1, health: 5000, color: '#39FF14', canShoot: false, range: null, fireRate: null, damage: null, level: 50, nextType: null },
-    { speed: 2, health: 200, color: '#1F51FF', canShoot: false, range: null, fireRate: null, damage: 50, level: 60, nextType: null, special: 'Explodes on death' } //do
+    { speed: 2, health: 200, color: '#1F51FF', canShoot: false, range: null, fireRate: null, damage: 50, level: 60, nextType: null, special: 'Explodes on death' }, //do
+    { speed: 1, health: 10000, color: '#ff0051', canShoot: false, range: null, fireRate: null, damage: null, level: 70, nextType: null },
+    { speed: 20, health: 1000, color: '#415282', canShoot: false, range: null, fireRate: null, damage: null, level: 80, nextType: null, special: 'Goes super duper fast' }
 ];
 
 // Function to handle the start of a wave
@@ -1218,6 +1223,10 @@ function spawnEnemies() {
             const updatedEnemyTypes = enemyTypes.filter(enemy => enemy.level <= wave);
             const randomType = updatedEnemyTypes[Math.floor(Math.random() * updatedEnemyTypes.length)];
             if (randomType) {
+                if (wave >= 40) {
+                    randomType.damage += Math.round((wave-40)/3);
+                    randomType.health += Math.round((wave-35)/3);
+                }
                 const enemy = new Enemy(randomType);
                 enemies.push(enemy);
             } else {

@@ -11,7 +11,7 @@ const playerId = localStorage.getItem('userID');
 
 async function getRanking() {
     const { data, error } = await supabase
-        .from('rankings')
+        .from('shadowboxing_rankings')
         .select('ranking')
         .eq('player_id', playerId)
         .single();
@@ -22,31 +22,31 @@ async function getRanking() {
 
 async function updateDisplay() {
     const { data, error } = await supabase
-        .from('games')
+        .from('shadowboxing_games')
         .select('*')
         .eq('status', 'ongoing');
     
     if (error) throw error;
 
-    // Display active games
-    console.log('Active Games:', data);
+    // Display active shadowboxing_games
+    console.log('Active shadowboxing_games:', data);
 }
 
-async function findGames() {
+async function findshadowboxing_games() {
     const { data, error } = await supabase
-        .from('games')
+        .from('shadowboxing_games')
         .select('*')
         .eq('status', 'waiting');
 
     if (error) throw error;
 
-    return data; // List of games waiting for an opponent
+    return data; // List of shadowboxing_games waiting for an opponent
 }
 
 async function play(gameId, playerMove) {
     // Submit the player's move for the current game
     const { error } = await supabase
-        .from('game_moves')
+        .from('shadowboxing_shadowboxing_game_moves')
         .insert([{ game_id: gameId, player_id: playerId, player_move: playerMove, timestamp: new Date() }]);
 
     if (error) throw error;
@@ -65,7 +65,7 @@ function calculateScore(currentRanking, enemyRanking) {
 
 async function submitRanking(newRanking) {
     const { error } = await supabase
-        .from('rankings')
+        .from('shadowboxing_rankings')
         .upsert({ player_id: playerId, ranking: newRanking }, { onConflict: ['player_id'] });
 
     if (error) throw error;
@@ -74,7 +74,7 @@ async function submitRanking(newRanking) {
 
 async function createGame() {
     const { error } = await supabase
-        .from('games')
+        .from('shadowboxing_games')
         .insert([{ player_1: playerId, status: 'waiting' }]);
 
     if (error) throw error;
@@ -114,13 +114,13 @@ async function updateVisits() {
 // Subscribe to real-time updates for game moves
 supabase
   .channel('realtime_moves')
-  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'game_moves' }, (payload) => {
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'shadowboxing_shadowboxing_game_moves' }, (payload) => {
     console.log('Move received!', payload);
     // Handle real-time move updates (e.g., opponent's move)
   })
   .subscribe();
 
-// Function to periodically update the display of ongoing games
+// Function to periodically update the display of ongoing shadowboxing_games
 updateDisplay();
 updateVisits();
-setInterval(updateDisplay, 1000); // Update every second to reflect ongoing games
+setInterval(updateDisplay, 1000); // Update every second to reflect ongoing shadowboxing_games

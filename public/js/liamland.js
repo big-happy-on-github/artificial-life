@@ -123,81 +123,111 @@ async function getLimbucks() {
 }
 
 async function showGames() {
-    if (!localStorage.getItem("userID")) {
-        localStorage.setItem("userID", generateRandomString(50));
-    }
-    const userID = localStorage.getItem("userID");
-    const { data, error } = await supabase
-        .from('limbucks')
-        .select('games')
-        .eq("userID", userID);
+    try {
+        if (!localStorage.getItem("userID")) {
+            localStorage.setItem("userID", generateRandomString(50));
+        }
+        const userID = localStorage.getItem("userID");
 
-    const games = data[0].games;
-    gameList.forEach(game => {
-        let yn = false;
-        for (let userGame in games) {
-            if (userGame == game.name) {
-                yn = true
+        // Fetch current games owned by the user
+        const { data, error } = await supabase
+            .from('limbucks')
+            .select('games')
+            .eq('userID', userID)
+            .single();  // Use single() to ensure one record
+
+        if (error) {
+            throw new Error('Error fetching games data.');
+        }
+
+        const games = data?.games || {};
+
+        gameList.forEach(game => {
+            const button = document.getElementById(`${game.name}Button`);
+
+            // Remove existing event listeners to avoid duplication
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+
+            if (games[game.name] || game.cost === 0) {
+                newButton.textContent = "play";
+                newButton.addEventListener('click', () => {
+                    window.location.href = `/projects/${game.name}`;
+                });
+            } else {
+                newButton.textContent = `buy (${game.cost})`;
+                newButton.addEventListener('click', () => buy(game.name));
             }
-        }
-        if (yn || game.cost == 0) {
-            document.getElementById(`${game.name}Button`).textContent = "play";
-            document.getElementById(`${game.name}Button`).addEventListener('click', () => window.location.href=`/projects/${game.name}`);
-            document.getElementById(`${game.name}Button`).removeEventListener('click', () => buy(game.name));
-        } else {
-            document.getElementById(`${game.name}Button`).textContent = `buy (${game.cost})`;
-            document.getElementById(`${game.name}Button`).addEventListener('click', () => buy(game.name));
-        }
-    });
+        });
+    } catch (error) {
+        console.error('Error displaying games:', error.message);
+    }
 }
 
 async function buy(game) {
-    if (!localStorage.getItem("userID")) {
-        localStorage.setItem("userID", generateRandomString(50));
-    }
-    const userID = localStorage.getItem("userID");
+    try {
+        // Ensure userID is present
+        if (!localStorage.getItem("userID")) {
+            localStorage.setItem("userID", generateRandomString(50));
+        }
+        const userID = localStorage.getItem("userID");
 
-    // Fetch current Limbucks and purchased games
-    const { data, error } = await supabase
-        .from('limbucks')
-        .select('*')
-        .eq("userID", userID);
-    
-    if (error || !data || data.length === 0) {
-        console.error('Error fetching Limbucks or no user data found:', error);
-        return;
-    }
-
-    const userLimbucks = data[0].amount;
-    const userGames = data[0].games || {};
-
-    // Find the game details from the game list
-    const gameToBuy = gameList.find(item => item.name === game);
-    if (!gameToBuy) {
-        alert(`Game ${game} not found.`);
-        return;
-    }
-
-    // Check if the user can afford the game
-    if (userLimbucks >= gameToBuy.cost) {
-        // Update the user's games and reduce the amount of Limbucks
-        const newAmount = userLimbucks - gameToBuy.cost;
-        const updatedGames = { ...userGames, [gameToBuy.name]: true };
-
-        // Update the Limbucks table with the new amount and games
-        const { error: updateError } = await supabase
+        // Fetch current Limbucks and purchased games for this user
+        const { data, error } = await supabase
             .from('limbucks')
-            .upsert({ userID, amount: newAmount, games: updatedGames });
+            .select('amount, games')
+            .eq('userID', userID)
+            .single();  // Use single() since you expect only one record for each userID
 
-        if (updateError) {
-            console.error('Error updating Limbucks:', updateError);
+        if (error) {
+            throw new Error('Error fetching Limbucks data.');
+        }
+
+        // Extract user's current Limbucks and games
+        const userLimbucks = data?.amount || 0;
+        const userGames = data?.games || {};
+
+        // Find the game details
+        const gameToBuy = gameList.find(item => item.name === game);
+        if (!gameToBuy) {
+            alert(`Game ${game} not found.`);
             return;
         }
 
-        alert(`You bought ${gameToBuy.name}!`);
-        updateDisplay();  // Refresh the display with updated values
-    } else {
-        alert(`You are ${gameToBuy.cost - userLimbucks} Limbucks short!`);
+        // Check if the user already owns the game
+        if (userGames[gameToBuy.name]) {
+            alert(`You already own ${gameToBuy.name}.`);
+            await showGames();
+            return;
+        }
+
+        // Check if the user can afford the game
+        if (userLimbucks >= gameToBuy.cost) {
+            // Deduct the cost and update the user's game list
+            const newAmount = userLimbucks - gameToBuy.cost;
+            const updatedGames = { ...userGames, [gameToBuy.name]: true };
+
+            // Update Supabase with new amount and games
+            const { error: updateError } = await supabase
+                .from('limbucks')
+                .upsert({ userID, amount: newAmount, games: updatedGames });
+
+            if (updateError) {
+                throw new Error('Error updating Limbucks data.');
+            }
+
+            // Notify user and refresh the display
+            alert(`You bought ${gameToBuy.name}!`);
+            await updateDisplay();  // Update display after buying
+
+        } else {
+            // User doesn't have enough Limbucks
+            const deficit = gameToBuy.cost - userLimbucks;
+            alert(`You are ${deficit} Limbucks short!`);
+        }
+
+    } catch (error) {
+        console.error('Error during the buying process:', error.message);
     }
 }
 

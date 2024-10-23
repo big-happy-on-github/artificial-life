@@ -1399,12 +1399,29 @@ const gridSize = 50; // Size of each grid square
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
 
-// Draw the grid and the path
 function drawGrid() {
-    ctx.strokeStyle = '	#3b3b3b'; // Light gray for grid lines
+    ctx.strokeStyle = '#3b3b3b'; // Grid lines color
+
     for (let x = 0; x < canvas.width; x += gridSize) {
         for (let y = 0; y < canvas.height; y += gridSize) {
-            ctx.strokeRect(x, y, gridSize, gridSize);
+            const gridX = Math.floor(x / gridSize);
+            const gridY = Math.floor(y / gridSize);
+            const squareKey = `${gridX},${gridY}`;
+
+            // Check if this square is occupied (either by a tower or a blocked image)
+            if (occupiedSquares.has(squareKey)) {
+                if (blockedImages.has(squareKey)) {
+                    // If it's a blocked square, draw the corresponding image
+                    const img = new Image();
+                    img.src = blockedImages.get(squareKey);
+                    img.onload = () => {
+                        ctx.drawImage(img, x, y, gridSize, gridSize); // Draw the image on the grid
+                    };
+                }
+            } else {
+                // Draw normal grid square
+                ctx.strokeRect(x, y, gridSize, gridSize);
+            }
         }
     }
 }
@@ -1865,6 +1882,44 @@ document.addEventListener('keydown', async function(event) {
 document.addEventListener('keyup', function(event) {
     delete keysPressed[event.key];
 });
+
+// Array of image sources for the blocked squares
+const imageSources = [
+    'path/to/image1.png',
+    'path/to/image2.png',
+    'path/to/image3.png',
+    'path/to/image4.png'
+];
+
+// Array of image sources for the blocked squares
+const imageSources = [
+    'path/to/image1.png',
+    'path/to/image2.png',
+    'path/to/image3.png',
+    'path/to/image4.png'
+];
+
+// Number of random squares to block
+const numberOfBlockedSquares = 5;
+let blockedImages = new Map();  // To store the image associated with blocked squares
+
+// Randomly generate blocked squares and add them to occupiedSquares
+function generateBlockedSquares() {
+    while (blockedImages.size < numberOfBlockedSquares) {
+        const randomX = Math.floor(Math.random() * gridWidth);
+        const randomY = Math.floor(Math.random() * gridHeight);
+        const squareKey = `${randomX},${randomY}`;
+        
+        if (!occupiedSquares.has(squareKey)) {
+            occupiedSquares.add(squareKey);  // Mark the square as occupied
+            const randomImage = imageSources[Math.floor(Math.random() * imageSources.length)];
+            blockedImages.set(squareKey, randomImage);  // Assign a random image to the blocked square
+        }
+    }
+}
+
+// Call this when the game starts to initialize blocked squares
+generateBlockedSquares();
 
 // Initialize the game
 updateHUD();

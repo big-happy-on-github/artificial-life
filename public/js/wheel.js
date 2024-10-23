@@ -19,7 +19,7 @@ if (!localStorage.getItem("userID")) {
 const userID = localStorage.getItem("userID");
 
 // Import the Supabase client
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
 const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
 const supabaseUrl = JSON.parse(await response1.text());
@@ -67,17 +67,41 @@ async function checkCooldown() {
 
 async function updateSpinTime() {
     const currentTime = new Date().toISOString();
-    const { data, error } = await supabase
-        .from('wheel')
-        .upsert(
-            { userID: userID, time: currentTime },
-            { onConflict: ['userID'] } // Handle conflict resolution on the 'userID' column
-        );
 
-    if (error) {
-        console.error('Error during upsert:', error);
+    // Check if the user already exists
+    const { data: existingData, error: selectError } = await supabase
+        .from('wheel')
+        .select('userID')
+        .eq('userID', userID);
+
+    if (selectError) {
+        console.error('Error fetching user:', selectError);
+        return;
+    }
+
+    if (existingData && existingData.length > 0) {
+        // User exists, update the time
+        const { error: updateError } = await supabase
+            .from('wheel')
+            .update({ time: currentTime })
+            .eq('userID', userID);
+
+        if (updateError) {
+            console.error('Error during update:', updateError);
+        } else {
+            console.log('Update successful');
+        }
     } else {
-        console.log('Upsert successful:', data);
+        // User does not exist, insert new record
+        const { error: insertError } = await supabase
+            .from('wheel')
+            .insert({ userID: userID, time: currentTime });
+
+        if (insertError) {
+            console.error('Error during insert:', insertError);
+        } else {
+            console.log('Insert successful');
+        }
     }
 }
 

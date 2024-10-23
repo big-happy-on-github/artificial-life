@@ -158,7 +158,7 @@ function showTowerStats(tower, showButtons=true) {
     towerTypeDisplay.textContent = `${towerType} tower`;
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health} hp`;
-    towerRangeDisplay.textContent = `${tower.range/50} square range`;
+    towerRangeDisplay.textContent = `${tower.range/gridSize} square range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
     towerDescDisplay.textContent = tower.desc;
     upgrade1Button.disabled = false;
@@ -289,7 +289,7 @@ upgrade1Button.addEventListener('click', (event) => {
             towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range/50} square range ➔ ${(showing.range + upgradeInfo.range)/50}`;
+            towerRangeDisplay.textContent = `${showing.range/gridSize} square range ➔ ${(showing.range + upgradeInfo.range)/gridSize}`;
 
             if (showing.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
@@ -362,7 +362,7 @@ upgrade2Button.addEventListener('click', (event) => {
             towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range/50} square range ➔ ${(showing.range + upgradeInfo.range)/50}`;
+            towerRangeDisplay.textContent = `${showing.range/gridSize} square range ➔ ${(showing.range + upgradeInfo.range)/gridSize}`;
 
             if (showing.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
@@ -1415,7 +1415,7 @@ function drawGrid() {
                     const img = new Image();
                     img.src = blockedImages.get(squareKey);
                     img.onload = () => {
-                        ctx.drawImage(img, x, y, gridSize, gridSize); // Draw the image on the grid
+                        ctx.drawImage(img, x, y, gridSize, gridSize); // Draw the image only after it's loaded
                     };
                 }
             } else {

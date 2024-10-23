@@ -156,18 +156,49 @@ async function buy(game) {
         localStorage.setItem("userID", generateRandomString(50));
     }
     const userID = localStorage.getItem("userID");
+
+    // Fetch current Limbucks and purchased games
     const { data, error } = await supabase
         .from('limbucks')
         .select('*')
         .eq("userID", userID);
-    const result = gameList.find(item => item.name === game);
-    if (data[0].amount >= result.cost) {
-        await addData(data[0].amount-result.cost, userID, { ...data[0].games, [result.name]: true });
-        alert(`bought ${result.name}!`);
-    } else {
-        alert(`you are ${result.cost-data[0].amount} limbucks short!`);
+    
+    if (error || !data || data.length === 0) {
+        console.error('Error fetching Limbucks or no user data found:', error);
+        return;
     }
-    updateDisplay();
+
+    const userLimbucks = data[0].amount;
+    const userGames = data[0].games || {};
+
+    // Find the game details from the game list
+    const gameToBuy = gameList.find(item => item.name === game);
+    if (!gameToBuy) {
+        alert(`Game ${game} not found.`);
+        return;
+    }
+
+    // Check if the user can afford the game
+    if (userLimbucks >= gameToBuy.cost) {
+        // Update the user's games and reduce the amount of Limbucks
+        const newAmount = userLimbucks - gameToBuy.cost;
+        const updatedGames = { ...userGames, [gameToBuy.name]: true };
+
+        // Update the Limbucks table with the new amount and games
+        const { error: updateError } = await supabase
+            .from('limbucks')
+            .upsert({ userID, amount: newAmount, games: updatedGames });
+
+        if (updateError) {
+            console.error('Error updating Limbucks:', updateError);
+            return;
+        }
+
+        alert(`You bought ${gameToBuy.name}!`);
+        updateDisplay();  // Refresh the display with updated values
+    } else {
+        alert(`You are ${gameToBuy.cost - userLimbucks} Limbucks short!`);
+    }
 }
 
 async function updateDisplay() {

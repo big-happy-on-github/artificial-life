@@ -231,6 +231,7 @@ async function updateDisplay() {
     await showGames();
 }
 
+getLimbucks();
 updateDisplay();
 if (!localStorage.getItem("userID")) {
     localStorage.setItem("userID", generateRandomString(50));

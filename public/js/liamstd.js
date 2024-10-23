@@ -1859,7 +1859,9 @@ document.addEventListener('keyup', function(event) {
 // Preload images for the blocked squares
 const imageSources = [
     'https://www.fertilome.com/media/klowrey/Article%20Images/Tree.jpg',
-    'https://s40170.pcdn.co/wp-content/uploads/2022/01/close-up-view-of-rock-aggregates.png'
+    'https://s40170.pcdn.co/wp-content/uploads/2022/01/close-up-view-of-rock-aggregates.png',
+    'https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://uplink.weforum.org/uplink/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_jpg&versionId=068TE000007b39WYAQ'
 ];
 
 const numberOfBlockedSquares = 5;

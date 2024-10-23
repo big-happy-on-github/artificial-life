@@ -1862,6 +1862,7 @@ const imageSources = [
     'https://s40170.pcdn.co/wp-content/uploads/2022/01/close-up-view-of-rock-aggregates.png'
 ];
 
+const numberOfBlockedSquares = 2;
 let blockedImages = new Map();
 let imageCache = {};
 

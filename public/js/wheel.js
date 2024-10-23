@@ -69,9 +69,11 @@ async function updateSpinTime() {
     const currentTime = new Date().toISOString();
     const { data, error } = await supabase
         .from('wheel')
-        .upsert({ userID: userID, time: currentTime })
-        .onConflict('userID'); // Ensures conflict resolution by userID
-    
+        .upsert(
+            { userID: userID, time: currentTime },
+            { onConflict: ['userID'] } // Handle conflict resolution on the 'userID' column
+        );
+
     if (error) {
         console.error('Error during upsert:', error);
     } else {

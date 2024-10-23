@@ -1885,18 +1885,8 @@ document.addEventListener('keyup', function(event) {
 
 // Array of image sources for the blocked squares
 const imageSources = [
-    'path/to/image1.png',
-    'path/to/image2.png',
-    'path/to/image3.png',
-    'path/to/image4.png'
-];
-
-// Array of image sources for the blocked squares
-const imageSources = [
-    'path/to/image1.png',
-    'path/to/image2.png',
-    'path/to/image3.png',
-    'path/to/image4.png'
+    'https://www.fertilome.com/media/klowrey/Article%20Images/Tree.jpg',
+    'https://s40170.pcdn.co/wp-content/uploads/2022/01/close-up-view-of-rock-aggregates.png'
 ];
 
 // Number of random squares to block

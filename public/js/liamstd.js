@@ -1399,33 +1399,6 @@ const gridSize = 50; // Size of each grid square
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
 
-function drawGrid() {
-    ctx.strokeStyle = '#3b3b3b'; // Grid lines color
-
-    for (let x = 0; x < canvas.width; x += gridSize) {
-        for (let y = 0; y < canvas.height; y += gridSize) {
-            const gridX = Math.floor(x / gridSize);
-            const gridY = Math.floor(y / gridSize);
-            const squareKey = `${gridX},${gridY}`;
-
-            // Check if this square is occupied (either by a tower or a blocked image)
-            if (occupiedSquares.has(squareKey)) {
-                if (blockedImages.has(squareKey)) {
-                    // If it's a blocked square, draw the corresponding image
-                    const img = new Image();
-                    img.src = blockedImages.get(squareKey);
-                    img.onload = () => {
-                        ctx.drawImage(img, x, y, gridSize, gridSize); // Draw the image only after it's loaded
-                    };
-                }
-            } else {
-                // Draw normal grid square
-                ctx.strokeRect(x, y, gridSize, gridSize);
-            }
-        }
-    }
-}
-
 function isSquareAvailable(x, y) {
     const gridX = Math.floor(x / gridSize);
     const gridY = Math.floor(y / gridSize);
@@ -1883,17 +1856,67 @@ document.addEventListener('keyup', function(event) {
     delete keysPressed[event.key];
 });
 
-// Array of image sources for the blocked squares
+// Preload images for the blocked squares
 const imageSources = [
     'https://www.fertilome.com/media/klowrey/Article%20Images/Tree.jpg',
     'https://s40170.pcdn.co/wp-content/uploads/2022/01/close-up-view-of-rock-aggregates.png'
 ];
 
-// Number of random squares to block
-const numberOfBlockedSquares = 5;
-let blockedImages = new Map();  // To store the image associated with blocked squares
+let blockedImages = new Map();
+let imageCache = {};
 
-// Randomly generate blocked squares and add them to occupiedSquares
+// Preload all images
+function preloadImages(sources, callback) {
+    let loadedImages = 0;
+    const numImages = sources.length;
+
+    sources.forEach(src => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+            loadedImages++;
+            imageCache[src] = img;
+            if (loadedImages >= numImages) {
+                callback(); // All images are loaded, start drawing
+            }
+        };
+        img.onerror = () => {
+            console.error(`Failed to load image at ${src}`);
+        };
+    });
+}
+
+// After all images are preloaded, start the game loop
+preloadImages(imageSources, () => {
+    generateBlockedSquares();
+    gameLoop();
+});
+
+function drawGrid() {
+    ctx.strokeStyle = '#3b3b3b'; // Grid lines color
+
+    for (let x = 0; x < canvas.width; x += gridSize) {
+        for (let y = 0; y < canvas.height; y += gridSize) {
+            const gridX = Math.floor(x / gridSize);
+            const gridY = Math.floor(y / gridSize);
+            const squareKey = `${gridX},${gridY}`;
+
+            // Check if this square is occupied (either by a tower or a blocked image)
+            if (occupiedSquares.has(squareKey)) {
+                if (blockedImages.has(squareKey)) {
+                    const imgSrc = blockedImages.get(squareKey);
+                    if (imageCache[imgSrc]) {
+                        ctx.drawImage(imageCache[imgSrc], x, y, gridSize, gridSize); // Draw the image from cache
+                    }
+                }
+            } else {
+                // Draw normal grid square
+                ctx.strokeRect(x, y, gridSize, gridSize);
+            }
+        }
+    }
+}
+
 function generateBlockedSquares() {
     while (blockedImages.size < numberOfBlockedSquares) {
         const randomX = Math.floor(Math.random() * gridWidth);
@@ -1907,9 +1930,6 @@ function generateBlockedSquares() {
         }
     }
 }
-
-// Call this when the game starts to initialize blocked squares
-generateBlockedSquares();
 
 // Initialize the game
 updateHUD();

@@ -19,7 +19,7 @@ if (!localStorage.getItem("userID")) {
 const userID = localStorage.getItem("userID");
 
 // Import the Supabase client
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
 const supabaseUrl = JSON.parse(await response1.text());

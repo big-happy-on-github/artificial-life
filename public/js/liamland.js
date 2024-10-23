@@ -7,7 +7,7 @@ const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, 
 const supabaseKey = JSON.parse(await response2.text());
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const gameList = [{ name: "liamstd", cost: 0 }, { name: "chat", cost: 0 }, { name: "wheel", cost: 0 }, { name: "admin", cost: 1/0 }];
+const gameList = [{ name: "liamstd", cost: 0 }, { name: "chat", cost: 0 }, { name: "wheel", cost: 0 }, { name: "shadowboxing", cost: 5 }, { name: "admin", cost: 1/0 }];
 
 // Function to add data to Supabase
 async function addData(feedback) {

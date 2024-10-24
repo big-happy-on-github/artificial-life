@@ -138,17 +138,14 @@ async function showGames() {
             .from('limbucks')
             .select('games')
             .eq('userID', userID)
-            .headers({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            })
             .single();
 
         if (error) {
+            console.error('Error fetching user games data:', error);
             throw new Error('Error fetching user games data.');
         }
 
-        const games = data[0]?.games || {}; // Fallback to an empty object if no games are found
+        const games = data?.games || {}; // Fallback to an empty object if no games are found
 
         // Iterate through the game list to update buttons accordingly
         gameList.forEach(game => {

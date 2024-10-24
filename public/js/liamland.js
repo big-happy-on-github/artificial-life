@@ -6,6 +6,8 @@ const supabaseUrl = JSON.parse(await response1.text());
 const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
 const supabaseKey = JSON.parse(await response2.text());
 const supabase = createClient(supabaseUrl, supabaseKey);
+console.log(supabase);
+console.log(supabaseKey);
 
 const gameList = [{ name: "liamstd", cost: 0 }, { name: "chat", cost: 0 }, { name: "wheel", cost: 0 }, { name: "shadowboxing", cost: 5 }, { name: "admin", cost: 1/0 }];
 

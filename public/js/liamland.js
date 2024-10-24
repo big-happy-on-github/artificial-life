@@ -123,6 +123,7 @@ async function getLimbucks() {
 }
 
 async function showGames() {
+    await getLimbucks();
     try {
         // Ensure userID is present
         if (!localStorage.getItem("userID")) {

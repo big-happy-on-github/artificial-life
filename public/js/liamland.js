@@ -71,7 +71,7 @@ async function addLimbucks(amount, userID, games) {
         // Add or update data in Supabase
         const { data, error } = await supabase
             .from('limbucks')
-            .upsert({ amount, userID, games });
+            .upsert({ amount: amount, userID: userID, games: games });
         
         if (error) {
             throw error;

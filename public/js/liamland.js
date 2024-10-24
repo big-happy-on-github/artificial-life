@@ -125,7 +125,6 @@ async function getLimbucks() {
 }
 
 async function showGames() {
-    await getLimbucks();
     try {
         // Ensure userID is present
         if (!localStorage.getItem("userID")) {
@@ -231,8 +230,8 @@ async function buy(gameName) {
 }
 
 async function updateDisplay() {
-    await getLimbucks();
     await showGames();
+    await getLimbucks();
 }
 
 getLimbucks();

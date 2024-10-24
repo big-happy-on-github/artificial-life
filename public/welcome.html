@@ -128,7 +128,8 @@
             .select('*')
             .eq('project_name', 'shadowboxing');
 
-        document.getElementById("shadowboxingP").textContent += ` (${data[0].num_visits} visits)`;
+        const num_visits = data?.num_visits || 0; // Fallback to 0 if undefined
+        document.getElementById("shadowboxingP").textContent += ` (${num_visits} visits)`;
     </script>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';

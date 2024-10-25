@@ -9,6 +9,26 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const gameList = [{ name: "liamstd", cost: 0 }, { name: "chat", cost: 0 }, { name: "wheel", cost: 0 }, { name: "shadowboxing", cost: 5 }, { name: "admin", cost: Infinity }];
 
+// Function to add data to Supabase
+async function addLimbucks(amount, userID, games) {
+    try {
+        const { data, error } = await supabase
+            .from('limbucks')
+            .upsert(
+                { userID, amount: amount, games: games }, 
+                { onConflict: ['userID'], returning: '*' } // This will return the updated row(s)
+            );
+        
+        if (error) {
+            throw error;
+        }
+        
+        console.log('Data inserted or updated:', data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 async function getLimbucks() {
     const userID = localStorage.getItem("userID") || generateRandomString(50);
     localStorage.setItem("userID", userID);

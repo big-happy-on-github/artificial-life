@@ -218,7 +218,7 @@ async function buy(gameName) {
 
             const { error: updateError } = await supabase
                 .from('limbucks')
-                .upsert({ userID, amount: newAmount, games: updatedGames });
+                .upsert({ userID, amount: newAmount, games: updatedGames }, { onConflict: ['userID'] });
 
             if (updateError) {
                 throw new Error('Error updating user Limbucks data.');

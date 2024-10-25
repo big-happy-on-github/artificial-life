@@ -9,70 +9,83 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Use localStorage to get the user ID
 const playerId = localStorage.getItem('userID');
 
-// Movement variables
-let playerPosition = { x: 0, y: 0 };
-const playerElement = document.getElementById('player');
-const enemyElement = document.getElementById('enemy');
+const player = document.getElementById('player');
+const enemy = document.getElementById('enemy');
+const timerDisplay = document.getElementById('timer');
+const enemyNameDisplay = document.getElementById('enemyName');
 
-// Enemy name prompt
-const enemyName = prompt('Enter the enemy name:');
-document.getElementById('enemyName').textContent = `Enemy Name: ${enemyName}`;
+// Game settings
+const gameDuration = 30; // 30 seconds game duration
+let timeLeft = gameDuration;
+let gameInterval;
+let enemyMoveInterval;
+const playerSpeed = 10;
+const enemySpeed = 5;
 
-function movePlayer(direction) {
-    const stepSize = 10; // Pixels per move
-    switch (direction) {
-        case 'up':
-            playerPosition.y -= stepSize;
-            break;
-        case 'down':
-            playerPosition.y += stepSize;
-            break;
-        case 'left':
-            playerPosition.x -= stepSize;
-            break;
-        case 'right':
-            playerPosition.x += stepSize;
-            break;
-    }
-    updatePlayerPosition();
+// Enemy moves randomly within bounds
+function moveEnemy() {
+    const gameContainer = document.getElementById('game-container');
+    const maxLeft = gameContainer.clientWidth - enemy.clientWidth;
+    const maxTop = gameContainer.clientHeight - enemy.clientHeight;
+    
+    const randomX = Math.floor(Math.random() * maxLeft);
+    const randomY = Math.floor(Math.random() * maxTop);
+
+    enemy.style.left = `${randomX}px`;
+    enemy.style.top = `${randomY}px`;
 }
 
-function updatePlayerPosition() {
-    playerElement.style.transform = `translate(${playerPosition.x}px, ${playerPosition.y}px)`;
+// Start the game timer
+function startTimer() {
+    timeLeft = gameDuration;
+    timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+
+    gameInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            endGame();
+        }
+    }, 1000);
 }
 
-// Arrow key event listener
+// End the game
+function endGame() {
+    clearInterval(gameInterval);
+    clearInterval(enemyMoveInterval);
+    timerDisplay.textContent = 'Time Up!';
+
+    // Optionally log end of game data to Supabase
+    // supabase.from('game_events').insert([{ event: 'game_end', duration: gameDuration }]);
+    alert('Game over!'); // Simple game over message
+}
+
+// Handle player movement with arrow keys
 document.addEventListener('keydown', (event) => {
+    const playerRect = player.getBoundingClientRect();
+    const gameRect = document.getElementById('game-container').getBoundingClientRect();
+
     switch (event.key) {
         case 'ArrowUp':
-            movePlayer('up');
+            if (playerRect.top > gameRect.top) player.style.top = `${player.offsetTop - playerSpeed}px`;
             break;
         case 'ArrowDown':
-            movePlayer('down');
+            if (playerRect.bottom < gameRect.bottom) player.style.top = `${player.offsetTop + playerSpeed}px`;
             break;
         case 'ArrowLeft':
-            movePlayer('left');
+            if (playerRect.left > gameRect.left) player.style.left = `${player.offsetLeft - playerSpeed}px`;
             break;
         case 'ArrowRight':
-            movePlayer('right');
+            if (playerRect.right < gameRect.right) player.style.left = `${player.offsetLeft + playerSpeed}px`;
             break;
     }
 });
 
-async function getRanking() {
-    const { data, error } = await supabase
-        .from('shadowboxing_rankings')
-        .select('ranking')
-        .eq('player_id', playerId)
-        .single();
-    
-    if (error) throw error;
-    return data ? data.ranking : 1000; // Default ranking if not found
+// Initialize game
+function startGame() {
+    startTimer();
+    enemyMoveInterval = setInterval(moveEnemy, 500); // Move enemy every 500ms
 }
 
-// Other game-related functions remain the same
-
-// Function to periodically update the display of ongoing shadowboxing_games
-updateDisplay();
-updateVisits();
-setInterval(updateDisplay, 1000); // Update every second to reflect ongoing shadowboxing_games
+// Begin game on load
+window.addEventListener('load', startGame);

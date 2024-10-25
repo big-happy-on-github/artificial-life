@@ -103,12 +103,19 @@ async function getLimbucks() {
     try {
         const { data, error } = await supabase
             .from('limbucks')
-            .select('amount')
-            .eq("userID", userID);
-        
-        if (error) {
+            .select('games')
+            .eq('userID', userID)
+            .single();
+    
+        if (error && error.code === 'PGRST116') {
+            console.warn('User data not found. Initializing with default values.');
+            // Initialize data here if needed, or display a message
+        } else if (error) {
             throw error;
         }
+    
+        // Process data if found
+        const games = data ? data.games : {};
         
         if (data && data.length > 0) {
             // Data exists, display the amount

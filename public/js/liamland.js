@@ -70,10 +70,12 @@ window.addData = addData;
 // Function to add data to Supabase
 async function addLimbucks(amount, userID, games) {
     try {
-        // Add or update data in Supabase
         const { data, error } = await supabase
             .from('limbucks')
-            .upsert({ amount: amount, userID: userID, games: games }, { onConflict: ['userID'] });
+            .upsert(
+                { userID, amount: newAmount, games: updatedGames }, 
+                { onConflict: ['userID'], returning: '*' } // This will return the updated row(s)
+            );
         
         if (error) {
             throw error;

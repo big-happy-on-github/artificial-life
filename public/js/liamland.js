@@ -73,7 +73,7 @@ async function addLimbucks(amount, userID, games) {
         const { data, error } = await supabase
             .from('limbucks')
             .upsert(
-                { userID, amount: newAmount, games: updatedGames }, 
+                { userID, amount: amount, games: games }, 
                 { onConflict: ['userID'], returning: '*' } // This will return the updated row(s)
             );
         

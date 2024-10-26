@@ -43,7 +43,7 @@ function translate(direction) {
 }
 
 function update() {
-    movesToDo = combos.length;
+    movesToDo = combo.length;
     if (playerMove || !turn) {
         if (!enemyMove) {
             console.log("calculating");

@@ -9,15 +9,17 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 let turn = 1; // Start with player's turn
 let playerMove = null;
 let enemyMove = null;
+let winning = 1;
 let combo = []; 
 
 function dead() {
-    alert(turn ? "You won!" : "You lost :(");
+    alert(winning ? "You won!" : "You lost :(");
     restart();
 }
 
 function restart() {
     turn = 1; // Set to 1 to start with player's turn
+    winning = 1;
     playerMove = null;
     enemyMove = null;
     combo = [];
@@ -40,19 +42,22 @@ function update() {
         if (playerMove == enemyMove) {
             combo.push(playerMove);
             console.log("Move matched, added to combo:", combo);
+            winning = turn;
         } else {
             console.log("Moves did not match.");
+            combo = [];
             turn = 1 - turn;
         }
         playerMove = null;
-        enemyMove = null; 
+        enemyMove = null;
         update();
     }
 }
 
 function calculate() {
     const options = ["n", "e", "s", "w"];
-    enemyMove = options.find(option => !combo.includes(option)) || "n";
+    const possible = options.filter(option => !combo.includes(option));
+    enemyMove = possible[Math.floor(Math.random() * possible.length)];
     console.log("Enemy calculated move:", enemyMove);
     update(); // Call update to process the enemy move
 }
@@ -83,7 +88,6 @@ document.addEventListener('keydown', (event) => {
         console.log("Player Move:", playerMove);
     } else {
         console.log("Enemy's turn, key ignored.");
-        turn = 1;
     }
     update();
 });

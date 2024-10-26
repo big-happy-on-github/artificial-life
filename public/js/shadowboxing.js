@@ -81,10 +81,10 @@ document.addEventListener('keydown', (event) => {
             return;
         }
         console.log("Player Move:", playerMove);
-        update(); // Call update after player's move
     } else {
         console.log("Enemy's turn, key ignored.");
     }
+    update();
 });
 
 update();

@@ -43,7 +43,7 @@ function update() {
             combo = [];
             turn = 1 - turn;
         }
-        document.getElementById("offense").textContent = attacking ? "your turn!" : "enemy is attacking now";
+        document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
         document.getElementById("result").textContent = `enemy move: ${enemyMove}`;
         attacking = turn;
         playerMove = null;

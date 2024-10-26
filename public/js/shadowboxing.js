@@ -11,6 +11,7 @@ let playerMove = null;
 let enemyMove = null;
 let attacking = 1;
 let combo = []; 
+let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {
     alert(attacking ? "You won!" : "You lost :(");
@@ -56,6 +57,13 @@ function update() {
 function calculate() {
     const options = ["n", "e", "s", "w"];
     const possible = options.filter(option => !combo.includes(option));
+    if (!attacking) { // Enemy is attacking, use the player's past defending moves
+        const mostLikelyDefendMove = Object.keys(playerMoveHistory).reduce((a, b) => playerMoveHistory[a] > playerMoveHistory[b] ? a : b);
+        possible = options.filter(option => option !== mostLikelyDefendMove);
+    } else { // Enemy is defending, avoid player's common attack moves
+        const mostLikelyAttackMove = Object.keys(playerMoveHistory).reduce((a, b) => playerMoveHistory[a] > playerMoveHistory[b] ? a : b);
+        possible = options.filter(option => option !== mostLikelyAttackMove);
+    }
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     console.log("Enemy calculated move:", enemyMove);
     document.getElementById("result").textContent = `enemy move: ${enemyMove}`;
@@ -84,6 +92,7 @@ document.addEventListener('keydown', (event) => {
         playerMove = null;
         return;
     }
+    playerMoveHistory[playerMove]++;
     update();
 });
 

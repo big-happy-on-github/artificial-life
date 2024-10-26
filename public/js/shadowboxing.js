@@ -61,9 +61,6 @@ function update() {
     }
 
     document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
-    if (enemyMove) {
-        document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
-    }
     document.getElementById("combo").textContent = "current combo:";
     combo.forEach(move => {
         document.getElementById("combo").textContent += ` ${translate(move)}`;
@@ -79,6 +76,7 @@ function calculate() {
     const options = ["n", "e", "s", "w"];
     let possible = options.filter(option => !combo.includes(option));
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
+    document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
     console.log("Enemy calculated move:", enemyMove);
     update(); // Call update to process the enemy move
 }

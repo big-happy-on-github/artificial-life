@@ -24,7 +24,7 @@ function restart() {
     playerMove = null;
     enemyMove = null;
     combo = [];
-    console.log("Game restarted. Player's turn.");
+    update();
 }
 
 function translate(direction) {
@@ -40,7 +40,6 @@ function translate(direction) {
 }
 
 function update() {
-    console.log("Update called - Combo:", combo, "Turn:", turn ? "Player" : "Enemy", "Attacking:", attacking ? "Player" : "Enemy");
     if (playerMove || !turn) {
         if (!enemyMove) {
             console.log("calculating");
@@ -49,9 +48,7 @@ function update() {
         }
         if (playerMove == enemyMove) {
             combo.push(playerMove);
-            console.log("Move matched, added to combo:", combo);
         } else {
-            console.log("Moves did not match.");
             combo = [];
             turn = 1 - turn;
         }
@@ -80,7 +77,6 @@ function calculate() {
     let possible = options.filter(option => !combo.includes(option));
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     document.getElementById("result").textContent = `last enemy move: ${translate(enemyMove)}`;
-    console.log("Enemy calculated move:", enemyMove);
     update(); // Call update to process the enemy move
 }
 

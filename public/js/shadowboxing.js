@@ -56,7 +56,7 @@ function update() {
 
 function calculate() {
     const options = ["n", "e", "s", "w"];
-    const possible = options.filter(option => !combo.includes(option));
+    let possible = options.filter(option => !combo.includes(option));
     if (!attacking) { // Enemy is attacking, use the player's past defending moves
         const mostLikelyDefendMove = Object.keys(playerMoveHistory).reduce((a, b) => playerMoveHistory[a] > playerMoveHistory[b] ? a : b);
         possible = options.filter(option => option !== mostLikelyDefendMove);

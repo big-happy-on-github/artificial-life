@@ -28,7 +28,6 @@ function restart() {
 }
 
 function update() {
-    document.getElementById("offense").textContent = attacking ? "your turn!" : "enemy is attacking now";
     console.log("Update called - Combo:", combo, "Turn:", turn ? "Player" : "Enemy", "Attacking:", attacking ? "Player" : "Enemy");
     if (playerMove || !turn) {
         if (!enemyMove) {
@@ -44,6 +43,8 @@ function update() {
             combo = [];
             turn = 1 - turn;
         }
+        document.getElementById("offense").textContent = attacking ? "your turn!" : "enemy is attacking now";
+        document.getElementById("result").textContent = `enemy move: ${enemyMove}`;
         attacking = turn;
         playerMove = null;
         enemyMove = null;
@@ -67,7 +68,6 @@ function calculate() {
     }
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     console.log("Enemy calculated move:", enemyMove);
-    document.getElementById("result").textContent = `enemy move: ${enemyMove}`;
     update(); // Call update to process the enemy move
 }
 

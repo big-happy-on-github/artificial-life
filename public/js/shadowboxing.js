@@ -28,7 +28,7 @@ function restart() {
 }
 
 function update() {
-    document.getElementById("offense").textContent = attacking ? "your turn!", "enemy is attacking now";
+    document.getElementById("offense").textContent = attacking ? "your turn!" : "enemy is attacking now";
     console.log("Update called - Combo:", combo, "Turn:", turn ? "Player" : "Enemy", "Attacking:", attacking ? "Player" : "Enemy");
     if (playerMove || !turn) {
         if (!enemyMove) {

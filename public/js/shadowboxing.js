@@ -82,3 +82,5 @@ document.addEventListener('keydown', (event) => {
         console.log("Enemy's turn, key ignored.");
     }
 });
+
+update();

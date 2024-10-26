@@ -6,86 +6,74 @@ const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, 
 const supabaseKey = JSON.parse(await response2.text());
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Use localStorage to get the user ID
-const playerId = localStorage.getItem('userID');
+let turn = 0; //false for enemy true for player
+let playerMove; //string "n", "e", "s", "w"
+let enemyMove; //string "n", "e", "s", "w"
+let combo = []; //max 2, if 3 than call dead()
 
-const player = document.getElementById('player');
-const enemy = document.getElementById('enemy');
-const timerDisplay = document.getElementById('timer');
-const enemyNameDisplay = document.getElementById('enemyName');
-
-// Game settings
-const gameDuration = 30; // 30 seconds game duration
-let timeLeft = gameDuration;
-let gameInterval;
-let enemyMoveInterval;
-const playerSpeed = 10;
-const enemySpeed = 5;
-
-// Enemy moves randomly within bounds
-function moveEnemy() {
-    const gameContainer = document.getElementById('game-container');
-    const maxLeft = gameContainer.clientWidth - enemy.clientWidth;
-    const maxTop = gameContainer.clientHeight - enemy.clientHeight;
-    
-    const randomX = Math.floor(Math.random() * maxLeft);
-    const randomY = Math.floor(Math.random() * maxTop);
-
-    enemy.style.left = `${randomX}px`;
-    enemy.style.top = `${randomY}px`;
+function dead() {
+    turn ? alert("you won!") : alert("you lost :(");
+    restart();
 }
 
-// Start the game timer
-function startTimer() {
-    timeLeft = gameDuration;
-    timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+function restart() {
+    turn = 0;
+    playerMove = null;
+    enemyMove = null;
+    combo = [];
+}
 
-    gameInterval = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = `Time Left: ${timeLeft}s`;
-        if (timeLeft <= 0) {
-            endGame();
+function update() {
+    if (combo.length >= 3) {
+        dead();
+    } if (!turn) {
+        calculate();
+    } if (playerMove || enemyMove) {
+        if (playerMove == enemyMove) {
+            combo++;
         }
-    }, 1000);
+        playerMove = null;
+        enemyMove = null;
+    console.log(combo);
+    console.log(turn);
 }
 
-// End the game
-function endGame() {
-    clearInterval(gameInterval);
-    clearInterval(enemyMoveInterval);
-    timerDisplay.textContent = 'Time Up!';
-
-    // Optionally log end of game data to Supabase
-    // supabase.from('game_events').insert([{ event: 'game_end', duration: gameDuration }]);
-    alert('Game over!'); // Simple game over message
+function calculate() {
+    const options = ["n", "e", "s", "w"];
+    options.forEach(option => {
+        combo.forEach(comboMove => {
+            if (option != comboMove) {
+                enemyMove = option;
+                break;
+            }
+        });
+    });
 }
 
 // Handle player movement with arrow keys
 document.addEventListener('keydown', (event) => {
-    const playerRect = player.getBoundingClientRect();
-    const gameRect = document.getElementById('game-container').getBoundingClientRect();
-
-    switch (event.key) {
-        case 'ArrowUp':
-            if (playerRect.top > gameRect.top) player.style.top = `${player.offsetTop - playerSpeed}px`;
-            break;
-        case 'ArrowDown':
-            if (playerRect.bottom < gameRect.bottom) player.style.top = `${player.offsetTop + playerSpeed}px`;
-            break;
-        case 'ArrowLeft':
-            if (playerRect.left > gameRect.left) player.style.left = `${player.offsetLeft - playerSpeed}px`;
-            break;
-        case 'ArrowRight':
-            if (playerRect.right < gameRect.right) player.style.left = `${player.offsetLeft + playerSpeed}px`;
-            break;
+    if (turn) {
+        combo.forEach(move => {
+            if (playerMove == move) {
+                alert("cannot go the same direction more than once");
+            }
+            return;
+        });
+    
+        switch (event.key) {
+            case 'ArrowUp':
+                playerMove = "n";
+                break;
+            case 'ArrowDown':
+                playerMove = "s";
+                break;
+            case 'ArrowLeft':
+                playerMove = "w";
+                break;
+            case 'ArrowRight':
+                playerMove = "e";
+                break;
+        }
+        update();
     }
 });
-
-// Initialize game
-function startGame() {
-    startTimer();
-    enemyMoveInterval = setInterval(moveEnemy, 500); // Move enemy every 500ms
-}
-
-// Begin game on load
-window.addEventListener('load', startGame);

@@ -43,9 +43,9 @@ function update() {
             console.log("Moves did not match.");
         }
         playerMove = null;
-        enemyMove = null;
-        turn = 1 - turn; // Alternate turns after processing moves
+        enemyMove = null; 
     }
+    turn = 1 - turn;
 }
 
 function calculate() {

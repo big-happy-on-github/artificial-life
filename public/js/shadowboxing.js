@@ -53,7 +53,7 @@ function calculate() {
     const options = ["n", "e", "s", "w"];
     enemyMove = options.find(option => !combo.includes(option)) || "n";
     console.log("Enemy calculated move:", enemyMove);
-    turn = 1; // Keep it enemy's turn to let update handle this move
+    turn = 0; // Keep it enemy's turn to let update handle this move
     update(); // Call update to process the enemy move
 }
 

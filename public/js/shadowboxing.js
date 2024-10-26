@@ -59,13 +59,6 @@ function update() {
 function calculate() {
     const options = ["n", "e", "s", "w"];
     let possible = options.filter(option => !combo.includes(option));
-    if (!attacking) { // Enemy is attacking, use the player's past defending moves
-        const mostLikelyDefendMove = Object.keys(playerMoveHistory).reduce((a, b) => playerMoveHistory[a] > playerMoveHistory[b] ? a : b);
-        possible = options.filter(option => option !== mostLikelyDefendMove);
-    } else { // Enemy is defending, avoid player's common attack moves
-        const mostLikelyAttackMove = Object.keys(playerMoveHistory).reduce((a, b) => playerMoveHistory[a] > playerMoveHistory[b] ? a : b);
-        possible = options.filter(option => option !== mostLikelyAttackMove);
-    }
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     console.log("Enemy calculated move:", enemyMove);
     update(); // Call update to process the enemy move

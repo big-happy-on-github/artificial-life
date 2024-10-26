@@ -36,7 +36,7 @@ function update() {
         calculate(); 
         return;
     }
-    if (playerMove || enemyMove) {
+    if (playerMove && enemyMove !== null) {
         if (playerMove == enemyMove) {
             combo.push(playerMove);
             console.log("Move matched, added to combo:", combo);
@@ -45,7 +45,7 @@ function update() {
         }
         playerMove = null;
         enemyMove = null; 
-        turn = 1 - turn;
+        turn = 1 - turn; // Switch turn
     }
 }
 

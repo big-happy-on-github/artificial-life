@@ -61,7 +61,9 @@ function update() {
     }
 
     document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
-    document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
+    if (enemyMove) {
+        document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
+    }
     document.getElementById("combo").textContent = "current combo:";
     combo.forEach(move => {
         document.getElementById("combo").textContent += ` ${translate(move)}`;
@@ -108,3 +110,4 @@ document.addEventListener('keydown', (event) => {
 });
 
 update();
+document.getElementById("result").textContent = "enemy move: nothing";

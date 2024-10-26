@@ -27,7 +27,7 @@ function restart() {
 }
 
 function update() {
-    console.log("Update called - Combo:", combo, "Turn:", turn ? "Player" : "Enemy");
+    console.log("Update called - Combo:", combo, "Turn:", turn ? "Player" : "Enemy", "Attacking:", attacking ? "Player" : "Enemy");
     if (playerMove || !turn) {
         if (!enemyMove) {
             console.log("calculating");
@@ -58,6 +58,7 @@ function calculate() {
     const possible = options.filter(option => !combo.includes(option));
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     console.log("Enemy calculated move:", enemyMove);
+    document.getElementById("result").textContent = `enemy move: ${enemyMove}`;
     update(); // Call update to process the enemy move
 }
 

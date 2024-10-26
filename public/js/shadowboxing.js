@@ -10,6 +10,7 @@ let turn = 1; // Start with player's turn
 let playerMove = null;
 let enemyMove = null;
 let attacking = 1;
+let movesToDo;
 let combo = []; 
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
@@ -42,6 +43,7 @@ function translate(direction) {
 }
 
 function update() {
+    movesToDo = combos.length;
     if (playerMove || !turn) {
         if (!enemyMove) {
             console.log("calculating");
@@ -99,11 +101,20 @@ document.addEventListener('keydown', (event) => {
         default:
             return; 
     }
-    if (combo.includes(playerMove)) {
-        alert("Cannot go the same direction more than once.");
+
+    if (playerMove == combo[movesToDo-1] && combo.length >= 1) {
+        movesToDo -=1;
+        document.getElementById("result").textContent = `last enemy move: ${translate(combo[movesToDo-1])}`;
+    } else if (playerMove != combo[movesToDo-1 && combo.length >= 1]) {
+        alert("you must repeat the prior moves in the current combo");
+        playerMove = null;
+        return;
+    } else if (combo.includes(playerMove) && combo[movesToDo-1] != playerMove) {
+        alert("you already went that direction");
         playerMove = null;
         return;
     }
+    
     playerMoveHistory[playerMove]++;
     update();
 });

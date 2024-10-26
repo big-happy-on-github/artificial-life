@@ -42,10 +42,10 @@ function update() {
             console.log("Move matched, added to combo:", combo);
         } else {
             console.log("Moves did not match.");
+            turn = 1 - turn;
         }
         playerMove = null;
         enemyMove = null; 
-        turn = 1 - turn;
         update();
     }
 }

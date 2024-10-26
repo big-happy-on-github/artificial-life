@@ -39,13 +39,15 @@ async function getLimbucks() {
             .select('amount, games')
             .eq('userID', userID)
             .single();
-        
-        if (error && error.code === 'PGRST116') {
-            await addLimbucks(10, userID, {});
-            document.getElementById("limbucks").textContent = '10 Limbucks';
-        } else if (data) {
-            document.getElementById("limbucks").textContent = `${data.amount} Limbucks`;
-        }
+
+        try {
+            if (error && error.code === 'PGRST116') {
+                await addLimbucks(10, userID, {});
+                document.getElementById("limbucks").textContent = '10 Limbucks';
+            } else if (data) {
+                document.getElementById("limbucks").textContent = `${data.amount} Limbucks`;
+            }
+        } catch {}
     } catch (error) {
         console.error('Error fetching Limbucks:', error);
     }

@@ -63,31 +63,26 @@ function calculate() {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (turn) { 
-        switch (event.key) {
-            case 'ArrowUp':
-                playerMove = "n";
-                break;
-            case 'ArrowDown':
-                playerMove = "s";
-                break;
-            case 'ArrowLeft':
-                playerMove = "w";
-                break;
-            case 'ArrowRight':
-                playerMove = "e";
-                break;
-            default:
-                return; 
-        }
-        if (combo.includes(playerMove)) {
-            alert("Cannot go the same direction more than once.");
-            playerMove = null;
-            return;
-        }
-        console.log("Player Move:", playerMove);
-    } else {
-        console.log("Enemy's turn, key ignored.");
+    switch (event.key) {
+        case 'ArrowUp':
+            playerMove = "n";
+            break;
+        case 'ArrowDown':
+            playerMove = "s";
+            break;
+        case 'ArrowLeft':
+            playerMove = "w";
+            break;
+        case 'ArrowRight':
+            playerMove = "e";
+            break;
+        default:
+            return; 
+    }
+    if (combo.includes(playerMove)) {
+        alert("Cannot go the same direction more than once.");
+        playerMove = null;
+        return;
     }
     update();
 });

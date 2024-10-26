@@ -1,18 +1,18 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-const supabaseUrl = JSON.parse(await response1.text());
-const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-const supabaseKey = JSON.parse(await response2.text());
+const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`);
+const supabaseUrl = await response1.json();
+const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`);
+const supabaseKey = await response2.json();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 let turn = 0; // false for enemy, true for player
-let playerMove; // string "n", "e", "s", "w"
-let enemyMove; // string "n", "e", "s", "w"
-let combo = []; // max 2, if 3 then call dead()
+let playerMove = null; // "n", "e", "s", "w"
+let enemyMove = null; // "n", "e", "s", "w"
+let combo = []; // stores matching moves, max 2, calls dead() if 3
 
 function dead() {
-    turn ? alert("you won!") : alert("you lost :(");
+    turn ? alert("You won!") : alert("You lost :(");
     restart();
 }
 
@@ -26,16 +26,18 @@ function restart() {
 function update() {
     if (combo.length >= 3) {
         dead();
+        return;
     }
     if (!turn) {
         calculate();
     }
-    if (playerMove || enemyMove) {
-        if (playerMove == enemyMove) {
-            combo.push(playerMove); // Use push instead of incrementing combo
+    if (playerMove && enemyMove) {
+        if (playerMove === enemyMove) {
+            combo.push(playerMove);
         }
         playerMove = null;
         enemyMove = null;
+        turn = 1 - turn; // Alternate turns
     }
     console.log(combo);
     console.log(turn);
@@ -43,26 +45,16 @@ function update() {
 
 function calculate() {
     const options = ["n", "e", "s", "w"];
-    options.forEach(option => {
-        combo.forEach(comboMove => {
-            if (option != comboMove) {
-                enemyMove = option;
-                return;
-            }
-        });
-    });
+    enemyMove = options.find(option => !combo.includes(option)) || "n"; // Pick a different move
 }
 
-// Handle player movement with arrow keys
 document.addEventListener('keydown', (event) => {
     if (turn) {
-        combo.forEach(move => {
-            if (playerMove == move) {
-                alert("cannot go the same direction more than once");
-            }
+        if (combo.includes(playerMove)) {
+            alert("Cannot go the same direction more than once.");
             return;
-        });
-    
+        }
+
         switch (event.key) {
             case 'ArrowUp':
                 playerMove = "n";
@@ -76,6 +68,8 @@ document.addEventListener('keydown', (event) => {
             case 'ArrowRight':
                 playerMove = "e";
                 break;
+            default:
+                return; // Ignore other keys
         }
         update();
     }

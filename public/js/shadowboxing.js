@@ -83,6 +83,7 @@ document.addEventListener('keydown', (event) => {
         console.log("Player Move:", playerMove);
     } else {
         console.log("Enemy's turn, key ignored.");
+        turn = 1;
     }
     update();
 });

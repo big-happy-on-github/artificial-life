@@ -21,6 +21,8 @@ function dead() {
 function restart() {
     turn = 1; // Set to 1 to start with player's turn
     attacking = 1;
+    playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
+    document.getElementById("result").textContent = "last enemy move: nothing";
     playerMove = null;
     enemyMove = null;
     combo = [];

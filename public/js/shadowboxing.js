@@ -36,8 +36,8 @@ function update() {
         calculate(); 
         return;
     }
-    if (playerMove && enemyMove) {
-        if (playerMove === enemyMove) {
+    if (playerMove || enemyMove) {
+        if (playerMove == enemyMove) {
             combo.push(playerMove);
             console.log("Move matched, added to combo:", combo);
         } else {

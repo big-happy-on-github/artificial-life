@@ -54,6 +54,9 @@ async function getLimbucks() {
 }
 
 async function showGames() {
+    if (window.location.pathname != "/welcome") {
+        return;
+    }
     const userID = localStorage.getItem("userID") || generateRandomString(50);
     localStorage.setItem("userID", userID);
 

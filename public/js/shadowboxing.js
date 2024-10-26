@@ -6,10 +6,10 @@ const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, 
 const supabaseKey = JSON.parse(await response2.text());
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-let turn = 0; //false for enemy true for player
-let playerMove; //string "n", "e", "s", "w"
-let enemyMove; //string "n", "e", "s", "w"
-let combo = []; //max 2, if 3 than call dead()
+let turn = 0; // false for enemy, true for player
+let playerMove; // string "n", "e", "s", "w"
+let enemyMove; // string "n", "e", "s", "w"
+let combo = []; // max 2, if 3 then call dead()
 
 function dead() {
     turn ? alert("you won!") : alert("you lost :(");
@@ -26,14 +26,17 @@ function restart() {
 function update() {
     if (combo.length >= 3) {
         dead();
-    } if (!turn) {
+    }
+    if (!turn) {
         calculate();
-    } if (playerMove || enemyMove) {
+    }
+    if (playerMove || enemyMove) {
         if (playerMove == enemyMove) {
-            combo++;
+            combo.push(playerMove); // Use push instead of incrementing combo
         }
         playerMove = null;
         enemyMove = null;
+    }
     console.log(combo);
     console.log(turn);
 }

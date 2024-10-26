@@ -62,13 +62,16 @@ function update() {
 
     document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
     document.getElementById("combo").textContent = "current combo:";
-    combo.forEach(move => {
-        document.getElementById("combo").textContent += ` ${translate(move)}`;
-    });
+    if (combo.length > 0) {
+        combo.forEach(move => {
+            document.getElementById("combo").textContent += ` ${translate(move)}`;
+        });
+    } else {
+        document.getElementById("combo").textContent += " nothing";
+    }
 
     if (combo.length >= 3) {
         dead();
-        return;
     }
 }
 
@@ -76,7 +79,7 @@ function calculate() {
     const options = ["n", "e", "s", "w"];
     let possible = options.filter(option => !combo.includes(option));
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
-    document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
+    document.getElementById("result").textContent = `last enemy move: ${translate(enemyMove)}`;
     console.log("Enemy calculated move:", enemyMove);
     update(); // Call update to process the enemy move
 }
@@ -108,4 +111,4 @@ document.addEventListener('keydown', (event) => {
 });
 
 update();
-document.getElementById("result").textContent = "enemy move: nothing";
+document.getElementById("result").textContent = "last enemy move: nothing";

@@ -80,3 +80,5 @@ document.addEventListener('keydown', (event) => {
         update();
     }
 });
+
+update();

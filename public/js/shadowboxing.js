@@ -28,11 +28,6 @@ function restart() {
 
 function update() {
     console.log("Update called - Combo:", combo, "Turn:", turn ? "Player" : "Enemy");
-
-    if (combo.length >= 3) {
-        dead();
-        return;
-    }
     if (playerMove || !turn) {
         if (!enemyMove) {
             console.log("calculating");
@@ -50,6 +45,11 @@ function update() {
         attacking = turn;
         playerMove = null;
         enemyMove = null;
+    }
+
+    if (combo.length >= 3) {
+        dead();
+        return;
     }
 }
 

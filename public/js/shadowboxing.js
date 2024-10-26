@@ -45,8 +45,8 @@ function update() {
         }
         playerMove = null;
         enemyMove = null; 
+        turn = 1 - turn;
     }
-    turn = 1 - turn;
 }
 
 function calculate() {

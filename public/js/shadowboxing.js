@@ -44,7 +44,7 @@ function calculate() {
         combo.forEach(comboMove => {
             if (option != comboMove) {
                 enemyMove = option;
-                break;
+                return;
             }
         });
     });

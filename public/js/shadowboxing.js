@@ -55,16 +55,17 @@ function update() {
             combo = [];
             turn = 1 - turn;
         }
-        document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
-        document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
-        document.getElementById("combo").textContent = "current combo:";
-        combo.forEach(move => {
-            document.getElementById("combo").textContent += ` ${translate(move)}`;
-        });
         attacking = turn;
         playerMove = null;
         enemyMove = null;
     }
+
+    document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
+    document.getElementById("result").textContent = `enemy move: ${translate(enemyMove)}`;
+    document.getElementById("combo").textContent = "current combo:";
+    combo.forEach(move => {
+        document.getElementById("combo").textContent += ` ${translate(move)}`;
+    });
 
     if (combo.length >= 3) {
         dead();

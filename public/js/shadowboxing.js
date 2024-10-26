@@ -31,12 +31,12 @@ function update() {
         dead();
         return;
     }
-    if (!turn) { 
-        console.log("calculating");
-        calculate(); 
-        return;
-    }
-    if (playerMove || enemyMove) {
+    if (playerMove) {
+        if (!enemyMove) {
+            console.log("calculating");
+            calculate(); 
+            return;
+        }
         if (playerMove == enemyMove) {
             combo.push(playerMove);
             console.log("Move matched, added to combo:", combo);
@@ -46,6 +46,7 @@ function update() {
         playerMove = null;
         enemyMove = null; 
         turn = 1 - turn;
+        update();
     }
 }
 

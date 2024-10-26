@@ -9,17 +9,17 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 let turn = 1; // Start with player's turn
 let playerMove = null;
 let enemyMove = null;
-let winning = 1;
+let attacking = 1;
 let combo = []; 
 
 function dead() {
-    alert(winning ? "You won!" : "You lost :(");
+    alert(attacking ? "You won!" : "You lost :(");
     restart();
 }
 
 function restart() {
     turn = 1; // Set to 1 to start with player's turn
-    winning = 1;
+    attacking = 1;
     playerMove = null;
     enemyMove = null;
     combo = [];
@@ -42,15 +42,14 @@ function update() {
         if (playerMove == enemyMove) {
             combo.push(playerMove);
             console.log("Move matched, added to combo:", combo);
-            winning = turn;
         } else {
             console.log("Moves did not match.");
             combo = [];
             turn = 1 - turn;
         }
+        attacking = turn;
         playerMove = null;
         enemyMove = null;
-        update();
     }
 }
 

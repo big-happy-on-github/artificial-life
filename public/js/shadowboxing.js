@@ -71,8 +71,8 @@ document.addEventListener('keydown', (event) => {
             default:
                 return; // Ignore other keys
         }
-        update();
     }
+    update();
 });
 
 update();

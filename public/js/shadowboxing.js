@@ -33,7 +33,7 @@ function update() {
         dead();
         return;
     }
-    if (playerMove) {
+    if (playerMove || !turn) {
         if (!enemyMove) {
             console.log("calculating");
             calculate(); 

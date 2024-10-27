@@ -55,7 +55,7 @@ function update() {
             combo.push(playerMove);
             // Update required combo
             requiredCombo = combo.slice();
-            comboIndex = 0; // Reset combo index after updating required combo
+            comboIndex = -1; // Reset combo index after updating required combo
         } else {
             combo = [];
             requiredCombo = [];

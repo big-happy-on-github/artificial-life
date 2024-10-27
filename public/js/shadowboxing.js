@@ -10,8 +10,9 @@ let turn = 1; // Start with player's turn
 let playerMove = null;
 let enemyMove = null;
 let attacking = 1;
-let movesToDo;
 let combo = []; 
+let requiredCombo = []; // Sequence of moves required before making a new move
+let comboIndex = 0; // Track player's progress in matching the required combo
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {
@@ -27,33 +28,38 @@ function restart() {
     playerMove = null;
     enemyMove = null;
     combo = [];
+    requiredCombo = [];
+    comboIndex = 0;
     update();
 }
 
 function translate(direction) {
     if (direction == "n") {
-        return "up"
+        return "up";
     } else if (direction == "e") {
-        return "right"
+        return "right";
     } else if (direction == "s") {
-        return "down"
+        return "down";
     } else if (direction == "w") {
-        return "left"
+        return "left";
     }
 }
 
 function update() {
-    movesToDo = combo.length;
     if (playerMove || !turn) {
         if (!enemyMove) {
-            console.log("calculating");
-            calculate(); 
+            calculate();
             return;
         }
-        if (playerMove == enemyMove) {
+        if (playerMove === enemyMove) {
             combo.push(playerMove);
+            // Update required combo
+            requiredCombo = combo.slice();
+            comboIndex = 0; // Reset combo index after updating required combo
         } else {
             combo = [];
+            requiredCombo = [];
+            comboIndex = 0;
             turn = 1 - turn;
         }
         attacking = turn;
@@ -102,24 +108,27 @@ document.addEventListener('keydown', (event) => {
             return; 
     }
 
-    console.log(combo[movesToDo-1]);
-    console.log(movesToDo);
-    if (combo.length >= 1 && movesToDo >= 1 && combo[movesToDo-1]) {
-        if (playerMove == combo[movesToDo-1]) {
-            movesToDo -=1;
-            document.getElementById("result").textContent = `last enemy move: ${translate(combo[movesToDo-1])}`;
-            return;
-        } else if (playerMove != combo[movesToDo-1]) {
-            alert("you must repeat the prior moves in the current combo");
-            playerMove = null;
-            return;
-        } else if (combo.includes(playerMove) && combo[movesToDo-1] != playerMove) {
-            alert("you already went that direction");
-            playerMove = null;
+    if (requiredCombo.length > 0 && requiredCombo[comboIndex] === playerMove) {
+        // Increment combo index if player matches the required combo move
+        comboIndex++;
+        if (comboIndex < requiredCombo.length) {
+            playerMove = null; // Not ready for a new move yet
             return;
         }
+    } else if (requiredCombo.length > 0) {
+        // Reset comboIndex if player doesn't match the required sequence
+        comboIndex = 0;
+        playerMove = null;
+        alert("You must follow the combo sequence before making a new move.");
+        return;
     }
-    
+
+    if (combo.includes(playerMove)) {
+        alert("you already went that direction");
+        playerMove = null;
+        return;
+    }
+
     playerMoveHistory[playerMove]++;
     update();
 });

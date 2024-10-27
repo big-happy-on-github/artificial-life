@@ -24,33 +24,27 @@
             <button onclick="addData(document.getElementById('feedbackInput').value)">send</button>
         </div>
     </header>
-    <div id="limbucks">loading</div>
+    <div id="limbucks">10 limbucks</div>
     <main>
         <div>
             <img id="wheelImg" width="400" height="375">
             <p id="wheelP">Daily Wheel</p>
-            <button id="wheelButton">loading</button>
+            <button id="wheelButton">play</button>
         </div>
         <div>
             <img id="liamstdImg" width="400" height="375">
             <p id="liamstdP">LiamsTD</p>
-            <button id="liamstdButton">loading</button>
+            <button id="liamstdButton">play</button>
         </div>
         <div>
             <img id="chatImg" width="400" height="375">
             <p id="chatP">Liam's Chat</p>
-            <button id="chatButton">loading</button>
+            <button id="chatButton">play</button>
         </div>
-        <div>
-            <img id="shadowboxingImg" width="400" height="375">
-            <p id="shadowboxingP">Online Shadowboxing</p>
-            <button id="shadowboxingButton">loading</button>
-        </div>
-        <br>
         <div>
             <img id="adminImg" width="400" height="375">
             <p id="adminP">Admin Menu</p>
-            <button id="adminButton">loading</button>
+            <button id="adminButton">play</button>
         </div>
     </main>
     <script type="module" src="/js/liamland.js"></script>
@@ -112,24 +106,6 @@
             .eq('project_name', 'wheel');
 
         document.getElementById("wheelP").textContent += ` (${data[0].num_visits} visits)`;
-    </script>
-    <script type="module">
-        // Initialize Supabase client
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-        
-        const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`, { mode: 'no-cors' });
-        const supabaseUrl = JSON.parse(await response1.text());
-        const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`, { mode: 'no-cors' });
-        const supabaseKey = JSON.parse(await response2.text());
-        const supabase = createClient(supabaseUrl, supabaseKey);
-        
-        const { data, error: selectError } = await supabase
-            .from('visits')
-            .select('*')
-            .eq('project_name', 'shadowboxing');
-
-        const num_visits = data?.num_visits || 0; // Fallback to 0 if undefined
-        document.getElementById("shadowboxingP").textContent += ` (${num_visits} visits)`;
     </script>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';

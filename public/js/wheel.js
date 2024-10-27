@@ -7,7 +7,7 @@ const wheelData = [
     { segment: '+3 limbucks', prize: 3, weight: 20 },
     { segment: '+4 limbucks', prize: 4, weight: 5 },
     { segment: '+5 limbucks', prize: 5, weight: 4 },
-    { segment: '+Infinity limbucks', prize: 1/0, weight: 0 },
+    { segment: '+Infinity limbucks', prize: 0, weight: 0 },
 ];
 
 let currentAngle = 0;

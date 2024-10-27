@@ -6,12 +6,12 @@ const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`);
 const supabaseKey = await response2.json();
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-let turn = 1; // 1 for player, 0 for enemy
+let turn = 1; // Start with player's turn
 let playerMove = null;
 let enemyMove = null;
 let attacking = 1;
-let combo = [];
-let movesToDo = 0;
+let movesToDo;
+let combo = []; 
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {
@@ -20,51 +20,57 @@ function dead() {
 }
 
 function restart() {
-    turn = 1;
+    turn = 1; // Set to 1 to start with player's turn
     attacking = 1;
     playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
     document.getElementById("result").textContent = "last enemy move: nothing";
     playerMove = null;
     enemyMove = null;
     combo = [];
-    movesToDo = 0;
     update();
 }
 
 function translate(direction) {
-    return { "n": "up", "e": "right", "s": "down", "w": "left" }[direction];
+    if (direction == "n") {
+        return "up"
+    } else if (direction == "e") {
+        return "right"
+    } else if (direction == "s") {
+        return "down"
+    } else if (direction == "w") {
+        return "left"
+    }
 }
 
 function update() {
-    if (turn === 1 && playerMove) {
-        // Handle player's turn
+    movesToDo = combo.length;
+    if (playerMove || !turn) {
         if (!enemyMove) {
-            calculate(); // Enemy's response
-        } else if (playerMove === enemyMove) {
-            combo.push(playerMove);
-            movesToDo = combo.length;
-            playerMove = null;
-            enemyMove = null;
-        } else {
-            // Reset combo if moves don't match
-            combo = [];
-            movesToDo = 0;
-            turn = 0; // Pass to enemy's turn
-            attacking = 0;
-            playerMove = null;
-            enemyMove = null;
+            console.log("calculating");
+            calculate(); 
+            return;
         }
-    } else if (turn === 0) {
-        // Enemy's turn logic here (just toggle back for simplicity)
-        turn = 1; // Back to player
-        attacking = 1;
+        if (playerMove == enemyMove) {
+            combo.push(playerMove);
+        } else {
+            combo = [];
+            turn = 1 - turn;
+        }
+        attacking = turn;
+        playerMove = null;
+        enemyMove = null;
     }
 
-    // Update UI elements
     document.getElementById("offense").textContent = attacking ? "you're on offense" : "you're on defense";
-    document.getElementById("combo").textContent = "current combo: " + (combo.length ? combo.map(translate).join(" ") : "nothing");
+    document.getElementById("combo").textContent = "current combo:";
+    if (combo.length > 0) {
+        combo.forEach(move => {
+            document.getElementById("combo").textContent += ` ${translate(move)}`;
+        });
+    } else {
+        document.getElementById("combo").textContent += " nothing";
+    }
 
-    // End game if combo length meets or exceeds threshold
     if (combo.length >= 3) {
         dead();
     }
@@ -75,37 +81,44 @@ function calculate() {
     let possible = options.filter(option => !combo.includes(option));
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     document.getElementById("result").textContent = `last enemy move: ${translate(enemyMove)}`;
-    update();
+    update(); // Call update to process the enemy move
 }
 
 document.addEventListener('keydown', (event) => {
-    if (turn !== 1) return; // Only proceed if it's the player's turn
-
     switch (event.key) {
-        case 'ArrowUp': playerMove = "n"; break;
-        case 'ArrowDown': playerMove = "s"; break;
-        case 'ArrowLeft': playerMove = "w"; break;
-        case 'ArrowRight': playerMove = "e"; break;
-        default: return;
+        case 'ArrowUp':
+            playerMove = "n";
+            break;
+        case 'ArrowDown':
+            playerMove = "s";
+            break;
+        case 'ArrowLeft':
+            playerMove = "w";
+            break;
+        case 'ArrowRight':
+            playerMove = "e";
+            break;
+        default:
+            return; 
     }
 
-    if (combo.length > 0 && playerMove === combo[combo.length - movesToDo]) {
-        movesToDo--;
-        document.getElementById("result").textContent = `last enemy move: ${translate(combo[combo.length - movesToDo - 1])}`;
-        if (movesToDo === 0) {
-            playerMoveHistory[playerMove]++;
-            update();
+    if (combo.length >= 1) {
+        if (playerMove == combo[movesToDo-1]) {
+            movesToDo -=1;
+            document.getElementById("result").textContent = `last enemy move: ${translate(combo[movesToDo-1])}`;
+        } else if (playerMove != combo[movesToDo-1]) {
+            alert("you must repeat the prior moves in the current combo");
+            playerMove = null;
+            return;
+        } else if (combo.includes(playerMove) && combo[movesToDo-1] != playerMove) {
+            alert("you already went that direction");
+            playerMove = null;
+            return;
         }
-    } else if (combo.length > 0 && combo.includes(playerMove)) {
-        alert("You already went that direction in the combo. Please continue the correct sequence.");
-        playerMove = null;
-    } else if (combo.length > 0) {
-        alert("Incorrect move! Repeat the combo in the correct order.");
-        playerMove = null;
-    } else {
-        playerMoveHistory[playerMove]++;
-        update();
     }
+    
+    playerMoveHistory[playerMove]++;
+    update();
 });
 
 update();

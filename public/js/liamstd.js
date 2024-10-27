@@ -158,7 +158,7 @@ function showTowerStats(tower, showButtons=true) {
     towerTypeDisplay.textContent = `${towerType} tower`;
     towerLevelDisplay.textContent = `lvl ${tower.level}`;
     towerHealthDisplay.textContent = `${tower.health} hp`;
-    towerRangeDisplay.textContent = `${tower.range/50} square range`;
+    towerRangeDisplay.textContent = `${tower.range/gridSize} square range`;
     towerDamageDisplay.textContent = `~${(tower.damage * Math.round((1 / tower.fireRate) * 100) / 100).toFixed(2)} dps`;
     towerDescDisplay.textContent = tower.desc;
     upgrade1Button.disabled = false;
@@ -289,7 +289,7 @@ upgrade1Button.addEventListener('click', (event) => {
             towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range/50} square range ➔ ${(showing.range + upgradeInfo.range)/50}`;
+            towerRangeDisplay.textContent = `${showing.range/gridSize} square range ➔ ${(showing.range + upgradeInfo.range)/gridSize}`;
 
             if (showing.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
@@ -362,7 +362,7 @@ upgrade2Button.addEventListener('click', (event) => {
             towerTypeDisplay.textContent = "Are you sure?";
             towerLevelDisplay.textContent = `lvl ${currentLevel} ➔ ${currentLevel + 1}`;
             towerHealthDisplay.textContent = `${showing.health}hp ➔ ${showing.health + upgradeInfo.health}`;
-            towerRangeDisplay.textContent = `${showing.range/50} square range ➔ ${(showing.range + upgradeInfo.range)/50}`;
+            towerRangeDisplay.textContent = `${showing.range/gridSize} square range ➔ ${(showing.range + upgradeInfo.range)/gridSize}`;
 
             if (showing.canShoot == false) {
                 towerDamageDisplay.textContent = `0 dps`;
@@ -1399,16 +1399,6 @@ const gridSize = 50; // Size of each grid square
 const gridWidth = canvas.width / gridSize;
 const gridHeight = canvas.height / gridSize;
 
-// Draw the grid and the path
-function drawGrid() {
-    ctx.strokeStyle = '	#3b3b3b'; // Light gray for grid lines
-    for (let x = 0; x < canvas.width; x += gridSize) {
-        for (let y = 0; y < canvas.height; y += gridSize) {
-            ctx.strokeRect(x, y, gridSize, gridSize);
-        }
-    }
-}
-
 function isSquareAvailable(x, y) {
     const gridX = Math.floor(x / gridSize);
     const gridY = Math.floor(y / gridSize);
@@ -1865,6 +1855,84 @@ document.addEventListener('keydown', async function(event) {
 document.addEventListener('keyup', function(event) {
     delete keysPressed[event.key];
 });
+
+// Preload images for the blocked squares
+const imageSources = [
+    'https://www.fertilome.com/media/klowrey/Article%20Images/Tree.jpg',
+    'https://s40170.pcdn.co/wp-content/uploads/2022/01/close-up-view-of-rock-aggregates.png',
+    'https://images.pexels.com/photos/736230/pexels-photo-736230.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://uplink.weforum.org/uplink/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_jpg&versionId=068TE000007b39WYAQ'
+];
+
+const numberOfBlockedSquares = 5;
+let blockedImages = new Map();
+let imageCache = {};
+
+// Preload all images
+function preloadImages(sources, callback) {
+    let loadedImages = 0;
+    const numImages = sources.length;
+
+    sources.forEach(src => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+            loadedImages++;
+            imageCache[src] = img;
+            if (loadedImages >= numImages) {
+                callback(); // All images are loaded, start drawing
+            }
+        };
+        img.onerror = () => {
+            console.error(`Failed to load image at ${src}`);
+        };
+    });
+}
+
+// After all images are preloaded, start the game loop
+preloadImages(imageSources, () => {
+    generateBlockedSquares();
+    gameLoop();
+});
+
+function drawGrid() {
+    ctx.strokeStyle = '#3b3b3b'; // Grid lines color
+
+    for (let x = 0; x < canvas.width; x += gridSize) {
+        for (let y = 0; y < canvas.height; y += gridSize) {
+            const gridX = Math.floor(x / gridSize);
+            const gridY = Math.floor(y / gridSize);
+            const squareKey = `${gridX},${gridY}`;
+
+            // Check if this square is occupied (either by a tower or a blocked image)
+            if (occupiedSquares.has(squareKey)) {
+                if (blockedImages.has(squareKey)) {
+                    const imgSrc = blockedImages.get(squareKey);
+                    if (imageCache[imgSrc]) {
+                        ctx.drawImage(imageCache[imgSrc], x, y, gridSize, gridSize); // Draw the image from cache
+                    }
+                }
+            } else {
+                // Draw normal grid square
+                ctx.strokeRect(x, y, gridSize, gridSize);
+            }
+        }
+    }
+}
+
+function generateBlockedSquares() {
+    while (blockedImages.size < numberOfBlockedSquares) {
+        const randomX = Math.floor(Math.random() * gridWidth);
+        const randomY = Math.floor(Math.random() * gridHeight);
+        const squareKey = `${randomX},${randomY}`;
+        
+        if (!occupiedSquares.has(squareKey)) {
+            occupiedSquares.add(squareKey);  // Mark the square as occupied
+            const randomImage = imageSources[Math.floor(Math.random() * imageSources.length)];
+            blockedImages.set(squareKey, randomImage);  // Assign a random image to the blocked square
+        }
+    }
+}
 
 // Initialize the game
 updateHUD();

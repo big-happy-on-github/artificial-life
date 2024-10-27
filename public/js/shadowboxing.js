@@ -126,11 +126,11 @@ document.addEventListener('keydown', (event) => {
     console.log(requiredCombo);
     console.log(comboIndex);
 
-    if (combo.includes(playerMove) && requiredCombo[comboIndex] != playerMove) {
+    /*if (combo.includes(playerMove) && requiredCombo[comboIndex] != playerMove) {
         alert("you already went that direction");
         playerMove = null;
         return;
-    }
+    }*/
 
     playerMoveHistory[playerMove]++;
     update();

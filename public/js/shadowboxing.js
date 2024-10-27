@@ -135,5 +135,36 @@ document.addEventListener('keydown', (event) => {
     update();
 });
 
+async function updateVisits() {
+    const { data, error: selectError } = await supabase
+        .from('visits')
+        .select('*')
+        .eq('project_name', 'shadowboxing');
+
+    if (selectError) throw selectError;
+
+    if (data.length === 0) {
+        const { error: insertError } = await supabase
+            .from('visits')
+            .insert([{ project_name: 'shadowboxing', num_visits: 1 }]);
+
+        if (insertError) throw insertError;
+
+        console.log('Created new row with project_name "shadowboxing" and num_visits set to 1');
+    } else {
+        const currentVisits = data[0].num_visits || 0;
+
+        const { error: updateError } = await supabase
+            .from('visits')
+            .update({ num_visits: currentVisits + 1 })
+            .eq('project_name', 'shadowboxing');
+
+        if (updateError) throw updateError;
+
+        console.log(`Updated num_visits to ${currentVisits + 1} for project_name "shadowboxing"`);
+    }
+}
+
+updateVisits();
 update();
 document.getElementById("result").textContent = "last enemy move: nothing";

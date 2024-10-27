@@ -12,7 +12,7 @@ let enemyMove = null;
 let attacking = 1;
 let combo = []; 
 let requiredCombo = []; // Sequence of moves required before making a new move
-let comboIndex = 0; // Track player's progress in matching the required combo
+let comboIndex = -1; // Track player's progress in matching the required combo
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {

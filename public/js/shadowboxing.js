@@ -53,9 +53,9 @@ function update() {
         }
         if (playerMove == enemyMove) {
             combo.push(playerMove);
-            // Update required combo
+            // Update required combo only if a new matching move is added
             requiredCombo = combo.slice();
-            comboIndex = 0; // Reset combo index after updating required combo
+            comboIndex = 0; // Reset combo index for the new combo sequence
         } else {
             combo = [];
             requiredCombo = [];
@@ -108,19 +108,28 @@ document.addEventListener('keydown', (event) => {
             return; 
     }
 
-    // Check if player matches the required combo sequence
-    if (requiredCombo.length > 0 && requiredCombo[comboIndex] == playerMove) {
-        comboIndex++; // Move to the next required move in the combo sequence
-        if (comboIndex < requiredCombo.length) {
-            playerMove = null; // Not ready for a new move yet
+    // Check if the player is still in the process of matching the required combo sequence
+    if (requiredCombo.length > 0 && comboIndex < requiredCombo.length) {
+        if (requiredCombo[comboIndex] === playerMove) {
+            comboIndex++; // Move to the next move in the sequence
+            if (comboIndex < requiredCombo.length) {
+                playerMove = null; // Prevent new moves until the sequence is matched
+                return;
+            }
+        } else {
+            // Reset if the sequence doesn't match
+            comboIndex = 0;
+            playerMove = null;
+            alert("You must follow the combo sequence before making a new move.");
             return;
         }
-    } else if (requiredCombo.length > 0) {
-        // Reset comboIndex if player doesn't match the required sequence
-        comboIndex = 0;
-        playerMove = null;
-        alert("You must follow the combo sequence before making a new move.");
-        return;
+    }
+
+    // Add the move to the combo if the entire sequence was matched
+    if (comboIndex === requiredCombo.length) {
+        combo.push(playerMove);
+        requiredCombo = combo.slice(); // Update the requiredCombo with the new sequence
+        comboIndex = 0; // Reset comboIndex for the next sequence
     }
 
     playerMoveHistory[playerMove]++;

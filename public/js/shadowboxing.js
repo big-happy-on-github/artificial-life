@@ -12,7 +12,7 @@ let enemyMove = null;
 let attacking = 1;
 let combo = []; 
 let requiredCombo = []; // Sequence of moves required before making a new move
-let comboIndex = -1; // Track player's progress in matching the required combo
+let comboIndex = 0; // Track player's progress in matching the required combo
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {
@@ -55,7 +55,7 @@ function update() {
             combo.push(playerMove);
             // Update required combo
             requiredCombo = combo.slice();
-            comboIndex = -1; // Reset combo index after updating required combo
+            comboIndex = 0; // Reset combo index after updating required combo
         } else {
             combo = [];
             requiredCombo = [];
@@ -108,9 +108,9 @@ document.addEventListener('keydown', (event) => {
             return; 
     }
 
+    // Check if player matches the required combo sequence
     if (requiredCombo.length > 0 && requiredCombo[comboIndex] == playerMove) {
-        // Increment combo index if player matches the required combo move
-        comboIndex++;
+        comboIndex++; // Move to the next required move in the combo sequence
         if (comboIndex < requiredCombo.length) {
             playerMove = null; // Not ready for a new move yet
             return;
@@ -122,15 +122,6 @@ document.addEventListener('keydown', (event) => {
         alert("You must follow the combo sequence before making a new move.");
         return;
     }
-
-    console.log(requiredCombo);
-    console.log(comboIndex);
-
-    /*if (combo.includes(playerMove) && requiredCombo[comboIndex] != playerMove) {
-        alert("you already went that direction");
-        playerMove = null;
-        return;
-    }*/
 
     playerMoveHistory[playerMove]++;
     update();

@@ -102,6 +102,8 @@ document.addEventListener('keydown', (event) => {
             return; 
     }
 
+    console.log(combo[movesToDo-1]);
+    console.log(movesToDo);
     if (combo.length >= 1) {
         if (playerMove == combo[movesToDo-1]) {
             movesToDo -=1;

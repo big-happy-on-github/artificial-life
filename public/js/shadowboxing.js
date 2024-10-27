@@ -105,7 +105,7 @@ document.addEventListener('keydown', (event) => {
     if (playerMove == combo[movesToDo-1] && combo.length >= 1) {
         movesToDo -=1;
         document.getElementById("result").textContent = `last enemy move: ${translate(combo[movesToDo-1])}`;
-    } else if (playerMove != combo[movesToDo-1 && combo.length >= 1]) {
+    } else if (playerMove != combo[movesToDo-1] && combo.length >= 1) {
         alert("you must repeat the prior moves in the current combo");
         playerMove = null;
         return;

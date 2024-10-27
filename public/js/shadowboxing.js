@@ -92,11 +92,6 @@ function calculate() {
 }
 
 document.addEventListener('keydown', (event) => {
-    if (breakMove) {
-        breakMove = false;
-        return;
-    }
-    
     switch (event.key) {
         case 'ArrowUp':
             playerMove = "n";
@@ -114,7 +109,7 @@ document.addEventListener('keydown', (event) => {
             return; 
     }
 
-    if (comboIndex != requiredCombo.length) {
+    if (comboIndex != requiredCombo.length && !breakMove) {
         // Check if player matches the required combo sequence
         if (requiredCombo.length > 0 && requiredCombo[comboIndex] == playerMove) {
             comboIndex++; // Move to the next required move in the combo sequence
@@ -130,8 +125,10 @@ document.addEventListener('keydown', (event) => {
             alert("You must follow the combo sequence before making a new move.");
             return;
         }
-    } else {
+    } else if (requiredCombo.length > 0) {
         breakMove = true;
+    } else {
+        breakMove = false;
     }
 
     playerMoveHistory[playerMove]++;

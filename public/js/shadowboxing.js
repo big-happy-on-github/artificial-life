@@ -111,6 +111,7 @@ document.addEventListener('keydown', (event) => {
     // Check if player matches the required combo sequence
     if (requiredCombo.length > 0 && requiredCombo[comboIndex] == playerMove) {
         comboIndex++; // Move to the next required move in the combo sequence
+        console.log(comboIndex, ":", requiredCombo.length);
         if (comboIndex+1 < requiredCombo.length) {
             playerMove = null; // Not ready for a new move yet
             return;

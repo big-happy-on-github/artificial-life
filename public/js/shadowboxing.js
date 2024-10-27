@@ -10,7 +10,8 @@ let turn = 1; // Start with player's turn
 let playerMove = null;
 let enemyMove = null;
 let attacking = 1;
-let combo = []; 
+let combo = [];
+let movesToDo = 0;
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {
@@ -26,28 +27,30 @@ function restart() {
     playerMove = null;
     enemyMove = null;
     combo = [];
+    movesToDo = 0;
     update();
 }
 
 function translate(direction) {
-    if (direction == "n") return "up";
-    if (direction == "e") return "right";
-    if (direction == "s") return "down";
-    if (direction == "w") return "left";
+    if (direction === "n") return "up";
+    if (direction === "e") return "right";
+    if (direction === "s") return "down";
+    if (direction === "w") return "left";
 }
 
 function update() {
-    if (turn == 1 && playerMove) {
+    if (turn === 1 && playerMove) {
         if (!enemyMove) {
             console.log("calculating");
             calculate();
             return;
         }
-        if (playerMove == enemyMove) {
+        if (playerMove === enemyMove) {
             combo.push(playerMove);
             movesToDo = combo.length;
         } else {
             combo = [];
+            movesToDo = 0;
             turn = 1 - turn;
         }
         attacking = turn;
@@ -80,21 +83,26 @@ document.addEventListener('keydown', (event) => {
         default: return;
     }
 
-    if (combo.length > 0 && playerMove == combo[combo.length - movesToDo]) {
+    // Only check sequence if combo exists
+    if (combo.length > 0 && playerMove === combo[combo.length - movesToDo]) {
         movesToDo--;
         document.getElementById("result").textContent = `last enemy move: ${translate(combo[combo.length - movesToDo - 1])}`;
-        if (movesToDo == 0) {
+        if (movesToDo === 0) {
             playerMoveHistory[playerMove]++;
             update();
         }
-    } else if (combo.includes(playerMove)) {
+    } else if (combo.length > 0 && combo.includes(playerMove)) {
         alert("You already went that direction in the combo. Please continue the correct sequence.");
         playerMove = null;
         return;
-    } else {
+    } else if (combo.length > 0) {
         alert("Incorrect move! Repeat the combo in the correct order.");
         playerMove = null;
         return;
+    } else {
+        // No combo to follow, so just proceed
+        playerMoveHistory[playerMove]++;
+        update();
     }
 });
 

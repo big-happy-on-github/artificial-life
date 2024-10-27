@@ -122,6 +122,7 @@ document.addEventListener('keydown', (event) => {
         alert("You must follow the combo sequence before making a new move.");
         return;
     }
+    console.log(translate(requiredCombo[comboIndex]));
 
     if (combo.includes(playerMove) && requiredCombo[comboIndex] != playerMove) {
         alert("you already went that direction");

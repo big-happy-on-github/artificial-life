@@ -51,7 +51,7 @@ function update() {
             calculate();
             return;
         }
-        if (playerMove === enemyMove) {
+        if (playerMove == enemyMove) {
             combo.push(playerMove);
             // Update required combo
             requiredCombo = combo.slice();
@@ -108,7 +108,7 @@ document.addEventListener('keydown', (event) => {
             return; 
     }
 
-    if (requiredCombo.length > 0 && requiredCombo[comboIndex] === playerMove) {
+    if (requiredCombo.length > 0 && requiredCombo[comboIndex] == playerMove) {
         // Increment combo index if player matches the required combo move
         comboIndex++;
         if (comboIndex < requiredCombo.length) {
@@ -123,7 +123,7 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
-    if (combo.includes(playerMove)) {
+    if (combo.includes(playerMove) && requiredCombo[comboIndex] != playerMove) {
         alert("you already went that direction");
         playerMove = null;
         return;

@@ -104,7 +104,7 @@ document.addEventListener('keydown', (event) => {
 
     console.log(combo[movesToDo-1]);
     console.log(movesToDo);
-    if (combo.length >= 1) {
+    if (combo.length >= 1 && movesToDo >= 1) {
         if (playerMove == combo[movesToDo-1]) {
             movesToDo -=1;
             document.getElementById("result").textContent = `last enemy move: ${translate(combo[movesToDo-1])}`;

@@ -114,6 +114,7 @@ document.addEventListener('keydown', (event) => {
             comboIndex++; // Move to the next required move in the combo sequence
             console.log(comboIndex, ":", requiredCombo.length);
             if (comboIndex < requiredCombo.length) {
+                document.getElementById("result").textContent = `last enemy move: ${playerMove}`;
                 playerMove = null; // Not ready for a new move yet
             }
             return;

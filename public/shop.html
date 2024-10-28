@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIAMLAND's shop</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        main div:hover {
+            transform: translateY(0px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/welcome"><h1>LIAMLAND</h1></a>
+        <div id="menu">
+            <a href="/updates"><p>updates</p></a>
+            <a href="/about"><p>about me</p></a>
+            <a href="/shop"><p>shop</p></a>
+        </div>
+        <div class="feedback-container">
+            <label for="feedbackInput">got feedback?: </label>
+            <input id="feedbackInput">
+            <button onclick="addData(document.getElementById('feedbackInput').value)">send</button>
+        </div>
+    </header>
+    <main>
+        <h1>LIAMLAND shop</h1>
+        <div>
+            <img>
+            <h3>declan skin (LiamsTD)</h3>
+            <p>10 limbucks</p>
+            <p class="tiny">covers all your towers with declan's face</p>
+        </div>
+    </main>
+    <script type="module" src="/js/liamland.js"></script>
+</body>
+</html>

@@ -115,8 +115,8 @@ document.addEventListener('keydown', (event) => {
             console.log(comboIndex, ":", requiredCombo.length);
             if (comboIndex < requiredCombo.length) {
                 playerMove = null; // Not ready for a new move yet
-                return;
             }
+            return;
         } else if (requiredCombo.length > 0) {
             // Reset comboIndex if player doesn't match the required sequence
             comboIndex = 0;

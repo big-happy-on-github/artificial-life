@@ -94,15 +94,19 @@ function calculate() {
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowUp':
+        case 'w':
             playerMove = "n";
             break;
         case 'ArrowDown':
+        case 's':
             playerMove = "s";
             break;
         case 'ArrowLeft':
+        case 'a':
             playerMove = "w";
             break;
         case 'ArrowRight':
+        case 'd':
             playerMove = "e";
             break;
         default:
@@ -115,15 +119,15 @@ document.addEventListener('keydown', (event) => {
             comboIndex++; // Move to the next required move in the combo sequence
             console.log(comboIndex, ":", requiredCombo.length);
             if (comboIndex < requiredCombo.length) {
-                document.getElementById("result").textContent = `last enemy move: ${playerMove}`;
                 playerMove = null; // Not ready for a new move yet
             }
+            document.getElementById("result").textContent = `last enemy move: ${translate(playerMove)}`;
             return;
         } else if (requiredCombo.length > 0) {
             // Reset comboIndex if player doesn't match the required sequence
             comboIndex = 0;
             playerMove = null;
-            alert("You must follow the combo sequence before making a new move.");
+            alert("you gotta follow the combo before making a new move");
             return;
         }
     }

@@ -16,11 +16,12 @@ let comboIndex = 0; // Track player's progress in matching the required combo
 let playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };
 
 function dead() {
-    alert(attacking ? "You won!" : "You lost :(");
+    alert(attacking ? "congrats my brotha 👏" : "imagine losing to a computer 💀");
     restart();
 }
 
 function restart() {
+    alert("play again?");
     turn = 1; // Set to 1 to start with player's turn
     attacking = 1;
     playerMoveHistory = { n: 0, e: 0, s: 0, w: 0 };

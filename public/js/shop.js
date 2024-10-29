@@ -12,7 +12,7 @@ if (!localStorage.getItem("purchases")) {
 }
 if (!localStorage.getItem("using")) {
     localStorage.setItem("using", JSON.stringify({}));
-}   
+}
 const purchases = JSON.parse(localStorage.getItem("purchases"));
 const using = JSON.parse(localStorage.getItem("using"));
 
@@ -30,14 +30,14 @@ async function addLimbucks(amount, userID, games) {
         const { data, error } = await supabase
             .from('limbucks')
             .upsert(
-                { userID, amount: amount, games: games }, 
-                { onConflict: ['userID'], returning: '*' } 
+                { userID, amount: amount, games: games },
+                { onConflict: ['userID'], returning: '*' }
             );
-        
+
         if (error) {
             throw error;
         }
-        
+
         console.log('Data inserted or updated:', data);
     } catch (error) {
         console.error('Error:', error);
@@ -69,38 +69,41 @@ async function getLimbucks() {
 function update() {
     list.forEach(item => {
         const button = document.getElementById(`${item.name}Button`);
-        button.removeEventListener('click', handleButtonClick);
-        
-        if (purchases[item.name]) {
-            button.textContent = using[item.name] ? "stop using" : "use";
-            button.addEventListener('click', () => handleButtonClick(item));
-        } else {
-            button.textContent = "Purchase";
-            button.addEventListener('click', () => purchase(item));
-        }
+
+        // Clear any existing event listeners
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        newButton.textContent = purchases[item.name]
+            ? (using[item.name] ? "Stop Using" : "Use")
+            : "Purchase";
+
+        newButton.addEventListener('click', () => {
+            if (!purchases[item.name]) {
+                purchase(item);
+            } else {
+                if (using[item.name]) {
+                    stop_using(item);
+                } else {
+                    use(item);
+                }
+            }
+        });
     });
 }
 
 async function purchase(item) {
     const user = await getLimbucks();
     if (user.amount >= item.cost) {
-        if (confirm(`are you sure?`)) {
+        if (confirm("Are you sure?")) {
             await addLimbucks(user.amount - item.cost, user.userID, user.games);
-            alert("successfully bought the item");
+            alert("Successfully bought the item");
             purchases[item.name] = true;
             localStorage.setItem("purchases", JSON.stringify(purchases));
             update();
         }
     } else {
-        alert("you don't have enough money");
-    }
-}
-
-function handleButtonClick(item) {
-    if (using[item.name]) {
-        stop_using(item);
-    } else {
-        use(item);
+        alert("You don't have enough money");
     }
 }
 

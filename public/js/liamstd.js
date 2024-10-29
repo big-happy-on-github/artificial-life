@@ -657,22 +657,24 @@ class Tower {
     }
 
     draw() {
+        let img;
         list.forEach(item => {
-            let img;
-            if (item.name == "declan_LiamsTD") {
-                img = new Image();
-                img.src = "/img/delcan_LiamsTD";
-                img.onload = () => {
-                    ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
-                };
-                return;
-            } if (item.name == "mitch_LiamsTD") {
-                img = new Image();
-                img.src = "/img/mitch_LiamsTD";
-                img.onload = () => {
-                    ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
-                };
-                return;
+            if (JSON.parse(localStorage.getItem(item.name))) {
+                if (item.name == "declan_LiamsTD") {
+                    img = new Image();
+                    img.src = "/img/delcan_LiamsTD";
+                    img.onload = () => {
+                        ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+                    };
+                    return;
+                } if (item.name == "mitch_LiamsTD") {
+                    img = new Image();
+                    img.src = "/img/mitch_LiamsTD";
+                    img.onload = () => {
+                        ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+                    };
+                    return;
+                }
             }
         });
         if (this.type == '1') {

@@ -75,8 +75,8 @@ function update() {
         button.parentNode.replaceChild(newButton, button);
 
         newButton.textContent = purchases[item.name]
-            ? (using[item.name] ? "Stop Using" : "Use")
-            : "Purchase";
+            ? (using[item.name] ? "unequip" : "equip")
+            : `buy (${item.cost})`;
 
         newButton.addEventListener('click', () => {
             if (!purchases[item.name]) {
@@ -95,15 +95,15 @@ function update() {
 async function purchase(item) {
     const user = await getLimbucks();
     if (user.amount >= item.cost) {
-        if (confirm("Are you sure?")) {
+        if (confirm("are you sure?")) {
             await addLimbucks(user.amount - item.cost, user.userID, user.games);
-            alert("Successfully bought the item");
+            alert("successfully bought the item");
             purchases[item.name] = true;
             localStorage.setItem("purchases", JSON.stringify(purchases));
             update();
         }
     } else {
-        alert("You don't have enough money");
+        alert("you don't have enough money");
     }
 }
 
@@ -114,7 +114,7 @@ function use(item) {
 }
 
 function stop_using(item) {
-    using[item.name] = false;
+    delete using[item.name]
     localStorage.setItem("using", JSON.stringify(using));
     update();
 }

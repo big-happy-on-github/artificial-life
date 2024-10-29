@@ -665,6 +665,7 @@ class Tower {
                     img.src = "/img/delcan.jpg";
                     img.onload = () => {
                         ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+                        console.log("delcan");
                     };
                     return;
                 } if (item.name == "mitch_LiamsTD") {
@@ -672,6 +673,7 @@ class Tower {
                     img.src = "/img/mitch.jpg";
                     img.onload = () => {
                         ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+                        console.log("mitch");
                     };
                     return;
                 }

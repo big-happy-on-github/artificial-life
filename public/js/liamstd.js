@@ -26,8 +26,8 @@ let upgradePressed = false; // Flag for upgrade confirmation
 let daves = 0;
 let kabirs = 0;
 
-const response = await fetch(`/.netlify/functions/well-kept?name=list`);
-const list = await response.json();
+const lResponse = await fetch(`/.netlify/functions/well-kept?name=list`);
+const list = await lResponse.json();
 
 const upgrade = {
     '1': {

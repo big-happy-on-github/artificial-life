@@ -674,7 +674,6 @@ class Tower {
         const img = towerImages[using['declan_LiamsTD'] ? 'declan' : using['mitch_LiamsTD'] ? 'mitch' : null];
         if (img) {
             ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
-            console.log(using['declan_LiamsTD'] ? 'declan' : using['mitch_LiamsTD'] ? 'mitch' : null);
         } else {
             if (this.type == '1') {
                 ctx.fillStyle = 'grey';

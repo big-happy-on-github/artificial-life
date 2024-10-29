@@ -26,6 +26,9 @@ let upgradePressed = false; // Flag for upgrade confirmation
 let daves = 0;
 let kabirs = 0;
 
+const response = await fetch(`/.netlify/functions/well-kept?name=list`);
+const list = await response.json();
+
 const upgrade = {
     '1': {
         'lvl2': { '1': { health: 5, range: 0, damage: 1, fireRate: -0.1, cost: 5 }, '2': { health: 0, range: 30, damage: 0, fireRate: 0, cost: 3 } },
@@ -654,6 +657,24 @@ class Tower {
     }
 
     draw() {
+        list.forEach(item => {
+            let img;
+            if (item.name == "declan_LiamsTD") {
+                img = new Image();
+                img.src = "/img/delcan_LiamsTD";
+                img.onload = () => {
+                    ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+                };
+                return;
+            } if (item.name == "mitch_LiamsTD") {
+                img = new Image();
+                img.src = "/img/mitch_LiamsTD";
+                img.onload = () => {
+                    ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+                };
+                return;
+            }
+        });
         if (this.type == '1') {
             ctx.fillStyle = 'grey';
         } else if (this.type == '2') {

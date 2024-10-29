@@ -95,7 +95,7 @@ async function purchase(item) {
         if (confirm(`are you sure?`)) {
             await addLimbucks(user.amount-item.cost, user.userID, user.games);
             alert("successfully bought the item")
-            localStorage.setItem("purchases", JSON.stringify({...purchases, `${item.name}`: true}));
+            localStorage.setItem("purchases", JSON.stringify({ ...purchases, [item.name]: true }));
             update();
         }
     } else {

@@ -31,7 +31,7 @@ async function addLimbucks(amount, userID, games) {
             .from('limbucks')
             .upsert(
                 { userID, amount: amount, games: games }, 
-                { onConflict: ['userID'], returning: '*' } // This will return the updated row(s)
+                { onConflict: ['userID'], returning: '*' } 
             );
         
         if (error) {
@@ -55,13 +55,12 @@ async function getLimbucks() {
             .eq('userID', userID)
             .single();
 
-        try {
-            if (error && error.code === 'PGRST116') {
-                await addLimbucks(10, userID, {});
-            } else if (data) {
-                return data;
-            }
-        } catch {}
+        if (error && error.code === 'PGRST116') {
+            await addLimbucks(10, userID, {});
+            return { amount: 10, userID, games: {} };
+        } else if (data) {
+            return data;
+        }
     } catch (error) {
         console.error('Error fetching Limbucks:', error);
     }
@@ -69,23 +68,16 @@ async function getLimbucks() {
 
 function update() {
     list.forEach(item => {
-        document.getElementById(item.name).addEventListener('click', () => {
-            if (purchases[item.name]) {
-                if (using[item.name]) {
-                    document.getElementById(`${item.name}Button`).textContent = "stop using";
-                    document.getElementById(`${item.name}Button`).addEventListener('click', () => {
-                        stop_using(item);
-                    });
-                } else {
-                    document.getElementById(`${item.name}Button`).textContent = "use";
-                    document.getElementById(`${item.name}Button`).addEventListener('click', () => {
-                        use(item);
-                    });
-                }
-            } else {
-                purchase(item);
-            }
-        });
+        const button = document.getElementById(`${item.name}Button`);
+        button.removeEventListener('click', handleButtonClick);
+        
+        if (purchases[item.name]) {
+            button.textContent = using[item.name] ? "stop using" : "use";
+            button.addEventListener('click', () => handleButtonClick(item));
+        } else {
+            button.textContent = "Purchase";
+            button.addEventListener('click', () => purchase(item));
+        }
     });
 }
 
@@ -93,9 +85,10 @@ async function purchase(item) {
     const user = await getLimbucks();
     if (user.amount >= item.cost) {
         if (confirm(`are you sure?`)) {
-            await addLimbucks(user.amount-item.cost, user.userID, user.games);
-            alert("successfully bought the item")
-            localStorage.setItem("purchases", JSON.stringify({ ...purchases, [item.name]: true }));
+            await addLimbucks(user.amount - item.cost, user.userID, user.games);
+            alert("successfully bought the item");
+            purchases[item.name] = true;
+            localStorage.setItem("purchases", JSON.stringify(purchases));
             update();
         }
     } else {
@@ -103,13 +96,23 @@ async function purchase(item) {
     }
 }
 
+function handleButtonClick(item) {
+    if (using[item.name]) {
+        stop_using(item);
+    } else {
+        use(item);
+    }
+}
+
 function use(item) {
     using[item.name] = true;
+    localStorage.setItem("using", JSON.stringify(using));
     update();
 }
 
 function stop_using(item) {
     using[item.name] = false;
+    localStorage.setItem("using", JSON.stringify(using));
     update();
 }
 

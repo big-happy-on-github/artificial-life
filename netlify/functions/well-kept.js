@@ -2,6 +2,13 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabaseUrl = 'https://kjfnxynntottdbxjcree.supabase.co';
 const mainPass = "HURRICANEHELENE";
 const liamstdPass = "HURRICANEMILTOn";
+const list = [{
+    name: "mitch_LiamsTD",
+    cost: 10
+}, {
+    name: "declan_LiamsTD",
+    cost: 10
+}];
 
 exports.handler = async (event) => {
     // Access the 'name' parameter from the query string
@@ -12,7 +19,8 @@ exports.handler = async (event) => {
         supabaseKey: supabaseKey,
         supabaseUrl: supabaseUrl,
         mainPass: mainPass,
-        liamstdPass: liamstdPass
+        liamstdPass: liamstdPass,
+        list: list
     };
 
     // Check if the requested 'name' exists in the keys object

@@ -1493,8 +1493,6 @@ canvas.addEventListener('click', (event) => {
 });
 
 function update(deltaTime) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
     miniEnemies.forEach(miniEnemy => miniEnemy.update());  // Update mini enemies

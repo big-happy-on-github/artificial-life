@@ -662,14 +662,14 @@ class Tower {
             if (JSON.parse(localStorage.getItem("using"))[item.name]) {
                 if (item.name == "declan_LiamsTD") {
                     img = new Image();
-                    img.src = "/img/delcan_LiamsTD.jpg";
+                    img.src = "/img/delcan.jpg";
                     img.onload = () => {
                         ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
                     };
                     return;
                 } if (item.name == "mitch_LiamsTD") {
                     img = new Image();
-                    img.src = "/img/mitch_LiamsTD.jpg";
+                    img.src = "/img/mitch.jpg";
                     img.onload = () => {
                         ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
                     };

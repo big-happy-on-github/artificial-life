@@ -1493,15 +1493,20 @@ canvas.addEventListener('click', (event) => {
 });
 
 function update(deltaTime) {
-    towers.forEach(tower => tower.update(deltaTime));
-    enemies.forEach(enemy => enemy.update());
-    miniEnemies.forEach(miniEnemy => miniEnemy.update());  // Update mini enemies
-    projectiles.forEach(projectile => projectile.update());
-    enemyProjectiles.forEach(projectile => projectile.update());
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw the grid after clearing
     drawGrid();
     drawPath();
+    
+    // Update and draw all elements on top of the grid
+    towers.forEach(tower => tower.update(deltaTime));
+    enemies.forEach(enemy => enemy.update());
+    miniEnemies.forEach(miniEnemy => miniEnemy.update());
+    projectiles.forEach(projectile => projectile.update());
+    enemyProjectiles.forEach(projectile => projectile.update());
 }
+
 
 function resetOtherDropdowns(excludeId) {
     const dropdownIds = ['general-towers', 'close-range-towers', 'far-range-towers', 'special-towers'];

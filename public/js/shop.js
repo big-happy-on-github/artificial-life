@@ -7,6 +7,15 @@ const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`);
 const supabaseKey = JSON.parse(await response2.text());
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+if (!localStorage.getItem("purchases")) {
+    localStorage.setItem("purchases", JSON.stringify({}));
+}
+if (!localStorage.getItem("using")) {
+    localStorage.setItem("using", JSON.stringify({}));
+}   
+const purchases = JSON.parse(localStorage.getItem("purchases"));
+const using = JSON.parse(localStorage.getItem("using"));
+
 const list = [{
     name: "mitch_LiamsTD",
     cost: 10
@@ -58,11 +67,27 @@ async function getLimbucks() {
     }
 }
 
-list.forEach(item => {
-    document.getElementById(item.name).addEventListener('click', () => {
-        purchase(item);
+function update() {
+    list.forEach(item => {
+        document.getElementById(item.name).addEventListener('click', () => {
+            if (purchases[item.name]) {
+                if (using[item.name]) {
+                    document.getElementById(`${item.name}Button`).textContent = "stop using";
+                    document.getElementById(`${item.name}Button`).addEventListener('click', () => {
+                        stop_using(item);
+                    });
+                } else {
+                    document.getElementById(`${item.name}Button`).textContent = "use";
+                    document.getElementById(`${item.name}Button`).addEventListener('click', () => {
+                        use(item);
+                    });
+                }
+            } else {
+                purchase(item);
+            }
+        });
     });
-});
+}
 
 async function purchase(item) {
     const user = await getLimbucks();
@@ -70,10 +95,22 @@ async function purchase(item) {
         if (confirm(`are you sure?`)) {
             await addLimbucks(user.amount-item.cost, user.userID, user.games);
             alert("successfully bought the item")
-            return;
+            localStorage.setItem("purchases", JSON.stringify({...purchases, `${item.name}`: true}));
+            update();
         }
     } else {
         alert("you don't have enough money");
-        return;
     }
 }
+
+function use(item) {
+    using[item.name] = true;
+    update();
+}
+
+function stop_using(item) {
+    using[item.name] = false;
+    update();
+}
+
+update();

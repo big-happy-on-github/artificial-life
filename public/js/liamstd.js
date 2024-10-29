@@ -448,6 +448,19 @@ let occupiedSquares = new Set();
 canvas.width = 800;
 canvas.height = 600;
 
+const towerImages = {};
+
+// Preload tower images
+function preloadTowerImage(name, src) {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => towerImages[name] = img;
+}
+
+// Call preloadTowerImage for Declan and Mitch
+preloadTowerImage('declan', '/img/delcan.jpg');
+preloadTowerImage('mitch', '/img/mitch.jpg');
+
 // Define path waypoints
 const path = [
     { x: 0, y: 300 },
@@ -657,76 +670,61 @@ class Tower {
     }
 
     draw() {
-        let img;
-        list.forEach(item => {
-            if (JSON.parse(localStorage.getItem("using"))[item.name]) {
-                if (item.name == "declan_LiamsTD") {
-                    img = new Image();
-                    img.src = "/img/delcan.jpg";
-                    img.onload = () => {
-                        ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
-                        console.log("delcan");
-                    };
-                    return;
-                } if (item.name == "mitch_LiamsTD") {
-                    img = new Image();
-                    img.src = "/img/mitch.jpg";
-                    img.onload = () => {
-                        ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
-                        console.log("mitch");
-                    };
-                    return;
-                }
+        const using = JSON.parse(localStorage.getItem("using")); 
+        const img = towerImages[using['declan_LiamsTD'] ? 'declan' : using['mitch_LiamsTD'] ? 'mitch' : null];
+        if (img) {
+            ctx.drawImage(img, this.x - 15, this.y - 15, 30, 30);
+            console.log(using['declan_LiamsTD'] ? 'declan' : using['mitch_LiamsTD'] ? 'mitch' : null);
+        } else {
+            if (this.type == '1') {
+                ctx.fillStyle = 'grey';
+            } else if (this.type == '2') {
+                ctx.fillStyle = 'green';
+            } else if (this.type == '3') {
+                ctx.fillStyle = 'purple';
+            } else if (this.type == '4') {
+                ctx.fillStyle = 'blue';
+            } else if (this.type == '5') {
+                ctx.fillStyle = 'red';
+            } else if (this.type == '6') {
+                ctx.fillStyle = 'pink';
+            } else if (this.type == '7') {
+                ctx.fillStyle = 'orange';
+            } else if (this.type == '8') {
+                ctx.fillStyle = 'cyan';
+            } else if (this.type == '9') {
+                ctx.fillStyle = 'brown';
+            } else if (this.type == '10') {
+                ctx.fillStyle = '#fcba03';
+            } else if (this.type == '11') {
+                ctx.fillStyle = '#fff';
+            } else if (this.type == '12') {
+                ctx.fillStyle = '#48f542';
+            } else if (this.type == '13') {
+                ctx.fillStyle = '#f542d1';
+            } else if (this.type == '14') {
+                ctx.fillStyle = '#874b26';
+            } else if (this.type == '15') {
+                ctx.fillStyle = '#999999';
+            } else if (this.type == '16') {
+                ctx.fillStyle = '#000000';
+            } else if (this.type == '17') {
+                ctx.fillStyle = '#91fdff';
+            } else if (this.type == '18') {
+                ctx.fillStyle = '#5c1139';
+            } else if (this.type == '19') {
+                ctx.fillStyle = '#d6b19a';
+            } else if (this.type == '20') {
+                ctx.fillStyle = '#cbabff';
+            } else if (this.type == '21') {
+                ctx.fillStyle = '#42f598';
+            } else if (this.type == '22') {
+                ctx.fillStyle = '#47380c';
+            } else if (this.type == '23') {
+                ctx.fillStyle = '#e5eb34';
             }
-        });
-        if (this.type == '1') {
-            ctx.fillStyle = 'grey';
-        } else if (this.type == '2') {
-            ctx.fillStyle = 'green';
-        } else if (this.type == '3') {
-            ctx.fillStyle = 'purple';
-        } else if (this.type == '4') {
-            ctx.fillStyle = 'blue';
-        } else if (this.type == '5') {
-            ctx.fillStyle = 'red';
-        } else if (this.type == '6') {
-            ctx.fillStyle = 'pink';
-        } else if (this.type == '7') {
-            ctx.fillStyle = 'orange';
-        } else if (this.type == '8') {
-            ctx.fillStyle = 'cyan';
-        } else if (this.type == '9') {
-            ctx.fillStyle = 'brown';
-        } else if (this.type == '10') {
-            ctx.fillStyle = '#fcba03';
-        } else if (this.type == '11') {
-            ctx.fillStyle = '#fff';
-        } else if (this.type == '12') {
-            ctx.fillStyle = '#48f542';
-        } else if (this.type == '13') {
-            ctx.fillStyle = '#f542d1';
-        } else if (this.type == '14') {
-            ctx.fillStyle = '#874b26';
-        } else if (this.type == '15') {
-            ctx.fillStyle = '#999999';
-        } else if (this.type == '16') {
-            ctx.fillStyle = '#000000';
-        } else if (this.type == '17') {
-            ctx.fillStyle = '#91fdff';
-        } else if (this.type == '18') {
-            ctx.fillStyle = '#5c1139';
-        } else if (this.type == '19') {
-            ctx.fillStyle = '#d6b19a';
-        } else if (this.type == '20') {
-            ctx.fillStyle = '#cbabff';
-        } else if (this.type == '21') {
-            ctx.fillStyle = '#42f598';
-        } else if (this.type == '22') {
-            ctx.fillStyle = '#47380c';
-        } else if (this.type == '23') {
-            ctx.fillStyle = '#e5eb34';
+            ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
         }
-        ctx.fillRect(this.x - 15, this.y - 15, 30, 30);
     }
 
    shoot() {

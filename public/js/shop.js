@@ -17,7 +17,7 @@ const purchases = JSON.parse(localStorage.getItem("purchases"));
 const using = JSON.parse(localStorage.getItem("using"));
 
 const response = await fetch(`/.netlify/functions/well-kept?name=list`);
-const list = JSON.parse(await response.json());
+const list = await response.json();
 
 // Function to add data to Supabase
 async function addLimbucks(amount, userID, games) {

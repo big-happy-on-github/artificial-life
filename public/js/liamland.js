@@ -113,6 +113,9 @@ async function buy(gameName) {
         }
 
         if (userLimbucks >= gameToBuy.cost) {
+            if (!confirm("are you sure?")) {
+                return;
+            }
             const newAmount = userLimbucks - gameToBuy.cost;
             const updatedGames = { ...userGames, [gameToBuy.name]: true };
 
@@ -124,10 +127,10 @@ async function buy(gameName) {
                 throw new Error('Error updating user Limbucks data.');
             }
 
-            alert(`You bought ${gameToBuy.name}!`);
+            alert(`you bought${gameToBuy.name}!`);
             await updateDisplay();
         } else {
-            alert(`You are ${gameToBuy.cost - userLimbucks} Limbucks short!`);
+            alert(`your ${gameToBuy.cost - userLimbucks} limbucks short!`);
         }
 
     } catch (error) {

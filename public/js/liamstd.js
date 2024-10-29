@@ -659,7 +659,7 @@ class Tower {
     draw() {
         let img;
         list.forEach(item => {
-            if (JSON.parse(localStorage.getItem(item.name))) {
+            if (JSON.parse(localStorage.getItem("using"))[item.name]) {
                 if (item.name == "declan_LiamsTD") {
                     img = new Image();
                     img.src = "/img/delcan_LiamsTD";

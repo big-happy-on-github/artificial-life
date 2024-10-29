@@ -1495,14 +1495,15 @@ canvas.addEventListener('click', (event) => {
 
 function update(deltaTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGrid();
-    drawPath();
 
     towers.forEach(tower => tower.update(deltaTime));
     enemies.forEach(enemy => enemy.update());
     miniEnemies.forEach(miniEnemy => miniEnemy.update());  // Update mini enemies
     projectiles.forEach(projectile => projectile.update());
     enemyProjectiles.forEach(projectile => projectile.update());
+
+    drawGrid();
+    drawPath();
 }
 
 function resetOtherDropdowns(excludeId) {

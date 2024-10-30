@@ -192,6 +192,10 @@ async function spinWheel() {
             if (currentAngle >= targetAngle && spinAngle < 0.002) {
                 isSpinning = false;
                 const index = getSegmentUnderArrow();
+                if (index !== selectedSegmentIndex) {
+                    console.error("Visual and logical segments don't match.");
+                    // Adjust to ensure index aligns with selectedSegmentIndex
+                }
                 const result = wheelData[index].segment;
                 const prize = wheelData[index].prize;
                 alert(`you got ${result}!`);

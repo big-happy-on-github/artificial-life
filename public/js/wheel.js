@@ -172,40 +172,29 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const deceleration = 0.97; // Slightly faster deceleration for more gradual slowing
-    let initialSpinSpeed = Math.random() * 0.5 + 0.5;
+    // Define deceleration steps and initial spin speed
+    const decelerationSteps = 300;  // Total frames for deceleration
+    let initialSpinSpeed = Math.random() * 0.5 + 2;  // Initial speed (in radians/frame)
     let spinAngle = initialSpinSpeed;
 
+    // Calculate target angle based on selected segment
     let selectedSegmentIndex = selectSegmentWithWeight();
     const arcSize = (2 * Math.PI) / wheelData.length;
-    const targetAngle = ((wheelData.length - 1 - selectedSegmentIndex) * arcSize) + (Math.PI * 4); // Additional spins for visual effect
+    const targetAngle = ((wheelData.length - 1 - selectedSegmentIndex) * arcSize);
+    const totalRotation = targetAngle + (Math.PI * 6); // Add extra spins for visual effect
 
-    let isSpinning = true;
+    let currentRotation = 0;
+    let frame = 0;
 
     async function animate() {
-        if (isSpinning) {
-            // Decelerate more quickly when close to target angle
-            if (currentAngle >= targetAngle - 0.1) {
-                spinAngle *= 0.95;  // Faster deceleration near the end
-            } else {
-                spinAngle *= deceleration;  // Normal deceleration
-            }
-
+        if (frame < decelerationSteps && currentRotation < totalRotation) {
+            // Linearly decelerate the spin speed over the frames
+            spinAngle = initialSpinSpeed * (1 - frame / decelerationSteps);
+            currentRotation += spinAngle;
             currentAngle += spinAngle;
 
-            // Stop condition: within a small margin of target angle and spin speed is low
-            if (Math.abs(currentAngle - targetAngle) < 0.005 && spinAngle < 0.002) {
-                isSpinning = false;
-                currentAngle = targetAngle % (2 * Math.PI); // Ensure within bounds of 0 to 2π
-
-                const result = wheelData[selectedSegmentIndex].segment;
-                const prize = wheelData[selectedSegmentIndex].prize;
-                alert(`you got ${result}!`);
-
-                updateSpinTime();
-                await addLimbucks(prize);
-                return;
-            }
+            // Update the frame count
+            frame += 1;
 
             // Draw the wheel with the updated angle
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -219,6 +208,16 @@ async function spinWheel() {
             drawArrow();
 
             spinTimeout = requestAnimationFrame(animate);
+        } else {
+            // Ensure the wheel lands precisely on the target segment
+            currentAngle = targetAngle % (2 * Math.PI);
+
+            const result = wheelData[selectedSegmentIndex].segment;
+            const prize = wheelData[selectedSegmentIndex].prize;
+            alert(`You got ${result}!`);
+
+            updateSpinTime();
+            await addLimbucks(prize);
         }
     }
 

@@ -176,7 +176,11 @@ async function spinWheel() {
     let initialSpinSpeed = Math.random() * 0.5 + 0.5;
 
     let selectedSegmentIndex = selectSegmentWithWeight();
+    const arcSize = (2 * Math.PI) / wheelData.length;
     const selectedPrize = wheelData[selectedSegmentIndex].prize;
+
+    // Calculate the target angle to land on the selected segment, plus additional spins for visual effect
+    const targetAngle = ((wheelData.length - 1 - selectedSegmentIndex) * arcSize) + (Math.PI * 4); // Adds 2 full rotations
 
     let spinAngle = initialSpinSpeed;
     let isSpinning = true;
@@ -185,17 +189,15 @@ async function spinWheel() {
         if (isSpinning) {
             spinAngle *= deceleration;
 
-            const arcSize = (2 * Math.PI) / wheelData.length;
-            const targetAngle = (wheelData.length - 1 - selectedSegmentIndex) * arcSize;
-
             currentAngle += spinAngle;
+
+            // Stop condition: when we reach the target angle and speed is low enough
             if (currentAngle >= targetAngle && spinAngle < 0.002) {
                 isSpinning = false;
-                const index = getSegmentUnderArrow();
-                if (index !== selectedSegmentIndex) {
-                    console.error("Visual and logical segments don't match.");
-                    // Adjust to ensure index aligns with selectedSegmentIndex
-                }
+
+                // Set the angle to precisely land on the target segment
+                currentAngle = targetAngle % (2 * Math.PI); // Ensure within bounds of 0 to 2π
+
                 const result = wheelData[selectedSegmentIndex].segment;
                 const prize = wheelData[selectedSegmentIndex].prize;
                 alert(`you got ${result}!`);
@@ -205,6 +207,7 @@ async function spinWheel() {
                 return;
             }
 
+            // Draw the wheel with the updated angle
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);

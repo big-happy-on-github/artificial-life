@@ -196,8 +196,8 @@ async function spinWheel() {
                     console.error("Visual and logical segments don't match.");
                     // Adjust to ensure index aligns with selectedSegmentIndex
                 }
-                const result = wheelData[index].segment;
-                const prize = wheelData[index].prize;
+                const result = wheelData[selectedSegmentIndex].segment;
+                const prize = wheelData[selectedSegmentIndex].prize;
                 alert(`you got ${result}!`);
 
                 updateSpinTime();

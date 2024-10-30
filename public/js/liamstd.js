@@ -1696,7 +1696,6 @@ async function endGame() {
     startWaveButton.disabled = false;
     autoStartCheckbox.checked = false;
     updateHUD();
-    window.location.reload();
 }
 
 let gotTop10 = false;

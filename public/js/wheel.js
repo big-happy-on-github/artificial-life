@@ -186,7 +186,7 @@ async function spinWheel() {
     let currentRotation = 0;
     let spinAngle = initialSpinSpeed;
     let frame = 0;
-    const decelerationFrames = 300;
+    const decelerationFrames = 500;
 
     async function animate() {
         if (currentRotation < totalRotation && frame < decelerationFrames) {

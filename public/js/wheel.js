@@ -152,14 +152,15 @@ function getSegmentUnderArrow() {
 
 function selectSegmentWithWeight() {
     console.log("Before filtering:", wheelData);
-const validSegments = wheelData.filter(segment => segment.weight > 0);
-console.log("After filtering:", validSegments);
+    const validSegments = wheelData.filter(segment => segment.weight > 0);
+    console.log("After filtering:", validSegments);
 
     const totalWeight = validSegments.reduce((sum, segment) => sum + segment.weight, 0);
     let random = Math.random() * totalWeight;
 
     for (let i = 0; i < validSegments.length; i++) {
         if (random < validSegments[i].weight) {
+            console.log(wheelData.indexOf(validSegments[i]));
             return wheelData.indexOf(validSegments[i]); // Return the index in the original wheelData
         }
         random -= validSegments[i].weight;

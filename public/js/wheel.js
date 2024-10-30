@@ -184,7 +184,11 @@ async function spinWheel() {
         if (isSpinning) {
             spinAngle *= deceleration;
 
-            if (spinAngle < 0.002) {
+            const arcSize = (2 * Math.PI) / wheelData.length;
+            const targetAngle = (wheelData.length - 1 - selectedSegmentIndex) * arcSize;
+
+            currentAngle += spinAngle;
+            if (currentAngle >= targetAngle && spinAngle < 0.002) {
                 isSpinning = false;
                 const index = getSegmentUnderArrow();
                 const result = wheelData[index].segment;
@@ -196,7 +200,6 @@ async function spinWheel() {
                 return;
             }
 
-            currentAngle += spinAngle;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);

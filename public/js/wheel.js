@@ -145,9 +145,11 @@ function drawArrow() {
 
 function getSegmentUnderArrow() {
     const arcSize = (2 * Math.PI) / wheelData.length;
+    // Adjust the angle so it reflects the top position correctly.
     const adjustedAngle = (currentAngle + Math.PI / 2) % (2 * Math.PI);
+    // Calculate index based on adjusted angle.
     const index = Math.floor(adjustedAngle / arcSize);
-    return (wheelData.length - 1 - index + wheelData.length) % wheelData.length;
+    return (index + wheelData.length) % wheelData.length;
 }
 
 function selectSegmentWithWeight() {
@@ -192,10 +194,10 @@ async function spinWheel() {
             spinAngle = initialSpinSpeed * (1 - frame / decelerationSteps);
             currentRotation += spinAngle;
             currentAngle += spinAngle;
-
+    
             // Update the frame count
             frame += 1;
-
+    
             // Draw the wheel with the updated angle
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
@@ -204,23 +206,25 @@ async function spinWheel() {
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
             drawWheel();
             ctx.restore();
-
+    
             drawArrow();
-
+    
             spinTimeout = requestAnimationFrame(animate);
         } else {
-            // Ensure the wheel lands precisely on the target segment
+            // Snap to the exact target angle to ensure accuracy
             currentAngle = targetAngle % (2 * Math.PI);
-
+    
+            const selectedSegmentIndex = getSegmentUnderArrow();
             const result = wheelData[selectedSegmentIndex].segment;
             const prize = wheelData[selectedSegmentIndex].prize;
+    
             alert(`You got ${result}!`);
-
-            updateSpinTime();
+    
+            await updateSpinTime();
             await addLimbucks(prize);
         }
     }
-
+    
     if (spinTimeout) {
         cancelAnimationFrame(spinTimeout);
     }

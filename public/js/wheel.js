@@ -172,30 +172,30 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    const deceleration = 0.97;
+    const deceleration = 0.97; // Slightly faster deceleration for more gradual slowing
     let initialSpinSpeed = Math.random() * 0.5 + 0.5;
+    let spinAngle = initialSpinSpeed;
 
     let selectedSegmentIndex = selectSegmentWithWeight();
     const arcSize = (2 * Math.PI) / wheelData.length;
-    const selectedPrize = wheelData[selectedSegmentIndex].prize;
+    const targetAngle = ((wheelData.length - 1 - selectedSegmentIndex) * arcSize) + (Math.PI * 4); // Additional spins for visual effect
 
-    // Calculate the target angle to land on the selected segment, plus additional spins for visual effect
-    const targetAngle = ((wheelData.length - 1 - selectedSegmentIndex) * arcSize) + (Math.PI * 4); // Adds 2 full rotations
-
-    let spinAngle = initialSpinSpeed;
     let isSpinning = true;
 
     async function animate() {
         if (isSpinning) {
-            spinAngle *= deceleration;
+            // Decelerate more quickly when close to target angle
+            if (currentAngle >= targetAngle - 0.1) {
+                spinAngle *= 0.95;  // Faster deceleration near the end
+            } else {
+                spinAngle *= deceleration;  // Normal deceleration
+            }
 
             currentAngle += spinAngle;
 
-            // Stop condition: when we reach the target angle and speed is low enough
-            if (currentAngle >= targetAngle && spinAngle < 0.002) {
+            // Stop condition: within a small margin of target angle and spin speed is low
+            if (Math.abs(currentAngle - targetAngle) < 0.005 && spinAngle < 0.002) {
                 isSpinning = false;
-
-                // Set the angle to precisely land on the target segment
                 currentAngle = targetAngle % (2 * Math.PI); // Ensure within bounds of 0 to 2π
 
                 const result = wheelData[selectedSegmentIndex].segment;

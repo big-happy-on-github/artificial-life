@@ -2,22 +2,25 @@
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 // Player and game settings
 const playerSize = 20;
-const playerSpeed = 3;
 const obstacleColor = 'gray';
 const obstacles = [
     { x: 300, y: 200, width: 100, height: 20 },
     { x: 500, y: 400, width: 150, height: 20 },
     { x: 200, y: 100, width: 20, height: 150 }
 ];
+const powers = [ //speed, jump (height), special ability
+    { name: "speedy boy", speed: 2, jump: 1.25 },
+    { name: "normal", speed: 1, jump: 1 }
+];
 
 // Player positions and movement
-const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue' };
-const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red' };
+const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', speed: 1, jump: 1, number: 1 };
+const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', speed: 1, jump: 1, number: 2 };
 let tagger = player1;  // Initial tagger is player1
 
 // Player movement states
@@ -43,6 +46,7 @@ function checkCollision(rect1, rect2) {
 
 // Update player positions
 function updatePlayer(player, up, left, down, right) {
+    const playerSpeed = player.speed * 3; // Base speed modified by power
     if (keys[up]) player.y -= playerSpeed;
     if (keys[down]) player.y += playerSpeed;
     if (keys[left]) player.x -= playerSpeed;
@@ -93,9 +97,31 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Initialize game
-document.getElementById('tagger').innerText = `Tagger: Player 1`;
-document.getElementById('player1name').innerText = 'Player 1: Blue';
-document.getElementById('player2name').innerText = 'Player 2: Red';
+// Function to choose power
+function choosePower(player) {
+    while (true) {
+        const chosenPower = prompt(`choose power for player ${player.number}, ${player.color} (enter 'speedy boy' or 'normal'):`);
+        const power = powers.find(p => p.name === chosenPower);
+        if (power) {
+            player.speed = power.speed;
+            player.jump = power.jump;
+            alert(`${player.color.charAt(0).toUpperCase() + player.color.slice(1)} player chose ${power.name} power!`);
+            break;
+        } else {
+            alert("that's not a choice buddy");
+        }
+    }
+}
 
+// Initialize game
+function initialize() {
+    document.getElementById('player1name').innerText = 'Player 1: Blue';
+    document.getElementById('player2name').innerText = 'Player 2: Red';
+
+    // Ask players for power choice
+    choosePower(player1);
+    choosePower(player2);
+}
+
+initialize();
 gameLoop();

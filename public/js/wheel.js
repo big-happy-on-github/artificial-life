@@ -174,31 +174,29 @@ async function spinWheel() {
     const canSpin = await checkCooldown();
     if (!canSpin) return;
 
-    // Define deceleration steps and initial spin speed
-    const decelerationSteps = 300;  // Total frames for deceleration
-    let initialSpinSpeed = Math.random() * 0.5 + 2;  // Initial speed (in radians/frame)
-    let spinAngle = initialSpinSpeed;
-
-    // Calculate target angle based on selected segment
-    let selectedSegmentIndex = selectSegmentWithWeight();
+    let initialSpinSpeed = Math.random() * 0.5 + 2; // Initial speed in radians per frame
+    const selectedSegmentIndex = selectSegmentWithWeight();
     const arcSize = (2 * Math.PI) / wheelData.length;
     const targetAngle = ((wheelData.length - 1 - selectedSegmentIndex) * arcSize);
-    const totalRotation = targetAngle + (Math.PI * 6); // Add extra spins for visual effect
+
+    // Add multiple spins before deceleration
+    const extraRotations = Math.PI * 8; // Ensures visual effect of multiple spins
+    const totalRotation = targetAngle + extraRotations;
 
     let currentRotation = 0;
+    let spinAngle = initialSpinSpeed;
     let frame = 0;
+    const decelerationFrames = 300;
 
     async function animate() {
-        if (frame < decelerationSteps && currentRotation < totalRotation) {
-            // Linearly decelerate the spin speed over the frames
-            spinAngle = initialSpinSpeed * (1 - frame / decelerationSteps);
+        if (currentRotation < totalRotation && frame < decelerationFrames) {
+            // Linearly decelerate the spin speed
+            spinAngle = initialSpinSpeed * (1 - frame / decelerationFrames);
             currentRotation += spinAngle;
             currentAngle += spinAngle;
-    
-            // Update the frame count
-            frame += 1;
-    
-            // Draw the wheel with the updated angle
+            frame++;
+
+            // Clear and redraw the wheel at the new angle
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -206,25 +204,19 @@ async function spinWheel() {
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
             drawWheel();
             ctx.restore();
-    
             drawArrow();
-    
+
             spinTimeout = requestAnimationFrame(animate);
         } else {
-            // Snap to the exact target angle to ensure accuracy
+            // Snap to the exact target segment
             currentAngle = targetAngle % (2 * Math.PI);
-    
-            const selectedSegmentIndex = getSegmentUnderArrow();
-            const result = wheelData[selectedSegmentIndex].segment;
-            const prize = wheelData[selectedSegmentIndex].prize;
-    
-            alert(`You got ${result}!`);
-    
+            const resultSegment = wheelData[selectedSegmentIndex];
+            alert(`You got ${resultSegment.segment}!`);
             await updateSpinTime();
-            await addLimbucks(prize);
+            await addLimbucks(resultSegment.prize);
         }
     }
-    
+
     if (spinTimeout) {
         cancelAnimationFrame(spinTimeout);
     }

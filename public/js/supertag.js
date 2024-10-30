@@ -46,7 +46,7 @@ function checkCollision(rect1, rect2) {
 
 // Update player positions
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.speed * 3; // Base speed modified by power
+    const playerSpeed = player.speed * 5; // Base speed modified by power
     if (keys[up]) player.y -= playerSpeed;
     if (keys[down]) player.y += playerSpeed;
     if (keys[left]) player.x -= playerSpeed;

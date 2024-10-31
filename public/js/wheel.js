@@ -145,9 +145,9 @@ function drawArrow() {
 
 function getSegmentUnderArrow() {
     const arcSize = (2 * Math.PI) / wheelData.length;
-    // Adjust the angle so it reflects the top position correctly.
-    const adjustedAngle = (currentAngle + Math.PI / 2) % (2 * Math.PI);
-    // Calculate index based on adjusted angle.
+    // Adjust the angle with an offset for accurate alignment
+    const adjustedAngle = (currentAngle + Math.PI / 2 + arcSize / 2) % (2 * Math.PI);
+    // Calculate the index based on the adjusted angle
     const index = Math.floor(adjustedAngle / arcSize);
     return (index + wheelData.length) % wheelData.length;
 }

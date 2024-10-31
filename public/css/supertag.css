@@ -14,11 +14,8 @@ body {
 
 /* HUD Styles */
 #hud {
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 10px;
     color: #000;
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
 }

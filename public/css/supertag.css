@@ -11,3 +11,14 @@ body {
     background-position: center center; /* Centers the image */
     background-attachment: fixed; /* Makes the background stay fixed during scrolling */
 }
+
+/* HUD Styles */
+#hud {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #000;
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}

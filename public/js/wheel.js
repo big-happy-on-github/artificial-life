@@ -1,3 +1,11 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`);
+const supabaseUrl = await response1.json();
+const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`);
+const supabaseKey = await response2.json();
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 // Initialize Canvas and Context
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
@@ -17,14 +25,6 @@ if (!localStorage.getItem("userID")) {
     localStorage.setItem("userID", generateRandomString(50));
 }
 const userID = localStorage.getItem("userID");
-
-// Import Supabase
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-const supabase = createClient(
-    (await fetch('/.netlify/functions/well-kept?name=supabaseUrl').then(res => res.text())),
-    (await fetch('/.netlify/functions/well-kept?name=supabaseKey').then(res => res.text()))
-);
 
 // Cooldown Check
 async function checkCooldown() {

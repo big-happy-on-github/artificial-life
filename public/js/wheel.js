@@ -125,11 +125,10 @@ async function spinWheel() {
     let spinInterval = setInterval(() => {
         if (rotation < targetAngle) {
             rotation += spinSpeed;
-            currentAngle += spinSpeed;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(currentAngle);
+            ctx.rotate(rotation);
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
             drawWheel();
             ctx.restore();

@@ -15,7 +15,7 @@ body {
 /* HUD Styles */
 #hud {
     position: fixed;
-    top: 1000px;
+    top: 100px;
     left: 30px;
     color: #000;
 }

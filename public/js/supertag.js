@@ -134,13 +134,13 @@ function choosePower(player) {
             player.powers = { speed: 1 };
             break;
         }
-        const power = powers.find(p => p.name == chosenPower);
+        const power = powers[parseInt(chosenPower)+1];
         if (power) {
             player.powers = { speed: power.speed };
             alert(`player ${player.number} chose ${power.name} power!`);
             break;
         } else {
-            alert("that's not a choice buddy");
+            alert("that's not a choice buddy (note: remember you're putting in a number, not the name of the power)");
         }
     }
 }

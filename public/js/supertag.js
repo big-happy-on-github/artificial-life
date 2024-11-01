@@ -99,8 +99,8 @@ function gameLoop() {
 
 // Function to choose power
 function choosePower(player) {
-    const text = `choose power for player ${player.number} (enter `;
-    const number = 1;
+    let text = `choose power for player ${player.number} (enter `;
+    let number = 1;
     powers.forEach(power => {
         if (number == 1) {
             text += `'${number}' for ${power.name}`;

@@ -21,6 +21,8 @@ const powers = [ //speed, jump (height), special ability
 const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: {} };
 const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, powers: {} };
 let tagger = player1;  // Initial tagger is player1
+let lastTagTime = 0;   // Track time of last tag
+const cooldownDuration = 3000; // 3 seconds cooldown
 
 // Player movement states
 const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false };
@@ -39,7 +41,7 @@ function checkCollision(rect1, rect2) {
         rect1.x < rect2.x + rect2.width &&
         rect1.x + rect1.width > rect2.x &&
         rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect1.height > rect2.y
+        rect1.y + rect2.height > rect2.y
     );
 }
 
@@ -80,34 +82,51 @@ function gameLoop() {
     updatePlayer(player1, 'w', 'a', 's', 'd');
     updatePlayer(player2, 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight');
 
-    // Check for tag
-    if (checkCollision(player1, player2)) {
+    // Check for tag if cooldown period has expired
+    const currentTime = Date.now();
+    if (checkCollision(player1, player2) && (currentTime - lastTagTime >= cooldownDuration)) {
         tagger = tagger == player1 ? player2 : player1;  // Switch tagger
+        lastTagTime = currentTime; // Update last tag time
         document.getElementById('tagger').innerText = `${tagger == player1 ? 'player 1' : 'player 2'} is it!`;
     }
 
-    // Draw players
-    ctx.fillStyle = player1.color;
-    ctx.fillRect(player1.x, player1.y, player1.width, player1.height);
-
-    ctx.fillStyle = player2.color;
-    ctx.fillRect(player2.x, player2.y, player2.width, player2.height);
+    // Draw players and cooldown timer
+    drawPlayerWithCooldown(player1);
+    drawPlayerWithCooldown(player2);
 
     requestAnimationFrame(gameLoop);
 }
 
+// Function to draw a player and display cooldown above them if tagged
+function drawPlayerWithCooldown(player) {
+    // Draw player
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    // Display cooldown if this player is the tagger and within cooldown period
+    const currentTime = Date.now();
+    if (tagger === player && currentTime - lastTagTime < cooldownDuration) {
+        const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000); // Remaining seconds
+        ctx.fillStyle = 'black';
+        ctx.font = '16px Arial';
+        ctx.fillText(`${remainingCooldown}s`, player.x, player.y - 10);
+    }
+}
+
+// Function to choose power
 function choosePower(player) {
     let text = `choose power for player ${player.number} (enter `;
-    powers.forEach((power, index) => {
-        if (index === 0) {
-            text += `'${index + 1}' for ${power.name}`;
-        } else if (index === powers.length - 1) {
-            text += `, or '${index + 1}' for ${power.name})`;
+    let number = 1;
+    powers.forEach(power => {
+        if (number == 1) {
+            text += `'${number}' for ${power.name}`;
+        } else if (number == powers.length) {
+            text += ` or '${number}' for ${power.name})`;
         } else {
-            text += `, '${index + 1}' for ${power.name}`;
+            text += `, '${number}' for ${power.name}`;
         }
+        number++;
     });
-
     while (true) {
         const chosenPower = prompt(text);
         if (!chosenPower) {
@@ -115,15 +134,13 @@ function choosePower(player) {
             player.powers = { speed: 1 };
             break;
         }
-
-        const powerIndex = parseInt(chosenPower, 10) - 1;
-        if (powerIndex >= 0 && powerIndex < powers.length) {
-            const power = powers[powerIndex];
+        const power = powers.find(p => p.name == chosenPower);
+        if (power) {
             player.powers = { speed: power.speed };
-            alert(`player ${player.number} chose the ${power.name} power!`);
+            alert(`player ${player.number} chose ${power.name} power!`);
             break;
         } else {
-            alert("not a choice buddy");
+            alert("that's not a choice buddy");
         }
     }
 }

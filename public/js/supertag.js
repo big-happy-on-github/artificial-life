@@ -19,8 +19,8 @@ const powers = [ //speed, jump (height), special ability
 ];
 
 // Player positions and movement
-const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', speed: 1, jump: 1, number: 1 };
-const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', speed: 1, jump: 1, number: 2 };
+const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', speed: 1, number: 1 };
+const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', speed: 1, number: 2 };
 let tagger = player1;  // Initial tagger is player1
 
 // Player movement states
@@ -84,7 +84,7 @@ function gameLoop() {
     // Check for tag
     if (checkCollision(player1, player2)) {
         tagger = tagger === player1 ? player2 : player1;  // Switch tagger
-        document.getElementById('tagger').innerText = `Tagger: ${tagger === player1 ? 'Player 1' : 'Player 2'}`;
+        document.getElementById('tagger').innerText = `${tagger === player1 ? 'player 1' : 'player 2'} is it!`;
     }
 
     // Draw players
@@ -99,28 +99,45 @@ function gameLoop() {
 
 // Function to choose power
 function choosePower(player) {
+    const text = `choose power for player ${player.number} (enter `;
+    const number = 1;
+    powers.forEach(power => {
+        if (number == 1) {
+            text += `'${number}' for ${power.name}`;
+        } else if (number == powers.length) {
+            text += ` or '${number}' for ${power.name}`;
+        } else {
+            text += `, '${number}' for ${power.name}`;
+        }
+        number++;
+    });
     while (true) {
-        const chosenPower = prompt(`choose power for player ${player.number}, ${player.color} (enter 'speedy boy' or 'normal'):`);
+        const chosenPower = prompt(text);
+        if (!chosenPower) {
+            alert("by canceling, you proceed without a power");
+            player.speed = 1;
+        }
         const power = powers.find(p => p.name === chosenPower);
         if (power) {
             player.speed = power.speed;
-            player.jump = power.jump;
-            alert(`${player.color.charAt(0).toUpperCase() + player.color.slice(1)} player chose ${power.name} power!`);
+            alert(`player ${player.number} chose ${power.name} power!`);
             break;
         } else {
             alert("that's not a choice buddy");
+            
         }
     }
 }
 
 // Initialize game
 function initialize() {
-    document.getElementById('player1name').innerText = 'Player 1: Blue';
-    document.getElementById('player2name').innerText = 'Player 2: Red';
+    document.getElementById('tagger').innerText = 'player 1 is it!';
+    document.getElementById('player1name').innerText = 'player 1 is blue';
+    document.getElementById('player2name').innerText = 'player 2 is red';
 
     // Ask players for power choice
-    /*choosePower(player1);
-    choosePower(player2);*/
+    choosePower(player1);
+    choosePower(player2);
 }
 
 initialize();

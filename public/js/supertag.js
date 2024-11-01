@@ -146,15 +146,15 @@ function choosePower(player) {
 }
 
 // Initialize game
-function initialize() {
+async function initialize() {
     document.body.style.overflow = 'hidden';
     document.getElementById('tagger').innerText = `player ${tagger.number} is it!`;
     document.getElementById('player1name').innerText = 'player 1 is blue';
     document.getElementById('player2name').innerText = 'player 2 is red';
 
     // Ask players for power choice
-    choosePower(player1);
-    choosePower(player2);
+    await choosePower(player1);
+    await choosePower(player2);
 }
 
 initialize();

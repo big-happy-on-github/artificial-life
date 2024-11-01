@@ -120,15 +120,13 @@ function choosePower(player) {
     powers.forEach(power => {
         if (number == 1) {
             text += `'${number}' for ${power.name}`;
-        } else if (number == powers.length) {
+        } else if (number == powers.length+1) {
             text += ` or '${number}' for ${power.name})`;
         } else {
             text += `, '${number}' for ${power.name}`;
         }
         number++;
     });
-    console.log(number);
-    console.log(powers.length);
     while (true) {
         const chosenPower = prompt(text);
         if (!chosenPower) {
@@ -136,9 +134,7 @@ function choosePower(player) {
             player.powers = { speed: 1 };
             break;
         }
-        const power = powers[parseInt(chosenPower)+1];
-        console.log(power)
-        console.log(parseInt(chosenPower)+1);
+        const power = powers[parseInt(chosenPower)-1];
         if (power) {
             player.powers = { speed: power.speed };
             alert(`player ${player.number} chose ${power.name} power!`);

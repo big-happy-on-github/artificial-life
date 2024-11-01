@@ -127,6 +127,8 @@ function choosePower(player) {
         }
         number++;
     });
+    console.log(number);
+    console.log(powers.length);
     while (true) {
         const chosenPower = prompt(text);
         if (!chosenPower) {
@@ -135,6 +137,8 @@ function choosePower(player) {
             break;
         }
         const power = powers[parseInt(chosenPower)+1];
+        console.log(power)
+        console.log(parseInt(chosenPower)+1);
         if (power) {
             player.powers = { speed: power.speed };
             alert(`player ${player.number} chose ${power.name} power!`);

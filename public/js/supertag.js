@@ -14,8 +14,7 @@ const obstacles = [
     { x: 200, y: 100, width: 20, height: 150 }
 ];
 const powers = [ //speed, jump (height), special ability
-    { name: "speedy boy", speed: 2, jump: 1.25 },
-    { name: "normal", speed: 1, jump: 1 }
+    { name: "speedy boy", speed: 2 }
 ];
 
 // Player positions and movement
@@ -46,7 +45,7 @@ function checkCollision(rect1, rect2) {
 
 // Update player positions
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.speed * 5; // Base speed modified by power
+    const playerSpeed = player.powers.speed * 5; // Base speed modified by power
     if (keys[up]) player.y -= playerSpeed;
     if (keys[down]) player.y += playerSpeed;
     if (keys[left]) player.x -= playerSpeed;
@@ -83,8 +82,8 @@ function gameLoop() {
 
     // Check for tag
     if (checkCollision(player1, player2)) {
-        tagger = tagger === player1 ? player2 : player1;  // Switch tagger
-        document.getElementById('tagger').innerText = `${tagger === player1 ? 'player 1' : 'player 2'} is it!`;
+        tagger = tagger == player1 ? player2 : player1;  // Switch tagger
+        document.getElementById('tagger').innerText = `${tagger == player1 ? 'player 1' : 'player 2'} is it!`;
     }
 
     // Draw players
@@ -105,7 +104,7 @@ function choosePower(player) {
         if (number == 1) {
             text += `'${number}' for ${power.name}`;
         } else if (number == powers.length) {
-            text += ` or '${number}' for ${power.name}`;
+            text += ` or '${number}' for ${power.name})`;
         } else {
             text += `, '${number}' for ${power.name}`;
         }
@@ -116,21 +115,22 @@ function choosePower(player) {
         if (!chosenPower) {
             alert("by canceling, you proceed without a power");
             player.powers = { speed: 1 };
+            break;
         }
-        const power = powers.find(p => p.name === chosenPower);
+        const power = powers.find(p => p.name == chosenPower);
         if (power) {
             player.powers = { speed: power.speed };
             alert(`player ${player.number} chose ${power.name} power!`);
             break;
         } else {
             alert("that's not a choice buddy");
-            
         }
     }
 }
 
 // Initialize game
 function initialize() {
+    document.body.style.overflow = 'hidden';
     document.getElementById('tagger').innerText = `player ${tagger.number} is it!`;
     document.getElementById('player1name').innerText = 'player 1 is blue';
     document.getElementById('player2name').innerText = 'player 2 is red';

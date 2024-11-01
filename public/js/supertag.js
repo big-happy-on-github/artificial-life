@@ -119,8 +119,8 @@ function initialize() {
     document.getElementById('player2name').innerText = 'Player 2: Red';
 
     // Ask players for power choice
-    choosePower(player1);
-    choosePower(player2);
+    /*choosePower(player1);
+    choosePower(player2);*/
 }
 
 initialize();

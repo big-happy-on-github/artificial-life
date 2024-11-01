@@ -19,8 +19,8 @@ const powers = [ //speed, jump (height), special ability
 ];
 
 // Player positions and movement
-const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', speed: 1, number: 1 };
-const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', speed: 1, number: 2 };
+const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: {} };
+const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, powers: {} };
 let tagger = player1;  // Initial tagger is player1
 
 // Player movement states
@@ -115,11 +115,11 @@ function choosePower(player) {
         const chosenPower = prompt(text);
         if (!chosenPower) {
             alert("by canceling, you proceed without a power");
-            player.speed = 1;
+            player.powers = { speed: 1 };
         }
         const power = powers.find(p => p.name === chosenPower);
         if (power) {
-            player.speed = power.speed;
+            player.powers = { speed: power.speed };
             alert(`player ${player.number} chose ${power.name} power!`);
             break;
         } else {
@@ -131,7 +131,7 @@ function choosePower(player) {
 
 // Initialize game
 function initialize() {
-    document.getElementById('tagger').innerText = 'player 1 is it!';
+    document.getElementById('tagger').innerText = `player ${tagger.number} is it!`;
     document.getElementById('player1name').innerText = 'player 1 is blue';
     document.getElementById('player2name').innerText = 'player 2 is red';
 

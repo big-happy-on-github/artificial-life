@@ -96,20 +96,18 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Function to choose power
 function choosePower(player) {
     let text = `choose power for player ${player.number} (enter `;
-    let number = 1;
-    powers.forEach(power => {
-        if (number == 1) {
-            text += `'${number}' for ${power.name}`;
-        } else if (number == powers.length) {
-            text += ` or '${number}' for ${power.name})`;
+    powers.forEach((power, index) => {
+        if (index === 0) {
+            text += `'${index + 1}' for ${power.name}`;
+        } else if (index === powers.length - 1) {
+            text += `, or '${index + 1}' for ${power.name})`;
         } else {
-            text += `, '${number}' for ${power.name}`;
+            text += `, '${index + 1}' for ${power.name}`;
         }
-        number++;
     });
+
     while (true) {
         const chosenPower = prompt(text);
         if (!chosenPower) {
@@ -117,13 +115,15 @@ function choosePower(player) {
             player.powers = { speed: 1 };
             break;
         }
-        const power = powers.find(p => p.name == chosenPower);
-        if (power) {
+
+        const powerIndex = parseInt(chosenPower, 10) - 1;
+        if (powerIndex >= 0 && powerIndex < powers.length) {
+            const power = powers[powerIndex];
             player.powers = { speed: power.speed };
-            alert(`player ${player.number} chose ${power.name} power!`);
+            alert(`player ${player.number} chose the ${power.name} power!`);
             break;
         } else {
-            alert("that's not a choice buddy");
+            alert("not a choice buddy");
         }
     }
 }

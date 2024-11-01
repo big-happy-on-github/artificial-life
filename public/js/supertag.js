@@ -14,7 +14,7 @@ window.addEventListener('resize', setCanvasSize);
 // Player and game settings
 const playerSize = 20;
 const obstacleColor = 'gray';
-const obstacleCount = 5; // Number of obstacles
+const obstacleCount = 8; // Number of obstacles
 const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [ // Speed, jump (height), special ability
@@ -43,7 +43,7 @@ function generateRandomObstacles(count) {
     const obstacles = [];
     for (let i = 0; i < count; i++) {
         const obstacleWidth = 50 + Math.random() * 100;
-        const obstacleHeight = 20 + Math.random() * 100;
+        const obstacleHeight = 50 + Math.random() * 100;
         obstacles.push({
             x: Math.random() * (canvas.width - obstacleWidth),
             y: Math.random() * (canvas.height - obstacleHeight),
@@ -79,17 +79,26 @@ function updatePlayer(player, up, left, down, right) {
     intendedX = Math.max(0, Math.min(canvas.width - player.width, intendedX));
     intendedY = Math.max(0, Math.min(canvas.height - player.height, intendedY));
 
-    // Check for collisions at intended new position
-    let collision = false;
+    // Fine-tune collision detection and handling
+    let collisionX = false;
+    let collisionY = false;
+
     obstacles.forEach(obstacle => {
-        if (checkCollision({ ...player, x: intendedX, y: intendedY }, obstacle)) {
-            collision = true;
+        // Check for collision along the X-axis
+        if (checkCollision({ ...player, x: intendedX, y: player.y }, obstacle)) {
+            collisionX = true;
+        }
+        // Check for collision along the Y-axis
+        if (checkCollision({ ...player, x: player.x, y: intendedY }, obstacle)) {
+            collisionY = true;
         }
     });
 
-    // Only update position if no collision detected
-    if (!collision) {
+    // Update position based on collision results
+    if (!collisionX) {
         player.x = intendedX;
+    }
+    if (!collisionY) {
         player.y = intendedY;
     }
 }

@@ -48,7 +48,7 @@ function generateRandomObstacles(count) {
             x: Math.random() * (canvas.width - obstacleWidth),
             y: Math.random() * (canvas.height - obstacleHeight),
             width: obstacleWidth,
-            height: obstacleHeight-150
+            height: obstacleHeight-75
         });
     }
     return obstacles;
@@ -182,7 +182,7 @@ function choosePower(player) {
 
 // Initialize game
 async function initialize() {
-    //document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
     document.getElementById('tagger').innerText = `player ${tagger.number} is it!`;
     document.getElementById('player1name').innerText = 'player 1 is blue';
     document.getElementById('player2name').innerText = 'player 2 is red';

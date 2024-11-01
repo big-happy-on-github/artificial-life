@@ -48,7 +48,7 @@ function generateRandomObstacles(count) {
             x: Math.random() * (canvas.width - obstacleWidth),
             y: Math.random() * (canvas.height - obstacleHeight),
             width: obstacleWidth,
-            height: 2/3*obstacleHeight
+            height: 0.5*obstacleHeight
         });
     }
     return obstacles;

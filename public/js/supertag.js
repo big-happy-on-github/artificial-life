@@ -39,15 +39,16 @@ document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
 });
 
-// Generate random obstacles
 function generateRandomObstacles(count) {
     const obstacles = [];
     for (let i = 0; i < count; i++) {
+        const obstacleWidth = 50 + Math.random() * 100;
+        const obstacleHeight = 20 + Math.random() * 100;
         obstacles.push({
-            x: Math.random() * (canvas.width - 150),
-            y: Math.random() * (canvas.height - 150),
-            width: 50 + Math.random() * 100,
-            height: 20 + Math.random() * 100
+            x: Math.random() * (canvas.width - obstacleWidth),
+            y: Math.random() * (canvas.height - obstacleHeight),
+            width: obstacleWidth,
+            height: obstacleHeight
         });
     }
     return obstacles;
@@ -63,27 +64,34 @@ function checkCollision(rect1, rect2) {
     );
 }
 
-// Update player positions
 function updatePlayer(player, up, left, down, right) {
     const playerSpeed = player.powers.speed * 5; // Base speed modified by power
-    if (keys[up]) player.y -= playerSpeed;
-    if (keys[down]) player.y += playerSpeed;
-    if (keys[left]) player.x -= playerSpeed;
-    if (keys[right]) player.x += playerSpeed;
+    let intendedX = player.x;
+    let intendedY = player.y;
+
+    // Calculate intended new position based on keys
+    if (keys[up]) intendedY -= playerSpeed;
+    if (keys[down]) intendedY += playerSpeed;
+    if (keys[left]) intendedX -= playerSpeed;
+    if (keys[right]) intendedX += playerSpeed;
 
     // Keep player within bounds
-    player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
-    player.y = Math.max(0, Math.min(canvas.height - player.height, player.y));
+    intendedX = Math.max(0, Math.min(canvas.width - player.width, intendedX));
+    intendedY = Math.max(0, Math.min(canvas.height - player.height, intendedY));
 
-    // Check obstacle collisions
+    // Check for collisions at intended new position
+    let collision = false;
     obstacles.forEach(obstacle => {
-        if (checkCollision(player, obstacle)) {
-            if (keys[up]) player.y += playerSpeed;
-            if (keys[down]) player.y -= playerSpeed;
-            if (keys[left]) player.x += playerSpeed;
-            if (keys[right]) player.x -= playerSpeed;
+        if (checkCollision({ ...player, x: intendedX, y: intendedY }, obstacle)) {
+            collision = true;
         }
     });
+
+    // Only update position if no collision detected
+    if (!collision) {
+        player.x = intendedX;
+        player.y = intendedY;
+    }
 }
 
 // Main game loop

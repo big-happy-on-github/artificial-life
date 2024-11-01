@@ -2,18 +2,22 @@
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
+// Function to set canvas to window size
+function setCanvasSize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+setCanvasSize();
+window.addEventListener('resize', setCanvasSize);
 
 // Player and game settings
 const playerSize = 20;
 const obstacleColor = 'gray';
-const obstacles = [
-    { x: 300, y: 200, width: 100, height: 20 },
-    { x: 500, y: 400, width: 150, height: 20 },
-    { x: 200, y: 100, width: 20, height: 150 }
-];
-const powers = [ //speed, jump (height), special ability
+const obstacleCount = 5; // Number of obstacles
+const obstacles = generateRandomObstacles(obstacleCount);
+
+const powers = [ // Speed, jump (height), special ability
     { name: "speedy boy", speed: 2 }
 ];
 
@@ -34,6 +38,20 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
 });
+
+// Generate random obstacles
+function generateRandomObstacles(count) {
+    const obstacles = [];
+    for (let i = 0; i < count; i++) {
+        obstacles.push({
+            x: Math.random() * (canvas.width - 150),
+            y: Math.random() * (canvas.height - 150),
+            width: 50 + Math.random() * 100,
+            height: 20 + Math.random() * 100
+        });
+    }
+    return obstacles;
+}
 
 // Check collision between two rectangles
 function checkCollision(rect1, rect2) {

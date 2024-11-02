@@ -4,6 +4,15 @@
     height: 100%;
 }
 
+/* Game Container Adjustment */
+#game-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    border: 2px solid #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
 body {
     background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/bf/Webb%27s_First_Deep_Field.jpg'); /* URL of your background image */
     background-size: cover; /* Ensures the image covers the entire background */

@@ -5,8 +5,8 @@ const ctx = canvas.getContext('2d');
 
 // Function to set canvas to window size
 function setCanvasSize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = 800;
+    canvas.height = 600;
 }
 setCanvasSize();
 window.addEventListener('resize', setCanvasSize);

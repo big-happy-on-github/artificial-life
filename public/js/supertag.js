@@ -60,7 +60,7 @@ function checkCollision(rect1, rect2) {
         rect1.x < rect2.x + rect2.width &&
         rect1.x + rect1.width > rect2.x &&
         rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect2.height > rect2.y
+        rect1.y + rect1.height > rect2.y
     );
 }
 
@@ -79,17 +79,21 @@ function updatePlayer(player, up, left, down, right) {
     intendedX = Math.max(0, Math.min(canvas.width - player.width, intendedX));
     intendedY = Math.max(0, Math.min(canvas.height - player.height, intendedY));
 
-    // Fine-tune collision detection and handling
+    // Collision flags
     let collisionX = false;
     let collisionY = false;
 
     obstacles.forEach(obstacle => {
-        // Check for collision along the X-axis
-        if (checkCollision({ ...player, x: intendedX, y: player.y }, obstacle)) {
+        // Create adjusted player bounding boxes for X and Y collision checking
+        const playerBoxX = { ...player, x: intendedX };
+        const playerBoxY = { ...player, y: intendedY };
+
+        // Check collision along the X-axis
+        if (checkCollision(playerBoxX, obstacle)) {
             collisionX = true;
         }
-        // Check for collision along the Y-axis
-        if (checkCollision({ ...player, x: player.x, y: intendedY }, obstacle)) {
+        // Check collision along the Y-axis
+        if (checkCollision(playerBoxY, obstacle)) {
             collisionY = true;
         }
     });
@@ -100,7 +104,6 @@ function updatePlayer(player, up, left, down, right) {
     }
     if (!collisionY) {
         player.y = intendedY;
-    }
 }
 
 // Main game loop

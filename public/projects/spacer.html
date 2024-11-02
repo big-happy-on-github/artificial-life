@@ -1,15 +1,36 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rocket Dodge Game</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>LIAMLAND's Spacer</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/spacer.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9556203064620862"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-9556203064620862">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-    <h1>Rocket Dodge Game</h1>
-    <canvas id="gameCanvas"></canvas>
-    <p id="score">Score: 0</p>
-    <script src="/script.js"></script>
+    <header>
+        <a href="/welcome"><h1>LIAMLAND</h1></a>
+        <div id="menu">
+            <a href="/updates"><p>updates</p></a>
+            <a href="/about"><p>about me</p></a>
+            <a href="/shop"><p>shop</p></a>
+        </div>
+        <div class="feedback-container">
+            <label for="feedbackInput">got feedback?: </label>
+            <input id="feedbackInput">
+            <button onclick="addData(document.getElementById('feedbackInput').value)">send</button>
+        </div>
+    </header>
+    <main>
+        <h1>Rocket Dodge Game</h1>
+        <canvas id="gameCanvas"></canvas>
+        <p id="score">Score: 0</p>
+    </main>
+    <script type="module" src="/js/liamland.js"></script>
+    <script type="module" src="/js/spacer.js"></script>
 </body>
 </html>

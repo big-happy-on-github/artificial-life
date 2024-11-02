@@ -5,7 +5,7 @@
 }
 
 body {
-    background-image: url('https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* URL of your background image */
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/bf/Webb%27s_First_Deep_Field.jpg'); /* URL of your background image */
     background-size: cover; /* Ensures the image covers the entire background */
     background-repeat: no-repeat; /* Prevents repeating the image */
     background-position: center center; /* Centers the image */
@@ -14,8 +14,10 @@ body {
 
 /* HUD Styles */
 #hud {
-    position: fixed;
-    top: 100px;
-    left: 30px;
-    color: #000;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #fff;
+    display: flex;
+    gap: 20px;
 }

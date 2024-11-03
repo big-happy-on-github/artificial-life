@@ -10,13 +10,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
-// Function to set canvas to window size
-function setCanvasSize() {
-    canvas.width = 800;
-    canvas.height = 600;
-}
-setCanvasSize();
-window.addEventListener('resize', setCanvasSize);
+canvas.width = 800;
+canvas.height = 600;
 
 // Player and game settings
 const playerSize = 20;
@@ -26,21 +21,26 @@ const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
+    { name: "invisible cloak", speed: 1, desc: "turns you invisible with a 5s cooldown (press i)" }
 ];
 
+let active = { "invisible cloak": null };
+
 // Player positions and movement
-const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: {} };
-const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, powers: {} };
+const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, last: Date.now() };
+const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, last: Date.now() };
 let tagger = player1;  // Initial tagger is player1
 let lastTagTime = 0;   // Track time of last tag
 const cooldownDuration = 3000; // 3 seconds cooldown
 
 // Player movement states
 const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false };
+const spec = { i: false }
 
 // Event listeners for key presses
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+    if (spec.hasOwnProperty(e.key)) spec[e.key] = true;
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
@@ -71,11 +71,23 @@ function checkCollision(rect1, rect2) {
     );
 }
 
+function checkSpec(player) {
+    if (active["invisible cloak"] == player && Date.now() - player.last >= 5000) active["invisible cloak"] = null;
+    if (!(Date.now() - player.last >= 5000)) return;
+    
+    if (spec[i] && player.power.name == "invisible cloak") {
+        player.last = Date.now();
+        active["invisible cloak"] = player;
+    }
+}
+
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.powers.speed * 5; // Base speed modified by power
+    const playerSpeed = player.power.speed * 5; // Base speed modified by power
     let intendedX = player.x;
     let intendedY = player.y;
 
+    checkSpec(player);
+    
     // Calculate intended new position based on keys
     if (keys[up]) intendedY -= playerSpeed;
     if (keys[down]) intendedY += playerSpeed;
@@ -145,6 +157,7 @@ function gameLoop() {
 
 // Function to draw a player and display cooldown above them if tagged
 function drawPlayerWithCooldown(player) {
+    if (active["invisible cloak"] == player) return;
     // Draw player
     ctx.fillStyle = player.color;
     ctx.fillRect(player.x, player.y, player.width, player.height);
@@ -176,12 +189,12 @@ function choosePower(player) {
         const chosenPower = prompt(text);
         if (!chosenPower) {
             alert("by canceling, you proceed without a power");
-            player.powers = { speed: 1 };
+            player.power = { name: "normal", speed: 1, desc: "does nothing special" };
             break;
         }
         const power = powers[parseInt(chosenPower)-1];
         if (power) {
-            player.powers = { speed: power.speed };
+            player.power = power;
             alert(`player ${player.number} chose ${power.name} power, which ${power.desc}`);
             break;
         } else {

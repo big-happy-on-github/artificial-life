@@ -10,7 +10,6 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
-// Function to set canvas to window size
 function setCanvasSize() {
     canvas.width = 800;
     canvas.height = 600;
@@ -18,10 +17,9 @@ function setCanvasSize() {
 setCanvasSize();
 window.addEventListener('resize', setCanvasSize);
 
-// Player and game settings
 const playerSize = 20;
 const obstacleColor = 'gray';
-const obstacleCount = Math.round(5 + Math.random() * 10); // Number of obstacles
+const obstacleCount = Math.round(5 + Math.random() * 10);
 const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [
@@ -30,19 +28,16 @@ const powers = [
     { name: "invisibility cloak", invisible: true, duration: 5000, desc: "turns you invisible for 5 seconds (press space)" },
 ];
 
-// Player positions and movement
-const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: {} };
-const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, powers: {} };
-let tagger = player1;  // Initial tagger is player1
-let lastTagTime = 0;   // Track time of last tag
-const cooldownDuration = 3000; // 3 seconds cooldown
+const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: { speed: 1 } };
+const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, powers: { speed: 1 } };
+let tagger = player1;
+let lastTagTime = 0;
+const cooldownDuration = 3000;
 
-// Player movement states
 const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false };
-let bullets = []; // Store bullets for tag power
-let invisiblePlayers = {}; // Track invisible players
+let bullets = [];
+let invisiblePlayers = {};
 
-// Event listeners for key presses
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
     
@@ -68,7 +63,6 @@ function generateRandomObstacles(count) {
     return obstacles;
 }
 
-// Check collision between two rectangles
 function checkCollision(rect1, rect2) {
     return (
         rect1.x < rect2.x + rect2.width &&
@@ -79,21 +73,18 @@ function checkCollision(rect1, rect2) {
 }
 
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.powers.speed * 5; // Base speed modified by power
+    const playerSpeed = player.powers.speed || 1;
     let intendedX = player.x;
     let intendedY = player.y;
 
-    // Calculate intended new position based on keys
     if (keys[up]) intendedY -= playerSpeed;
     if (keys[down]) intendedY += playerSpeed;
     if (keys[left]) intendedX -= playerSpeed;
     if (keys[right]) intendedX += playerSpeed;
 
-    // Keep player within bounds
     intendedX = Math.max(0, Math.min(canvas.width - player.width, intendedX));
     intendedY = Math.max(0, Math.min(canvas.height - player.height, intendedY));
 
-    // Collision flags
     let collisionX = false;
     let collisionY = false;
 
@@ -109,7 +100,6 @@ function updatePlayer(player, up, left, down, right) {
     if (!collisionY) player.y = intendedY;
 }
 
-// Function to handle bullets
 function fireTagBullet(player) {
     const bulletSpeed = 5;
     const bullet = {
@@ -123,7 +113,6 @@ function fireTagBullet(player) {
     console.log("shot");
 }
 
-// Handle invisibility
 function triggerInvisibility(player) {
     invisiblePlayers[player.number] = {
         player,
@@ -133,7 +122,6 @@ function triggerInvisibility(player) {
     console.log("invisible");
 }
 
-// Main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -172,7 +160,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Adjust draw function for invisibility
 function drawPlayerWithCooldown(player) {
     if (!invisiblePlayers[player.number]) {
         ctx.fillStyle = player.color;
@@ -188,7 +175,6 @@ function drawPlayerWithCooldown(player) {
     }
 }
 
-// Choose power function
 function choosePower(player) {
     let text = `choose power for player ${player.number} (enter `;
     powers.forEach((power, index) => {
@@ -214,7 +200,6 @@ function choosePower(player) {
     }
 }
 
-// Initialize game
 async function initialize() {
     document.body.style.overflow = 'hidden';
     document.getElementById('tagger').innerText = `player ${tagger.number} is it!`;

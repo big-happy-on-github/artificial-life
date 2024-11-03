@@ -141,8 +141,8 @@ function animate() {
 
   if (keys['w']) newPosition.add(forward.clone().multiplyScalar(-0.1));
   if (keys['s']) newPosition.add(forward.clone().multiplyScalar(0.1));
-  if (keys['a']) newPosition.add(right.clone().multiplyScalar(0.1));
-  if (keys['d']) newPosition.add(right.clone().multiplyScalar(-0.1));
+  if (keys['a']) newPosition.add(right.clone().multiplyScalar(-0.1));
+  if (keys['d']) newPosition.add(right.clone().multiplyScalar(0.1));
 
   // Only update player position if no collision
   if (!checkCollision(newPosition)) {

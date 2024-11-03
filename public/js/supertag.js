@@ -196,5 +196,36 @@ async function initialize() {
     await choosePower(player2);
 }
 
+async function updateVisits() {
+    const { data, error: selectError } = await supabase
+        .from('visits')
+        .select('*')
+        .eq('project_name', 'supertag');
+
+    if (selectError) throw selectError;
+
+    if (data.length === 0) {
+        const { error: insertError } = await supabase
+            .from('visits')
+            .insert([{ project_name: 'supertag', num_visits: 1 }]);
+
+        if (insertError) throw insertError;
+
+        console.log('Created new row with project_name "supertag" and num_visits set to 1');
+    } else {
+        const currentVisits = data[0].num_visits || 0;
+
+        const { error: updateError } = await supabase
+            .from('visits')
+            .update({ num_visits: currentVisits + 1 })
+            .eq('project_name', 'supertag');
+
+        if (updateError) throw updateError;
+
+        console.log(`Updated num_visits to ${currentVisits + 1} for project_name "supertag"`);
+    }
+}
+
+updateVisits();
 initialize();
 gameLoop();

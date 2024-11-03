@@ -40,9 +40,10 @@ let invisiblePlayers = {};
 
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
-    
-    if (e.key === 'e' && tagger.powers.tagBullet) fireTagBullet(tagger);
-    else if (e.key === '/' && tagger.powers.invisible) triggerInvisibility(tagger);
+
+    //powers
+    if (e.key == 'e' && tagger.powers.tagBullet) fireTagBullet(tagger);
+    if (e.key == '/' && tagger.powers.invisible) triggerInvisibility(tagger);
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
@@ -105,8 +106,8 @@ function fireTagBullet(player) {
     const bullet = {
         x: player.x + player.width / 2,
         y: player.y + player.height / 2,
-        vx: player === player1 ? bulletSpeed : -bulletSpeed,
-        vy: player === player1 ? bulletSpeed : -bulletSpeed,
+        vx: player == player1 ? bulletSpeed : -bulletSpeed,
+        vy: player == player1 ? bulletSpeed : -bulletSpeed,
         player
     };
     bullets.push(bullet);
@@ -139,7 +140,7 @@ function gameLoop() {
         ctx.fillStyle = 'yellow';
         ctx.fillRect(bullet.x, bullet.y, 5, 5);
 
-        const targetPlayer = bullet.player === player1 ? player2 : player1;
+        const targetPlayer = bullet.player == player1 ? player2 : player1;
         if (checkCollision(bullet, targetPlayer)) {
             tagger = targetPlayer;
             lastTagTime = Date.now();
@@ -167,7 +168,7 @@ function drawPlayerWithCooldown(player) {
     }
 
     const currentTime = Date.now();
-    if (tagger === player && currentTime - lastTagTime < cooldownDuration) {
+    if (tagger == player && currentTime - lastTagTime < cooldownDuration) {
         const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000);
         ctx.fillStyle = '#fff';
         ctx.font = '16px Arial';
@@ -178,7 +179,7 @@ function drawPlayerWithCooldown(player) {
 function choosePower(player) {
     let text = `choose power for player ${player.number} (enter `;
     powers.forEach((power, index) => {
-        text += index === 0 ? `'${index + 1}' for ${power.name}` : `, '${index + 1}' for ${power.name}`;
+        text += index == 0 ? `'${index + 1}' for ${power.name}` : `, '${index + 1}' for ${power.name}`;
     });
     text += ')';
 
@@ -210,7 +211,7 @@ async function updateVisits() {
 
     if (selectError) throw selectError;
 
-    if (data.length === 0) {
+    if (data.length == 0) {
         const { error: insertError } = await supabase
             .from('visits')
             .insert([{ project_name: 'supertag', num_visits: 1 }]);

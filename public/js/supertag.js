@@ -41,9 +41,9 @@ let invisiblePlayers = {};
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
 
-    //powers
-    if (e.key == 'e' && tagger.powers.tagBullet) fireTagBullet(tagger);
-    if (e.key == '/' && tagger.powers.invisible) triggerInvisibility(tagger);
+    // Powers - check if the player has the ability before activating
+    if (e.key === 'e' && tagger.powers.tagBullet) fireTagBullet(tagger);
+    if (e.key === '/' && tagger.powers.invisible) triggerInvisibility(tagger);
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
@@ -103,11 +103,12 @@ function updatePlayer(player, up, left, down, right) {
 
 function fireTagBullet(player) {
     const bulletSpeed = 5;
+    const direction = player === player1 ? 1 : -1;
     const bullet = {
         x: player.x + player.width / 2,
         y: player.y + player.height / 2,
-        vx: player == player1 ? bulletSpeed : -bulletSpeed,
-        vy: player == player1 ? bulletSpeed : -bulletSpeed,
+        vx: direction * bulletSpeed,
+        vy: 0,
         player
     };
     bullets.push(bullet);
@@ -115,12 +116,18 @@ function fireTagBullet(player) {
 }
 
 function triggerInvisibility(player) {
-    invisiblePlayers[player.number] = {
-        player,
-        startTime: Date.now(),
-        duration: powers.find(p => p.invisible).duration
-    };
-    console.log("invisible");
+    if (!invisiblePlayers[player.number]) { // Only trigger if not already invisible
+        invisiblePlayers[player.number] = {
+            player,
+            startTime: Date.now(),
+            duration: powers.find(p => p.invisible).duration
+        };
+        console.log("invisible");
+        setTimeout(() => { 
+            delete invisiblePlayers[player.number]; 
+            console.log("visible again");
+        }, powers.find(p => p.invisible).duration);
+    }
 }
 
 function gameLoop() {
@@ -140,11 +147,11 @@ function gameLoop() {
         ctx.fillStyle = 'yellow';
         ctx.fillRect(bullet.x, bullet.y, 5, 5);
 
-        const targetPlayer = bullet.player == player1 ? player2 : player1;
+        const targetPlayer = bullet.player === player1 ? player2 : player1;
         if (checkCollision(bullet, targetPlayer)) {
             tagger = targetPlayer;
             lastTagTime = Date.now();
-            document.getElementById('tagger').innerText = `${tagger == player1 ? 'player 1' : 'player 2'} is it!`;
+            document.getElementById('tagger').innerText = `${tagger === player1 ? 'player 1' : 'player 2'} is it!`;
             bullets.splice(index, 1);
         }
     });
@@ -168,7 +175,7 @@ function drawPlayerWithCooldown(player) {
     }
 
     const currentTime = Date.now();
-    if (tagger == player && currentTime - lastTagTime < cooldownDuration) {
+    if (tagger === player && currentTime - lastTagTime < cooldownDuration) {
         const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000);
         ctx.fillStyle = '#fff';
         ctx.font = '16px Arial';
@@ -177,19 +184,19 @@ function drawPlayerWithCooldown(player) {
 }
 
 function choosePower(player) {
-    let text = `choose power for player ${player.number} (enter `;
+    let text = `Choose power for player ${player.number} (enter `;
     powers.forEach((power, index) => {
-        text += index == 0 ? `'${index + 1}' for ${power.name}` : `, '${index + 1}' for ${power.name}`;
+        text += `${index + 1} for ${power.name}${index < powers.length - 1 ? ', ' : ''}`;
     });
     text += ')';
 
     const chosenPower = parseInt(prompt(text));
     const power = powers[chosenPower - 1];
     if (power) {
-        player.powers = { speed: power.speed };
-        alert(`player ${player.number} chose ${power.name} power, which ${power.desc}`);
+        player.powers = { ...power }; // Spread the power properties directly
+        alert(`Player ${player.number} chose ${power.name} power, which ${power.desc}`);
     } else {
-        player.powers = { speed: 1 };
+        player.powers = { speed: 1 }; // Default speed
     }
 }
 

@@ -220,14 +220,18 @@ const pathname = window.location.pathname;
 const parts = pathname.split('/');
 const e = parts[parts.length - 1];
 let free = false;
+
+// Check if the game is free or if it's one of the allowed routes
 gameList.forEach(game => {
-    if (game.name == e && game.cost < 1) {
+    if (game.name === e && game.cost === 0) {
         free = true;
-        return;
     }
 });
-if (!userGames[e] && !free && (userGames[e] != "welcome" || userGames[e] != "about" || userGames[e] != "shop" || userGames[e] != "updates")) {
-    new Promise(resolve => setTimeout(resolve, 1000));
+
+const allowedRoutes = ["welcome", "about", "shop", "updates"];
+if (!userGames[e] && !free && !allowedRoutes.includes(e)) {
+    // Redirect to home page if the user doesn't own the game and it's not free or an allowed route
+    await new Promise(resolve => setTimeout(resolve, 1000));
     window.location.href = "/";
 }
 

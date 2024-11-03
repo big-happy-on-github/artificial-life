@@ -146,7 +146,7 @@ function drawPlayerWithCooldown(player) {
     const currentTime = Date.now();
     if (tagger === player && currentTime - lastTagTime < cooldownDuration) {
         const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000); // Remaining seconds
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#fff';
         ctx.font = '16px Arial';
         ctx.fillText(`${remainingCooldown}s`, player.x, player.y - 10);
     }

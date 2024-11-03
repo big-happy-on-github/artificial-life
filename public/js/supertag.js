@@ -24,8 +24,8 @@ const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
-    { name: "tag bullet", tagBullet: true, desc: "shoots a bullet that tags the other player if it hits (press space)" },
-    { name: "invisibility cloak", invisible: true, duration: 5000, desc: "turns you invisible for 5 seconds (press space)" },
+    { name: "tag bullet", tagBullet: true, desc: "shoots a bullet that tags the other player if it hits (press e)" },
+    { name: "invisibility cloak", invisible: true, duration: 5000, desc: "turns you invisible for 5 seconds (press /)" },
 ];
 
 const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: { speed: 1 } };
@@ -41,8 +41,8 @@ let invisiblePlayers = {};
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
     
-    if (e.key === ' ' && tagger.powers.tagBullet) fireTagBullet(tagger);
-    else if (e.key === ' ' && tagger.powers.invisible) triggerInvisibility(tagger);
+    if (e.key === 'e' && tagger.powers.tagBullet) fireTagBullet(tagger);
+    else if (e.key === '/' && tagger.powers.invisible) triggerInvisibility(tagger);
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
@@ -185,16 +185,8 @@ function choosePower(player) {
     const chosenPower = parseInt(prompt(text));
     const power = powers[chosenPower - 1];
     if (power) {
-        if (power.tagBullet) {
-            player.powers.tagBullet = true;
-            alert(`${power.desc}`);
-        } else if (power.invisible) {
-            player.powers.invisible = true;
-            triggerInvisibility(player);
-        } else {
-            player.powers = { speed: power.speed };
-            alert(`player ${player.number} chose ${power.name} power, which ${power.desc}`);
-        }
+        player.powers = { speed: power.speed };
+        alert(`player ${player.number} chose ${power.name} power, which ${power.desc}`);
     } else {
         player.powers = { speed: 1 };
     }

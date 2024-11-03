@@ -81,25 +81,6 @@ function checkSpec(player) {
     }
 }
 
-function checkSpec(player) {
-    const currentTime = Date.now();
-
-    // Check if the player is currently invisible and if the invisibility duration has expired
-    if (active["invisible cloak"] === player && currentTime - player.last >= 5000) {
-        active["invisible cloak"] = null; // Deactivate invisibility
-        player.last = currentTime; // Start cooldown after invisibility ends
-    }
-
-    // Check if the invisibility cloak can be activated
-    if (spec["i"] && player.power.name === "invisible cloak" && active["invisible cloak"] !== player) {
-        // Ensure enough time has passed since the last invisibility (cooldown)
-        if (currentTime - player.last >= 7000) {
-            player.last = currentTime; // Update last activation time
-            active["invisible cloak"] = player; // Activate invisibility
-        }
-    }
-}
-
 function updatePlayer(player, up, left, down, right) {
     const playerSpeed = player.power.speed * 5; // Base speed modified by power
     let intendedX = player.x;

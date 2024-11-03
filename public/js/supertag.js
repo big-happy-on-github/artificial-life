@@ -76,7 +76,7 @@ function checkCollision(rect1, rect2) {
 }
 
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.powers.speed*5;
+    const playerSpeed = player.powers.speed * 5;
     let intendedX = player.x;
     let intendedY = player.y;
 
@@ -101,6 +101,8 @@ function updatePlayer(player, up, left, down, right) {
 
     if (!collisionX) player.x = intendedX;
     if (!collisionY) player.y = intendedY;
+
+    console.log(`Player ${player.number} moved to (${player.x}, ${player.y})`);
 }
 
 function fireTagBullet(player) {
@@ -135,49 +137,34 @@ function triggerInvisibility(player) {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    console.log(`Player 1 Position: (${player1.x}, ${player1.y}), Invisible: ${player1.invisible || false}`);
+    console.log(`Player 2 Position: (${player2.x}, ${player2.y}), Invisible: ${player2.invisible || false}`);
+
+    // Draw obstacles
     ctx.fillStyle = obstacleColor;
     obstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     });
 
+    // Update player positions based on keys
     updatePlayer(player1, 'w', 'a', 's', 'd');
     updatePlayer(player2, 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight');
 
-    bullets.forEach((bullet, index) => {
-        bullet.x += bullet.vx;
-        bullet.y += bullet.vy;
-        ctx.fillStyle = 'yellow';
-        ctx.fillRect(bullet.x, bullet.y, 5, 5);
-
-        const targetPlayer = bullet.player === player1 ? player2 : player1;
-        if (checkCollision(bullet, targetPlayer)) {
-            tagger = targetPlayer;
-            lastTagTime = Date.now();
-            document.getElementById('tagger').innerText = `${tagger === player1 ? 'player 1' : 'player 2'} is it!`;
-            bullets.splice(index, 1);
-        }
-    });
-
-    Object.keys(invisiblePlayers).forEach(playerId => {
-        const { player, startTime, duration } = invisiblePlayers[playerId];
-        if (Date.now() - startTime >= duration) {
-            delete invisiblePlayers[playerId];
-            player.invisible = false; // Reset invisibility here
-        } else {
-            player.invisible = true;
-        }
-    });
-
+    // Draw players with visibility status
     drawPlayerWithCooldown(player1);
     drawPlayerWithCooldown(player2);
 
     requestAnimationFrame(gameLoop);
 }
 
+
 function drawPlayerWithCooldown(player) {
-    if (!invisiblePlayers[player.number]) {
+    if (!player.invisible) { // Only draw if the player is not invisible
         ctx.fillStyle = player.color;
         ctx.fillRect(player.x, player.y, player.width, player.height);
+        console.log(`Drawing Player ${player.number} at (${player.x}, ${player.y})`);
+    } else {
+        console.log(`Player ${player.number} is invisible and not drawn`);
     }
 
     const currentTime = Date.now();

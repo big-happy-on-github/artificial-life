@@ -74,7 +74,7 @@ function checkCollision(rect1, rect2) {
 }
 
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.powers.speed || 1;
+    const playerSpeed = player.powers.speed*5;
     let intendedX = player.x;
     let intendedY = player.y;
 

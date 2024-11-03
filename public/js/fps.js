@@ -1,5 +1,5 @@
 // Basic 3D FPS game setup with Three.js
-let scene, camera, renderer, player, bullets = [];
+let scene, camera, renderer, player, bullets = [], objects = [];
 let keys = {}; // Track key states
 let rotation = { x: 0, y: 0 }; // Track camera rotation
 
@@ -33,7 +33,7 @@ function init() {
   player.add(camera);
   camera.position.set(0, 1.5, 0); // Position camera at player's head height
 
-  // Add some objects for reference in the scene
+  // Add some objects for reference in the scene and enable collision detection
   createMapObjects();
 
   // Enable pointer lock for mouse control
@@ -57,7 +57,7 @@ function init() {
   animate();
 }
 
-// Create some map objects for visual reference
+// Create some map objects for visual reference and store them for collision detection
 function createMapObjects() {
   // Add walls
   for (let i = -20; i <= 20; i += 10) {
@@ -66,6 +66,7 @@ function createMapObjects() {
     const wall = new THREE.Mesh(wallGeometry, wallMaterial);
     wall.position.set(i, 1.5, -30);
     scene.add(wall);
+    objects.push(wall); // Add to objects array for collision detection
   }
 
   // Add boxes
@@ -75,6 +76,7 @@ function createMapObjects() {
     const box = new THREE.Mesh(boxGeometry, boxMaterial);
     box.position.set(Math.random() * 40 - 20, 1, Math.random() * 40 - 20);
     scene.add(box);
+    objects.push(box); // Add to objects array for collision detection
   }
 }
 
@@ -106,11 +108,23 @@ function onMouseMove(event) {
   player.rotation.set(rotation.x, rotation.y, 0);
 }
 
+// Basic collision detection function
+function checkCollision(newPosition) {
+  for (let i = 0; i < objects.length; i++) {
+    const object = objects[i];
+    const distance = newPosition.distanceTo(object.position);
+    if (distance < 1.5) { // Adjust this radius for sensitivity
+      return true;
+    }
+  }
+  return false;
+}
+
 // Animate the scene
 function animate() {
   requestAnimationFrame(animate);
 
-  // Update player position based on WASD keys and camera direction
+  // Calculate movement direction vectors
   const forward = new THREE.Vector3(
     Math.sin(rotation.y) * Math.cos(rotation.x),
     0,
@@ -122,10 +136,18 @@ function animate() {
     Math.cos(rotation.y + Math.PI / 2)
   );
 
-  if (keys['w']) player.position.add(forward.clone().multiplyScalar(0.1));
-  if (keys['s']) player.position.add(forward.clone().multiplyScalar(-0.1));
-  if (keys['a']) player.position.add(right.clone().multiplyScalar(-0.1));
-  if (keys['d']) player.position.add(right.clone().multiplyScalar(0.1));
+  // Update player position based on WASD keys and camera direction
+  let newPosition = player.position.clone();
+
+  if (keys['w']) newPosition.add(forward.clone().multiplyScalar(0.1));
+  if (keys['s']) newPosition.add(forward.clone().multiplyScalar(-0.1));
+  if (keys['a']) newPosition.add(right.clone().multiplyScalar(-0.1));
+  if (keys['d']) newPosition.add(right.clone().multiplyScalar(0.1));
+
+  // Only update player position if no collision
+  if (!checkCollision(newPosition)) {
+    player.position.copy(newPosition);
+  }
 
   // Update bullets
   bullets.forEach((bullet, index) => {
@@ -145,7 +167,5 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 });
-
-init();
 
 init();

@@ -82,11 +82,15 @@ function createMapObjects() {
 
 // Handle shooting
 function shoot() {
-  const bulletGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+  const bulletGeometry = new THREE.SphereGeometry(0.2, 16, 16); // Increase bullet size for visibility
   const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
   const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
 
-  bullet.position.copy(player.position); // Start bullet from player's position
+  // Start bullet at player's current position
+  bullet.position.copy(player.position);
+  bullet.position.y += 1.5; // Offset bullet to camera height
+
+  // Calculate direction based on rotation and apply as velocity
   const direction = new THREE.Vector3(
     Math.sin(rotation.y) * Math.cos(rotation.x),
     Math.sin(rotation.x),
@@ -99,7 +103,7 @@ function shoot() {
 
 // Handle mouse movement to control where the camera and player are looking
 function onMouseMove(event) {
-  const sensitivity = 0.001; // Adjust sensitivity as needed
+  const sensitivity = 0.002; // Adjust sensitivity as needed
   rotation.y -= event.movementX * sensitivity;
   rotation.x -= event.movementY * sensitivity;
   rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.x)); // Limit vertical look angle
@@ -139,8 +143,8 @@ function animate() {
   // Update player position based on WASD keys and camera direction
   let newPosition = player.position.clone();
 
-  if (keys['w']) newPosition.add(forward.clone().multiplyScalar(-0.1));
-  if (keys['s']) newPosition.add(forward.clone().multiplyScalar(0.1));
+  if (keys['w']) newPosition.add(forward.clone().multiplyScalar(0.1));
+  if (keys['s']) newPosition.add(forward.clone().multiplyScalar(-0.1));
   if (keys['a']) newPosition.add(right.clone().multiplyScalar(-0.1));
   if (keys['d']) newPosition.add(right.clone().multiplyScalar(0.1));
 
@@ -152,7 +156,7 @@ function animate() {
   // Update bullets
   bullets.forEach((bullet, index) => {
     bullet.position.add(bullet.velocity);
-    if (bullet.position.length() > 100) {
+    if (bullet.position.distanceTo(player.position) > 100) { // Set max distance for bullets
       scene.remove(bullet);
       bullets.splice(index, 1);
     }

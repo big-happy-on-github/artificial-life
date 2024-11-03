@@ -231,7 +231,7 @@ gameList.forEach(game => {
 const allowedRoutes = ["welcome", "about", "shop", "updates"];
 if (!userGames[e] && !free && !allowedRoutes.includes(e)) {
     // Redirect to home page if the user doesn't own the game and it's not free or an allowed route
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    new Promise(resolve => setTimeout(resolve, 1000));
     window.location.href = "/";
 }
 

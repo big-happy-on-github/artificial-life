@@ -21,11 +21,13 @@ window.addEventListener('resize', setCanvasSize);
 // Player and game settings
 const playerSize = 20;
 const obstacleColor = 'gray';
-const obstacleCount = Math.round(5+Math.random()*10); // Number of obstacles
+const obstacleCount = Math.round(5 + Math.random() * 10); // Number of obstacles
 const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
+    { name: "tag bullet", tagBullet: true, desc: "shoots a bullet that tags the other player if it hits (press space)" },
+    { name: "invisibility cloak", invisible: true, duration: 5000, desc: "turns you invisible for 5 seconds (press space)" },
 ];
 
 // Player positions and movement
@@ -37,10 +39,14 @@ const cooldownDuration = 3000; // 3 seconds cooldown
 
 // Player movement states
 const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false };
+let bullets = []; // Store bullets for tag power
+let invisiblePlayers = {}; // Track invisible players
 
 // Event listeners for key presses
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+    if (e.key === ' ' && tagger.powers.tagBullet) fireTagBullet(tagger);
+    if (e.key === 'i' && tagger.powers.invisible) triggerInvisibility(tagger);
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
@@ -55,7 +61,7 @@ function generateRandomObstacles(count) {
             x: Math.random() * (canvas.width - obstacleWidth),
             y: Math.random() * (canvas.height - obstacleHeight),
             width: obstacleWidth,
-            height: 0.2*obstacleHeight
+            height: 0.2 * obstacleHeight
         });
     }
     return obstacles;
@@ -91,103 +97,117 @@ function updatePlayer(player, up, left, down, right) {
     let collisionY = false;
 
     obstacles.forEach(obstacle => {
-        // Create adjusted player bounding boxes for X and Y collision checking
         const playerBoxX = { ...player, x: intendedX };
         const playerBoxY = { ...player, y: intendedY };
 
-        // Check collision along the X-axis
-        if (checkCollision(playerBoxX, obstacle)) {
-            collisionX = true;
-        }
-        // Check collision along the Y-axis
-        if (checkCollision(playerBoxY, obstacle)) {
-            collisionY = true;
-        }
+        if (checkCollision(playerBoxX, obstacle)) collisionX = true;
+        if (checkCollision(playerBoxY, obstacle)) collisionY = true;
     });
 
-    // Update position based on collision results
-    if (!collisionX) {
-        player.x = intendedX;
-    }
-    if (!collisionY) {
-        player.y = intendedY;
-    }
+    if (!collisionX) player.x = intendedX;
+    if (!collisionY) player.y = intendedY;
+}
+
+// Function to handle bullets
+function fireTagBullet(player) {
+    const bulletSpeed = 5;
+    const bullet = {
+        x: player.x + player.width / 2,
+        y: player.y + player.height / 2,
+        vx: player === player1 ? bulletSpeed : -bulletSpeed,
+        vy: player === player1 ? bulletSpeed : -bulletSpeed,
+        player
+    };
+    bullets.push(bullet);
+}
+
+// Handle invisibility
+function triggerInvisibility(player) {
+    invisiblePlayers[player.number] = {
+        player,
+        startTime: Date.now(),
+        duration: powers.find(p => p.invisible).duration
+    };
 }
 
 // Main game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw obstacles
     ctx.fillStyle = obstacleColor;
     obstacles.forEach(obstacle => {
         ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     });
 
-    // Update and draw players
     updatePlayer(player1, 'w', 'a', 's', 'd');
     updatePlayer(player2, 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight');
 
-    // Check for tag if cooldown period has expired
-    const currentTime = Date.now();
-    if (checkCollision(player1, player2) && (currentTime - lastTagTime >= cooldownDuration)) {
-        tagger = tagger == player1 ? player2 : player1;  // Switch tagger
-        lastTagTime = currentTime; // Update last tag time
-        document.getElementById('tagger').innerText = `${tagger == player1 ? 'player 1' : 'player 2'} is it!`;
-    }
+    bullets.forEach((bullet, index) => {
+        bullet.x += bullet.vx;
+        bullet.y += bullet.vy;
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(bullet.x, bullet.y, 5, 5);
 
-    // Draw players and cooldown timer
+        const targetPlayer = bullet.player === player1 ? player2 : player1;
+        if (checkCollision(bullet, targetPlayer)) {
+            tagger = targetPlayer;
+            lastTagTime = Date.now();
+            document.getElementById('tagger').innerText = `${tagger == player1 ? 'player 1' : 'player 2'} is it!`;
+            bullets.splice(index, 1);
+        }
+    });
+
+    Object.keys(invisiblePlayers).forEach(playerId => {
+        const { player, startTime, duration } = invisiblePlayers[playerId];
+        if (Date.now() - startTime >= duration) delete invisiblePlayers[playerId];
+        else player.invisible = true;
+    });
+
     drawPlayerWithCooldown(player1);
     drawPlayerWithCooldown(player2);
 
     requestAnimationFrame(gameLoop);
 }
 
-// Function to draw a player and display cooldown above them if tagged
+// Adjust draw function for invisibility
 function drawPlayerWithCooldown(player) {
-    // Draw player
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    if (!invisiblePlayers[player.number]) {
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
 
-    // Display cooldown if this player is the tagger and within cooldown period
     const currentTime = Date.now();
     if (tagger === player && currentTime - lastTagTime < cooldownDuration) {
-        const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000); // Remaining seconds
+        const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000);
         ctx.fillStyle = '#fff';
         ctx.font = '16px Arial';
         ctx.fillText(`${remainingCooldown}s`, player.x, player.y - 10);
     }
 }
 
-// Function to choose power
+// Choose power function
 function choosePower(player) {
     let text = `choose power for player ${player.number} (enter `;
-    let number = 1;
-    powers.forEach(power => {
-        if (number == 1) {
-            text += `'${number}' for ${power.name}`;
-        } else if (number == powers.length+1) {
-            text += ` or '${number}' for ${power.name})`;
-        } else {
-            text += `, '${number}' for ${power.name}`;
-        }
-        number++;
+    powers.forEach((power, index) => {
+        text += index === 0 ? `'${index + 1}' for ${power.name}` : `, '${index + 1}' for ${power.name}`;
     });
-    while (true) {
-        const chosenPower = prompt(text);
-        if (!chosenPower) {
-            alert("by canceling, you proceed without a power");
-            player.powers = { speed: 1 };
-            break;
-        }
-        const power = powers[parseInt(chosenPower)-1];
-        if (power) {
+    text += ')';
+
+    const chosenPower = parseInt(prompt(text));
+    const power = powers[chosenPower - 1];
+    if (power) {
+        if (power.tagBullet) {
+            player.powers.tagBullet = true;
+            alert(`${power.desc}`);
+        } else if (power.invisible) {
+            player.powers.invisible = true;
+            triggerInvisibility(player);
+        } else {
             player.powers = { speed: power.speed };
             alert(`player ${player.number} chose ${power.name} power, which ${power.desc}`);
-            break;
-        } else {
-            alert("that's not a choice buddy (note: remember you're putting in a number, not the name of the power)");
         }
+    } else {
+        player.powers = { speed: 1 };
     }
 }
 
@@ -198,7 +218,6 @@ async function initialize() {
     document.getElementById('player1name').innerText = 'player 1 is blue (wasd)';
     document.getElementById('player2name').innerText = 'player 2 is red (arrow keys)';
 
-    // Ask players for power choice
     await choosePower(player1);
     await choosePower(player2);
 }

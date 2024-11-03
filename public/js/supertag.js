@@ -220,6 +220,7 @@ async function initialize() {
     document.getElementById('player1name').innerText = 'player 1 is blue (wasd)';
     document.getElementById('player2name').innerText = 'player 2 is red (arrow keys)';
 
+    new Promise(resolve => setTimeout(resolve, 500));
     // Ask players for power choice
     await choosePower(player1);
     await choosePower(player2);

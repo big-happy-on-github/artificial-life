@@ -226,7 +226,7 @@ gameList.forEach(game => {
         return;
     }
 });
-if (!userGames[e] && !free) {
+if (!userGames[e] && !free && userGames[e] != "welcome") {
     new Promise(resolve => setTimeout(resolve, 1000));
     window.location.href = "/";
 }

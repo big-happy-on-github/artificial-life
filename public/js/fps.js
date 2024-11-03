@@ -60,24 +60,26 @@ function shoot() {
   const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
   const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
   
-  bullet.position.copy(camera.position);
-  bullet.velocity = new THREE.Vector3(
-    Math.sin(rotation.y),
-    0,
-    Math.cos(rotation.y)
-  ).multiplyScalar(0.2);
+  bullet.position.copy(player.position); // Start bullet from player's position
+  const direction = new THREE.Vector3(
+    Math.sin(rotation.y) * Math.cos(rotation.x),
+    Math.sin(rotation.x),
+    Math.cos(rotation.y) * Math.cos(rotation.x)
+  );
+  bullet.velocity = direction.multiplyScalar(0.2);
   bullets.push(bullet);
   scene.add(bullet);
 }
 
-// Handle mouse movement to control where the camera is looking
+// Handle mouse movement to control where the camera and player are looking
 function onMouseMove(event) {
   const sensitivity = 0.002; // Adjust sensitivity as needed
   rotation.y -= event.movementX * sensitivity;
   rotation.x -= event.movementY * sensitivity;
   rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.x)); // Limit vertical look angle
 
-  camera.rotation.set(rotation.x, rotation.y, 0);
+  // Set the player's rotation
+  player.rotation.set(rotation.x, rotation.y, 0);
 }
 
 // Animate the scene
@@ -85,13 +87,21 @@ function animate() {
   requestAnimationFrame(animate);
 
   // Update player position based on WASD keys and camera direction
-  const forward = new THREE.Vector3(Math.sin(rotation.y), 0, Math.cos(rotation.y));
-  const right = new THREE.Vector3(Math.sin(rotation.y + Math.PI / 2), 0, Math.cos(rotation.y + Math.PI / 2));
+  const forward = new THREE.Vector3(
+    Math.sin(rotation.y),
+    0,
+    Math.cos(rotation.y)
+  );
+  const right = new THREE.Vector3(
+    Math.sin(rotation.y + Math.PI / 2),
+    0,
+    Math.cos(rotation.y + Math.PI / 2)
+  );
 
-  if (keys['w']) player.position.add(forward.multiplyScalar(0.1));
-  if (keys['s']) player.position.add(forward.multiplyScalar(-0.1));
-  if (keys['a']) player.position.add(right.multiplyScalar(-0.1));
-  if (keys['d']) player.position.add(right.multiplyScalar(0.1));
+  if (keys['w']) player.position.add(forward.clone().multiplyScalar(0.1));
+  if (keys['s']) player.position.add(forward.clone().multiplyScalar(-0.1));
+  if (keys['a']) player.position.add(right.clone().multiplyScalar(-0.1));
+  if (keys['d']) player.position.add(right.clone().multiplyScalar(0.1));
 
   // Update bullets
   bullets.forEach((bullet, index) => {

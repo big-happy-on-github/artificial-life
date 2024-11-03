@@ -76,21 +76,27 @@ function checkCollision(rect1, rect2) {
 }
 
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.powers.speed * 5;
+    const playerSpeed = player.powers.speed ? player.powers.speed * 5 : 5; // Ensure speed has a fallback
     let intendedX = player.x;
     let intendedY = player.y;
 
+    console.log(`Keys - Up: ${keys[up]}, Down: ${keys[down]}, Left: ${keys[left]}, Right: ${keys[right]}`);
+    console.log(`Player Speed: ${playerSpeed}`);
+
+    // Apply movement based on key press and player speed
     if (keys[up]) intendedY -= playerSpeed;
     if (keys[down]) intendedY += playerSpeed;
     if (keys[left]) intendedX -= playerSpeed;
     if (keys[right]) intendedX += playerSpeed;
 
-    intendedX = Math.max(0, Math.min(canvas.width - player.width, intendedX));
-    intendedY = Math.max(0, Math.min(canvas.height - player.height, intendedY));
+    // Clamp intended positions within canvas boundaries
+    intendedX = isNaN(intendedX) ? player.x : Math.max(0, Math.min(canvas.width - player.width, intendedX));
+    intendedY = isNaN(intendedY) ? player.y : Math.max(0, Math.min(canvas.height - player.height, intendedY));
 
     let collisionX = false;
     let collisionY = false;
 
+    // Check for collisions with obstacles
     obstacles.forEach(obstacle => {
         const playerBoxX = { ...player, x: intendedX };
         const playerBoxY = { ...player, y: intendedY };
@@ -99,6 +105,7 @@ function updatePlayer(player, up, left, down, right) {
         if (checkCollision(playerBoxY, obstacle)) collisionY = true;
     });
 
+    // Update player's position if no collision
     if (!collisionX) player.x = intendedX;
     if (!collisionY) player.y = intendedY;
 

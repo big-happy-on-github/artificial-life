@@ -14,7 +14,7 @@ window.addEventListener('resize', setCanvasSize);
 // Player and game settings
 const playerSize = 20;
 const obstacleColor = 'gray';
-const obstacleCount = 8; // Number of obstacles
+const obstacleCount = Math.round(5+Math.random()*10); // Number of obstacles
 const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [ // Speed, jump (height), special ability

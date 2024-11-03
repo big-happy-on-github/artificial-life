@@ -208,6 +208,8 @@ async function updateDisplay() {
     await getLimbucks();
 }
 
+const userID = localStorage.getItem("userID") || generateRandomString(50);
+localStorage.setItem("userID", userID);
 const { data, error } = await supabase
     .from('limbucks')
     .select('games')

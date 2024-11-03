@@ -120,6 +120,7 @@ function fireTagBullet(player) {
         player
     };
     bullets.push(bullet);
+    console.log("shot");
 }
 
 // Handle invisibility
@@ -129,6 +130,7 @@ function triggerInvisibility(player) {
         startTime: Date.now(),
         duration: powers.find(p => p.invisible).duration
     };
+    console.log("invisible");
 }
 
 // Main game loop

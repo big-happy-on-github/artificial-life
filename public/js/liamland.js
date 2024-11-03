@@ -208,5 +208,26 @@ async function updateDisplay() {
     await getLimbucks();
 }
 
+const { data, error } = await supabase
+    .from('limbucks')
+    .select('games')
+    .eq('userID', userID)
+    .single();
+const userGames = data.games || {};
+const pathname = window.location.pathname;
+const parts = pathname.split('/');
+const e = parts[parts.length - 1];
+let free = false;
+gameList.forEach(game => {
+    if (game.name == e && game.cost < 1) {
+        free = true;
+        return;
+    }
+});
+if (!userGames[e] && !free) {
+    new Promise(resolve => setTimeout(resolve, 1000));
+    window.location.href = "/";
+}
+
 getLimbucks();
 updateDisplay();

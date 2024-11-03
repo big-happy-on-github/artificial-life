@@ -99,7 +99,7 @@ function shoot() {
 
 // Handle mouse movement to control where the camera and player are looking
 function onMouseMove(event) {
-  const sensitivity = 0.002; // Adjust sensitivity as needed
+  const sensitivity = 0.001; // Adjust sensitivity as needed
   rotation.y -= event.movementX * sensitivity;
   rotation.x -= event.movementY * sensitivity;
   rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.x)); // Limit vertical look angle
@@ -139,10 +139,10 @@ function animate() {
   // Update player position based on WASD keys and camera direction
   let newPosition = player.position.clone();
 
-  if (keys['w']) newPosition.add(forward.clone().multiplyScalar(0.1));
-  if (keys['s']) newPosition.add(forward.clone().multiplyScalar(-0.1));
-  if (keys['a']) newPosition.add(right.clone().multiplyScalar(-0.1));
-  if (keys['d']) newPosition.add(right.clone().multiplyScalar(0.1));
+  if (keys['w']) newPosition.add(forward.clone().multiplyScalar(-0.1));
+  if (keys['s']) newPosition.add(forward.clone().multiplyScalar(0.1));
+  if (keys['a']) newPosition.add(right.clone().multiplyScalar(0.1));
+  if (keys['d']) newPosition.add(right.clone().multiplyScalar(-0.1));
 
   // Only update player position if no collision
   if (!checkCollision(newPosition)) {

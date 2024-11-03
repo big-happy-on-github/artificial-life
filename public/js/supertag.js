@@ -24,8 +24,8 @@ const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
-    { name: "tag bullet", tagBullet: true, desc: "shoots a bullet that tags the other player if it hits (press e)" },
-    { name: "invisibility cloak", invisible: true, duration: 5000, desc: "turns you invisible for 5 seconds (press /)" },
+    { name: "tag bullet", desc: "shoots a bullet that tags the other player if it hits (press e)" },
+    { name: "invisibility cloak", desc: "turns you invisible for 5 seconds (press /)" },
 ];
 
 const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: { speed: 1 } };
@@ -42,8 +42,8 @@ document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
 
     // Powers - check if the player has the ability before activating
-    if (e.key === 'e' && tagger.powers.tagBullet) fireTagBullet(tagger);
-    if (e.key === '/' && tagger.powers.invisible) triggerInvisibility(tagger);
+    if (e.key === 'e' && tagger.powers.name == "tag bullet") fireTagBullet(tagger);
+    if (e.key === '/' && tagger.powers.name == "invisibility cloak") triggerInvisibility(tagger);
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;

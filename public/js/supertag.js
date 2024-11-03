@@ -41,12 +41,12 @@ let invisiblePlayers = {};
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
 
-    // Powers - activate based on chosen power
-    if (e.key === 'e' && tagger.powers.name === "tag bullet") {
+    // Powers - check if the player has the ability before activating
+    if (e.key === 'e' && tagger.powers && tagger.powers.name === "tag bullet") {
         fireTagBullet(tagger);
     }
 
-    if (e.key === '/' && tagger.powers.name === "invisibility cloak") {
+    if (e.key === '/' && tagger.powers && tagger.powers.name === "invisibility cloak") {
         triggerInvisibility(tagger);
     }
 });
@@ -126,25 +126,25 @@ function fireTagBullet(player) {
         player
     };
     bullets.push(bullet);
-    console.log("shot");
+    console.log("Bullet fired by Player", player.number);
 }
 
 function triggerInvisibility(player) {
     const invisibilityPower = powers.find(p => p.name === "invisibility cloak");
 
-    if (!invisiblePlayers[player.number] && invisibilityPower) { // Only trigger if not already invisible
+    if (!invisiblePlayers[player.number] && invisibilityPower) {
         invisiblePlayers[player.number] = {
             player,
             startTime: Date.now(),
             duration: invisibilityPower.duration
         };
         player.invisible = true;
-        console.log("Player is now invisible");
-        
+        console.log(`Player ${player.number} is now invisible`);
+
         setTimeout(() => { 
-            player.invisible = false; // Make visible again
+            player.invisible = false;
             delete invisiblePlayers[player.number];
-            console.log("Player is visible again");
+            console.log(`Player ${player.number} is visible again`);
         }, invisibilityPower.duration);
     }
 }
@@ -201,10 +201,12 @@ function choosePower(player) {
     const chosenPower = parseInt(prompt(text));
     const power = powers[chosenPower - 1];
     if (power) {
-        player.powers = { ...power }; // Spread the power properties directly
+        player.powers = { ...power }; // Assign all properties directly to player.powers
+        console.log(`Player ${player.number} chose power:`, player.powers);
         alert(`Player ${player.number} chose ${power.name} power, which ${power.desc}`);
     } else {
-        player.powers = { speed: 1 }; // Default speed
+        player.powers = { speed: 1 }; // Default to basic speed if no power selected
+        console.log(`Player ${player.number} has default power (speed only)`);
     }
 }
 

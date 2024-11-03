@@ -61,14 +61,24 @@ function generateRandomObstacles(count) {
     return obstacles;
 }
 
-// Check collision between two rectangles
-function checkCollision(rect1, rect2) {
-    return (
-        rect1.x < rect2.x + rect2.width &&
-        rect1.x + rect1.width > rect2.x &&
-        rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect1.height > rect2.y
-    );
+function checkSpec(player) {
+    const currentTime = Date.now();
+
+    // Check if the player is currently invisible and if the invisibility duration has expired
+    if (active["invisible cloak"] === player && currentTime - player.last >= 5000) {
+        active["invisible cloak"] = null; // Deactivate invisibility
+        player.last = currentTime; // Start cooldown after invisibility ends
+    }
+
+    // Check if the invisibility cloak can be activated, and reset spec["i"] after use
+    if (spec["i"] && player.power.name === "invisible cloak" && active["invisible cloak"] !== player) {
+        // Ensure enough time has passed since the last invisibility (cooldown)
+        if (currentTime - player.last >= 7000) {
+            player.last = currentTime; // Update last activation time
+            active["invisible cloak"] = player; // Activate invisibility
+        }
+        spec["i"] = false; // Reset the "i" key after activation to avoid re-triggering
+    }
 }
 
 function checkSpec(player) {

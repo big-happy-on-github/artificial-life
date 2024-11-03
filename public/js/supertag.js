@@ -21,7 +21,7 @@ const obstacles = generateRandomObstacles(obstacleCount);
 
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
-    { name: "invisible cloak", speed: 1, desc: "turns you invisible with a 5s cooldown (press i)" }
+    { name: "invisible cloak", speed: 1, desc: "turns you invisible with a 7s cooldown (press i)" }
 ];
 
 let active = { "invisible cloak": null };
@@ -72,12 +72,21 @@ function checkCollision(rect1, rect2) {
 }
 
 function checkSpec(player) {
-    if (active["invisible cloak"] == player && Date.now() - player.last >= 5000) active["invisible cloak"] = null;
-    if (!(Date.now() - player.last >= 5000)) return;
-    
-    if (spec["i"] && player.power.name == "invisible cloak") {
-        player.last = Date.now();
-        active["invisible cloak"] = player;
+    const currentTime = Date.now();
+
+    // Check if the player is currently invisible and if the invisibility duration has expired
+    if (active["invisible cloak"] === player && currentTime - player.last >= 5000) {
+        active["invisible cloak"] = null; // Deactivate invisibility
+        player.last = currentTime; // Start cooldown after invisibility ends
+    }
+
+    // Check if the invisibility cloak can be activated
+    if (spec["i"] && player.power.name === "invisible cloak" && active["invisible cloak"] !== player) {
+        // Ensure enough time has passed since the last invisibility (cooldown)
+        if (currentTime - player.last >= 7000) {
+            player.last = currentTime; // Update last activation time
+            active["invisible cloak"] = player; // Activate invisibility
+        }
     }
 }
 

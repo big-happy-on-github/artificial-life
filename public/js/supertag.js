@@ -1,11 +1,16 @@
 // supertag.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`);
-const supabaseUrl = await response1.json();
-const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`);
-const supabaseKey = await response2.json();
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Function to initialize Supabase client with fetched URL and Key
+async function initSupabase() {
+    const response1 = await fetch(`/.netlify/functions/well-kept?name=supabaseUrl`);
+    const { supabaseUrl } = await response1.json();
+    const response2 = await fetch(`/.netlify/functions/well-kept?name=supabaseKey`);
+    const { supabaseKey } = await response2.json();
+    return createClient(supabaseUrl, supabaseKey);
+}
+
+const supabase = await initSupabase();
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
@@ -25,7 +30,7 @@ const obstacles = generateRandomObstacles(obstacleCount);
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
     { name: "tag bullet", desc: "shoots a bullet that tags the other player if it hits (press e)" },
-    { name: "invisibility cloak", desc: "turns you invisible for 5 seconds (press /)" },
+    { name: "invisibility cloak", duration: 5000, desc: "turns you invisible for 5 seconds (press /)" },
 ];
 
 const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: { speed: 1 } };
@@ -42,9 +47,10 @@ document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
 
     // Powers - check if the player has the ability before activating
-    if (e.key === 'e' && tagger.powers.name == "tag bullet") fireTagBullet(tagger);
-    if (e.key === '/' && tagger.powers.name == "invisibility cloak") triggerInvisibility(tagger);
+    if (e.key === 'e' && tagger.powers.name === "tag bullet") fireTagBullet(tagger);
+    if (e.key === '/' && tagger.powers.name === "invisibility cloak") triggerInvisibility(tagger);
 });
+
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
 });
@@ -74,7 +80,7 @@ function checkCollision(rect1, rect2) {
 }
 
 function updatePlayer(player, up, left, down, right) {
-    const playerSpeed = player.powers.speed*5;
+    const playerSpeed = player.powers.speed * 5;
     let intendedX = player.x;
     let intendedY = player.y;
 
@@ -112,31 +118,20 @@ function fireTagBullet(player) {
         player
     };
     bullets.push(bullet);
-    console.log("shot");
 }
 
 function triggerInvisibility(player) {
-    if (!invisiblePlayers[player.number]) { // Only trigger if not already invisible
-        invisiblePlayers[player.number] = {
-            player,
-            startTime: Date.now(),
-            duration: powers.find(p => p.invisible).duration
-        };
-        console.log("invisible");
-        setTimeout(() => { 
-            delete invisiblePlayers[player.number]; 
-            console.log("visible again");
-        }, powers.find(p => p.invisible).duration);
+    if (!invisiblePlayers[player.number]) {
+        const invisDuration = powers.find(p => p.name === "invisibility cloak").duration;
+        invisiblePlayers[player.number] = { player, startTime: Date.now(), duration: invisDuration };
+        setTimeout(() => { delete invisiblePlayers[player.number]; }, invisDuration);
     }
 }
 
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = obstacleColor;
-    obstacles.forEach(obstacle => {
-        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-    });
+    obstacles.forEach(obstacle => ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height));
 
     updatePlayer(player1, 'w', 'a', 's', 'd');
     updatePlayer(player2, 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight');
@@ -156,12 +151,6 @@ function gameLoop() {
         }
     });
 
-    Object.keys(invisiblePlayers).forEach(playerId => {
-        const { player, startTime, duration } = invisiblePlayers[playerId];
-        if (Date.now() - startTime >= duration) delete invisiblePlayers[playerId];
-        else player.invisible = true;
-    });
-
     drawPlayerWithCooldown(player1);
     drawPlayerWithCooldown(player2);
 
@@ -173,30 +162,11 @@ function drawPlayerWithCooldown(player) {
         ctx.fillStyle = player.color;
         ctx.fillRect(player.x, player.y, player.width, player.height);
     }
-
-    const currentTime = Date.now();
-    if (tagger === player && currentTime - lastTagTime < cooldownDuration) {
-        const remainingCooldown = Math.ceil((cooldownDuration - (currentTime - lastTagTime)) / 1000);
+    if (tagger === player && Date.now() - lastTagTime < cooldownDuration) {
+        const remainingCooldown = Math.ceil((cooldownDuration - (Date.now() - lastTagTime)) / 1000);
         ctx.fillStyle = '#fff';
         ctx.font = '16px Arial';
         ctx.fillText(`${remainingCooldown}s`, player.x, player.y - 10);
-    }
-}
-
-function choosePower(player) {
-    let text = `Choose power for player ${player.number} (enter `;
-    powers.forEach((power, index) => {
-        text += `${index + 1} for ${power.name}${index < powers.length - 1 ? ', ' : ''}`;
-    });
-    text += ')';
-
-    const chosenPower = parseInt(prompt(text));
-    const power = powers[chosenPower - 1];
-    if (power) {
-        player.powers = { ...power }; // Spread the power properties directly
-        alert(`Player ${player.number} chose ${power.name} power, which ${power.desc}`);
-    } else {
-        player.powers = { speed: 1 }; // Default speed
     }
 }
 
@@ -215,28 +185,20 @@ async function updateVisits() {
         .from('visits')
         .select('*')
         .eq('project_name', 'supertag');
-
     if (selectError) throw selectError;
 
-    if (data.length == 0) {
+    if (data.length === 0) {
         const { error: insertError } = await supabase
             .from('visits')
             .insert([{ project_name: 'supertag', num_visits: 1 }]);
-
         if (insertError) throw insertError;
-
-        console.log('Created new row with project_name "supertag" and num_visits set to 1');
     } else {
         const currentVisits = data[0].num_visits || 0;
-
         const { error: updateError } = await supabase
             .from('visits')
             .update({ num_visits: currentVisits + 1 })
             .eq('project_name', 'supertag');
-
         if (updateError) throw updateError;
-
-        console.log(`Updated num_visits to ${currentVisits + 1} for project_name "supertag"`);
     }
 }
 

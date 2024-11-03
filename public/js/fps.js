@@ -1,6 +1,7 @@
 // Basic 3D FPS game setup with Three.js
 let scene, camera, renderer, player, bullets = [];
 let keys = {}; // Track key states
+let rotation = { x: 0, y: 0 }; // Track camera rotation
 
 // Set up the scene
 function init() {
@@ -28,9 +29,22 @@ function init() {
   player.position.y = 0.5;
   scene.add(player);
 
-  // Set the initial camera position
-  camera.position.set(0, 1.6, 5);
-  camera.lookAt(player.position);
+  // Attach the camera to the player for first-person view
+  player.add(camera);
+  camera.position.set(0, 1.5, 0); // Position camera at player's head height
+
+  // Enable pointer lock for mouse control
+  document.body.addEventListener('click', () => {
+    document.body.requestPointerLock();
+  });
+
+  document.addEventListener('pointerlockchange', () => {
+    if (document.pointerLockElement === document.body) {
+      document.addEventListener('mousemove', onMouseMove, false);
+    } else {
+      document.removeEventListener('mousemove', onMouseMove, false);
+    }
+  });
 
   // Add event listeners
   document.addEventListener('keydown', (e) => keys[e.key] = true);
@@ -46,29 +60,38 @@ function shoot() {
   const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
   const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
   
-  bullet.position.copy(player.position);
+  bullet.position.copy(camera.position);
   bullet.velocity = new THREE.Vector3(
-    Math.sin(camera.rotation.y),
+    Math.sin(rotation.y),
     0,
-    Math.cos(camera.rotation.y)
+    Math.cos(rotation.y)
   ).multiplyScalar(0.2);
   bullets.push(bullet);
   scene.add(bullet);
+}
+
+// Handle mouse movement to control where the camera is looking
+function onMouseMove(event) {
+  const sensitivity = 0.002; // Adjust sensitivity as needed
+  rotation.y -= event.movementX * sensitivity;
+  rotation.x -= event.movementY * sensitivity;
+  rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.x)); // Limit vertical look angle
+
+  camera.rotation.set(rotation.x, rotation.y, 0);
 }
 
 // Animate the scene
 function animate() {
   requestAnimationFrame(animate);
 
-  // Update player position based on keys
-  if (keys['w']) player.position.z -= 0.1;
-  if (keys['s']) player.position.z += 0.1;
-  if (keys['a']) player.position.x -= 0.1;
-  if (keys['d']) player.position.x += 0.1;
+  // Update player position based on WASD keys and camera direction
+  const forward = new THREE.Vector3(Math.sin(rotation.y), 0, Math.cos(rotation.y));
+  const right = new THREE.Vector3(Math.sin(rotation.y + Math.PI / 2), 0, Math.cos(rotation.y + Math.PI / 2));
 
-  // Update camera position to follow player
-  camera.position.set(player.position.x, player.position.y + 1.5, player.position.z + 5);
-  camera.lookAt(player.position);
+  if (keys['w']) player.position.add(forward.multiplyScalar(0.1));
+  if (keys['s']) player.position.add(forward.multiplyScalar(-0.1));
+  if (keys['a']) player.position.add(right.multiplyScalar(-0.1));
+  if (keys['d']) player.position.add(right.multiplyScalar(0.1));
 
   // Update bullets
   bullets.forEach((bullet, index) => {

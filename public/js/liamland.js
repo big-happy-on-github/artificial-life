@@ -183,7 +183,7 @@ async function buy(gameName) {
                 throw new Error('Error updating user Limbucks data.');
             }
 
-            alert(`you bought${gameToBuy.name}!`);
+            alert(`you bought ${gameToBuy.name}!`);
             await updateDisplay();
         } else {
             alert(`your ${gameToBuy.cost - userLimbucks} limbucks short!`);

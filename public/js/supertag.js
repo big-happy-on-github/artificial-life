@@ -45,8 +45,9 @@ let invisiblePlayers = {}; // Track invisible players
 // Event listeners for key presses
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+    
     if (e.key === ' ' && tagger.powers.tagBullet) fireTagBullet(tagger);
-    if (e.key === 'i' && tagger.powers.invisible) triggerInvisibility(tagger);
+    else if (e.key === ' ' && tagger.powers.invisible) triggerInvisibility(tagger);
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;

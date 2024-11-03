@@ -88,6 +88,7 @@ function calculate() {
     let possible = options.filter(option => !combo.includes(option));
     enemyMove = possible[Math.floor(Math.random() * possible.length)];
     document.getElementById("result").textContent = `last enemy move: ${translate(enemyMove)}`;
+    document.getElementById("img").src = `/img/shadowboxing_${attacking ? "defense" : "offense"}_${translate(enemyMove)}`;
     update(); // Call update to process the enemy move
 }
 
@@ -122,6 +123,7 @@ document.addEventListener('keydown', (event) => {
                 playerMove = null; // Not ready for a new move yet
             }
             document.getElementById("result").textContent = `last enemy move: ${translate(playerMove)}`;
+            document.getElementById("img").src = `/img/shadowboxing_${attacking ? "defense" : "offense"}_${translate(playerMove)}`;
             return;
         } else if (requiredCombo.length > 0) {
             // Reset comboIndex if player doesn't match the required sequence

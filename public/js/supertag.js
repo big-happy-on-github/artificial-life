@@ -27,8 +27,8 @@ const powers = [
 let active = { "invisible cloak": null };
 
 // Player positions and movement
-const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, last: Date.now() };
-const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, last: Date.now() };
+const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, power: {}, last: Date.now() };
+const player2 = { x: 700, y: 500, width: playerSize, height: playerSize, color: 'red', number: 2, power: {}, last: Date.now() };
 let tagger = player1;  // Initial tagger is player1
 let lastTagTime = 0;   // Track time of last tag
 const cooldownDuration = 3000; // 3 seconds cooldown

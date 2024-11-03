@@ -24,8 +24,8 @@ const obstacleColor = 'gray';
 const obstacleCount = Math.round(5+Math.random()*10); // Number of obstacles
 const obstacles = generateRandomObstacles(obstacleCount);
 
-const powers = [ // Speed, jump (height), special ability
-    { name: "speedy boy", speed: 2 }
+const powers = [
+    { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
 ];
 
 // Player positions and movement
@@ -183,7 +183,7 @@ function choosePower(player) {
         const power = powers[parseInt(chosenPower)-1];
         if (power) {
             player.powers = { speed: power.speed };
-            alert(`player ${player.number} chose ${power.name} power!`);
+            alert(`player ${player.number} chose ${power.name} power, which ${power.desc}`);
             break;
         } else {
             alert("that's not a choice buddy (note: remember you're putting in a number, not the name of the power)");

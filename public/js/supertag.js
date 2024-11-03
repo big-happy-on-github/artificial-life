@@ -41,9 +41,12 @@ let invisiblePlayers = {};
 document.addEventListener('keydown', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
 
-    // Powers - check if the player has the ability before activating
-    if (e.key === 'e' && tagger.powers.name == "tag bullet") fireTagBullet(tagger);
-    if (e.key === '/' && tagger.powers.name === "invisibility cloak" && powers.find(p => p.name === "invisibility cloak").duration) {
+    // Powers - activate based on chosen power
+    if (e.key === 'e' && tagger.powers.name === "tag bullet") {
+        fireTagBullet(tagger);
+    }
+
+    if (e.key === '/' && tagger.powers.name === "invisibility cloak") {
         triggerInvisibility(tagger);
     }
 });
@@ -127,17 +130,22 @@ function fireTagBullet(player) {
 }
 
 function triggerInvisibility(player) {
-    if (!invisiblePlayers[player.number]) { // Only trigger if not already invisible
+    const invisibilityPower = powers.find(p => p.name === "invisibility cloak");
+
+    if (!invisiblePlayers[player.number] && invisibilityPower) { // Only trigger if not already invisible
         invisiblePlayers[player.number] = {
             player,
             startTime: Date.now(),
-            duration: powers.find(p => p.invisible).duration
+            duration: invisibilityPower.duration
         };
-        console.log("invisible");
+        player.invisible = true;
+        console.log("Player is now invisible");
+        
         setTimeout(() => { 
-            delete invisiblePlayers[player.number]; 
-            console.log("visible again");
-        }, powers.find(p => p.invisible).duration);
+            player.invisible = false; // Make visible again
+            delete invisiblePlayers[player.number];
+            console.log("Player is visible again");
+        }, invisibilityPower.duration);
     }
 }
 

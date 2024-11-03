@@ -33,6 +33,9 @@ function init() {
   player.add(camera);
   camera.position.set(0, 1.5, 0); // Position camera at player's head height
 
+  // Add some objects for reference in the scene
+  createMapObjects();
+
   // Enable pointer lock for mouse control
   document.body.addEventListener('click', () => {
     document.body.requestPointerLock();
@@ -54,19 +57,40 @@ function init() {
   animate();
 }
 
+// Create some map objects for visual reference
+function createMapObjects() {
+  // Add walls
+  for (let i = -20; i <= 20; i += 10) {
+    const wallGeometry = new THREE.BoxGeometry(1, 3, 10);
+    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+    wall.position.set(i, 1.5, -30);
+    scene.add(wall);
+  }
+
+  // Add boxes
+  for (let i = 0; i < 5; i++) {
+    const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
+    const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x8844aa });
+    const box = new THREE.Mesh(boxGeometry, boxMaterial);
+    box.position.set(Math.random() * 40 - 20, 1, Math.random() * 40 - 20);
+    scene.add(box);
+  }
+}
+
 // Handle shooting
 function shoot() {
   const bulletGeometry = new THREE.SphereGeometry(0.1, 8, 8);
   const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
   const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
-  
+
   bullet.position.copy(player.position); // Start bullet from player's position
   const direction = new THREE.Vector3(
     Math.sin(rotation.y) * Math.cos(rotation.x),
     Math.sin(rotation.x),
     Math.cos(rotation.y) * Math.cos(rotation.x)
   );
-  bullet.velocity = direction.multiplyScalar(0.2);
+  bullet.velocity = direction.multiplyScalar(0.5); // Faster bullet speed for visibility
   bullets.push(bullet);
   scene.add(bullet);
 }
@@ -88,9 +112,9 @@ function animate() {
 
   // Update player position based on WASD keys and camera direction
   const forward = new THREE.Vector3(
-    Math.sin(rotation.y),
+    Math.sin(rotation.y) * Math.cos(rotation.x),
     0,
-    Math.cos(rotation.y)
+    Math.cos(rotation.y) * Math.cos(rotation.x)
   );
   const right = new THREE.Vector3(
     Math.sin(rotation.y + Math.PI / 2),
@@ -121,5 +145,7 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 });
+
+init();
 
 init();

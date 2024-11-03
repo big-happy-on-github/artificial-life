@@ -75,7 +75,7 @@ function checkSpec(player) {
     if (active["invisible cloak"] == player && Date.now() - player.last >= 5000) active["invisible cloak"] = null;
     if (!(Date.now() - player.last >= 5000)) return;
     
-    if (spec[i] && player.power.name == "invisible cloak") {
+    if (spec["i"] && player.power.name == "invisible cloak") {
         player.last = Date.now();
         active["invisible cloak"] = player;
     }

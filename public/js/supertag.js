@@ -104,6 +104,7 @@ function updatePlayer(player, up, left, down, right) {
     }
     if (!collisionY) {
         player.y = intendedY;
+    }
 }
 
 // Main game loop

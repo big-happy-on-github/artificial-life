@@ -25,7 +25,7 @@ const obstacles = generateRandomObstacles(obstacleCount);
 const powers = [
     { name: "speedy boy", speed: 2, desc: "makes your player move faster" },
     { name: "tag bullet", desc: "shoots a bullet that tags the other player if it hits (press e)" },
-    { name: "invisibility cloak", desc: "turns you invisible for 5 seconds (press /)" },
+    { name: "invisibility cloak", desc: "turns you invisible for 5 seconds (press /)", duration: 5000 },
 ];
 
 const player1 = { x: 100, y: 100, width: playerSize, height: playerSize, color: 'blue', number: 1, powers: { speed: 1 } };
@@ -43,7 +43,9 @@ document.addEventListener('keydown', (e) => {
 
     // Powers - check if the player has the ability before activating
     if (e.key === 'e' && tagger.powers.name == "tag bullet") fireTagBullet(tagger);
-    if (e.key === '/' && tagger.powers.name == "invisibility cloak") triggerInvisibility(tagger);
+    if (e.key === '/' && tagger.powers.name === "invisibility cloak" && powers.find(p => p.name === "invisibility cloak").duration) {
+        triggerInvisibility(tagger);
+    }
 });
 document.addEventListener('keyup', (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
@@ -158,8 +160,12 @@ function gameLoop() {
 
     Object.keys(invisiblePlayers).forEach(playerId => {
         const { player, startTime, duration } = invisiblePlayers[playerId];
-        if (Date.now() - startTime >= duration) delete invisiblePlayers[playerId];
-        else player.invisible = true;
+        if (Date.now() - startTime >= duration) {
+            delete invisiblePlayers[playerId];
+            player.invisible = false; // Reset invisibility here
+        } else {
+            player.invisible = true;
+        }
     });
 
     drawPlayerWithCooldown(player1);
